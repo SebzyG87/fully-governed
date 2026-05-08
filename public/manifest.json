@@ -1,0 +1,32 @@
+{
+  "name": "Fully Governed Studio & Cloud",
+  "short_name": "FG Studio",
+  "description": "Premium recording studio, content creation centre and multi-use room in Lewisham, South East London.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0a",
+  "theme_color": "#D4AF37",
+  "categories": [
+    "entertainment",
+    "music",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
