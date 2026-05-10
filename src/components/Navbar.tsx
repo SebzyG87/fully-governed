@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Crown, User, Shield, ChevronRight } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Crown, User, Shield, ChevronRight, ArrowLeft } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 const groupedNav = [
@@ -50,7 +50,17 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { user, role } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const isAdmin = role === "creator_admin";
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate("/");
+  };
 
   // Close menu on route change
   useEffect(() => {
@@ -70,11 +80,21 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-[70] bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="container flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 min-h-[44px] min-w-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md">
-            <Crown className="w-6 h-6 text-primary" />
-            <span className="font-bebas text-2xl tracking-widest text-foreground hidden sm:inline-block">FULLY GOVERNED</span>
-            <span className="font-bebas text-2xl tracking-widest text-foreground sm:hidden">FG</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="min-h-[40px] min-w-[40px] inline-flex items-center justify-center rounded-md border border-border/70 bg-background/80 text-muted-foreground transition-colors hover:text-interactive hover:border-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <Link to="/" className="flex items-center gap-2 min-h-[44px] min-w-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md">
+              <Crown className="w-6 h-6 text-primary" />
+              <span className="font-bebas text-2xl tracking-widest text-foreground hidden sm:inline-block">FULLY GOVERNED</span>
+              <span className="font-bebas text-2xl tracking-widest text-foreground sm:hidden">FG</span>
+            </Link>
+          </div>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2 sm:gap-4">
