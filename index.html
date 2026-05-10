@@ -68,6 +68,10 @@
   <button id="global-back-fallback" type="button" aria-label="Go back">&larr; BACK</button>
   <div id="root"></div>
   <script>
+    if (window.location.pathname === '/login' || window.location.pathname === '/signin') {
+      window.history.replaceState(null, '', '/auth' + window.location.search + window.location.hash);
+    }
+
     document.getElementById('global-back-fallback')?.addEventListener('click', () => {
       if (window.history.length > 1) {
         window.history.back();
