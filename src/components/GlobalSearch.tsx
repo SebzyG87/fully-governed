@@ -25,8 +25,7 @@ const GlobalSearch = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  if (pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock")) return null;
+  const hidden = pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock");
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -38,6 +37,8 @@ const GlobalSearch = () => {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  if (hidden) return null;
 
   const go = (path: string) => {
     navigate(path);

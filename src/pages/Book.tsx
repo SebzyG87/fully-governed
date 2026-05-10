@@ -259,10 +259,10 @@ const Book = () => {
         setRooms(data);
         setSelectedRoom(data[0] ?? null);
       }
-    }).catch(() => { /* rooms unavailable — empty state will show */ });
+    });
     supabase.from("engineers").select("id, name, speciality").eq("availability", "available").then(({ data }) => {
       setEngineers((data as Engineer[]) || []);
-    }).catch(() => { /* engineers unavailable */ });
+    });
   }, []);
 
   const fetchBookings = useCallback(async () => {

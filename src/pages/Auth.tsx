@@ -48,10 +48,11 @@ const Auth = () => {
   const fromPath = (location.state as any)?.from;
   const redirectTo = fromPath || "/dashboard";
 
-  // Check query params for recovery flow
+  // Check query/hash params for recovery flow
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("type") === "recovery" || window.location.hash.includes("recovery_token")) {
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    if (params.get("type") === "recovery" || hashParams.get("type") === "recovery" || window.location.hash.includes("recovery_token")) {
       setIsRecovery(true);
       setIsLogin(false);
       setIsForgotPassword(false);
@@ -199,6 +200,10 @@ const Auth = () => {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (newPassword.length < 8) {
+      toast({ title: "Password must be at least 8 characters", variant: "destructive" });
+      return;
+    }
     setSubmitting(true);
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
@@ -359,7 +364,7 @@ const Auth = () => {
               <motion.form key="recovery" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleUpdatePassword} className="space-y-4">
                 <p className="text-center text-muted-foreground font-barlow text-sm">Set your new access credentials</p>
                 <div>
-                  <Label htmlFor="new-password" title="NEW PASSWORD" />
+                  <Label htmlFor="new-password" className="text-muted-foreground uppercase text-[10px] tracking-widest">New Password</Label>
                   <div className="relative mt-1">
                     <Input id="new-password" type={showPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required placeholder="••••••••" className="bg-background pr-10" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white">

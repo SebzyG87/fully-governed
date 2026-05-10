@@ -9,6 +9,7 @@ import { Crown } from "lucide-react";
 import MobileTabBar from "@/components/MobileTabBar";
 import HelpWidget from "@/components/HelpWidget";
 import GlobalSearch from "@/components/GlobalSearch";
+import GlobalBackButton from "@/components/GlobalBackButton";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AudioPlayerProvider } from "@/contexts/AudioPlayerContext";
@@ -183,6 +184,7 @@ const App = () => (
                   {/* Core */}
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/login" element={<Auth />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/dashboard/upload-music" element={<ProtectedRoute><UploadMusic /></ProtectedRoute>} />
                   <Route path="/dashboard/my-vault" element={<ProtectedRoute><MyVault /></ProtectedRoute>} />
@@ -338,6 +340,7 @@ const App = () => (
                 <MobileTabBar />
                 <HelpWidget />
                 <GlobalSearch />
+                <GlobalBackButton />
               </Suspense>
             </AudioPlayerProvider>
           </AuthProvider>
