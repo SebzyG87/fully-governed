@@ -205,7 +205,7 @@ const Book = () => {
     if (selectedRoom && (sessionType || notes || numGuests > 0)) {
       saveDraft();
     }
-  }, [sessionType, notes, numGuests, selectedEngineer, selectedDate, selectedDuration, saveDraft]);
+  }, [sessionType, notes, numGuests, selectedEngineer, selectedDate, selectedDuration, selectedRoom, saveDraft]);
 
   // Check for draft on mount
   useEffect(() => {

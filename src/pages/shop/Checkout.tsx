@@ -110,7 +110,7 @@ const Checkout = () => {
         };
 
         initCheckout();
-    }, [trackId, navigate, toast]);
+    }, [trackId, navigate, toast, profile?.loyalty_points, user?.id]);
 
     if (!track) {
         return (

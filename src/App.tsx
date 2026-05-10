@@ -9,7 +9,6 @@ import { Crown } from "lucide-react";
 import MobileTabBar from "@/components/MobileTabBar";
 import HelpWidget from "@/components/HelpWidget";
 import GlobalSearch from "@/components/GlobalSearch";
-import GlobalBackButton from "@/components/GlobalBackButton";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AudioPlayerProvider } from "@/contexts/AudioPlayerContext";
@@ -340,7 +339,6 @@ const App = () => (
                 <MobileTabBar />
                 <HelpWidget />
                 <GlobalSearch />
-                <GlobalBackButton />
               </Suspense>
             </AudioPlayerProvider>
           </AuthProvider>

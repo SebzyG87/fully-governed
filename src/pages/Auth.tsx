@@ -81,7 +81,7 @@ const Auth = () => {
         navigate(redirectTo, { replace: true });
       }
     }
-  }, [loading, user, profile, navigate, isRecovery, showVerification]);
+  }, [loading, user, profile, navigate, isRecovery, showVerification, redirectTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

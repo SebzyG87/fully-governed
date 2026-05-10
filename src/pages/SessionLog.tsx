@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Crown, FileText, ArrowLeft, Pencil } from "lucide-react";
@@ -50,7 +50,7 @@ const SessionLog = () => {
     if (!loading && !user) navigate("/auth", { state: { from: "/log" } });
   }, [loading, user, navigate]);
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     if (!user) return;
     // Past session logs
     supabase.from("session_logs").select("*").order("session_date", { ascending: false }).limit(100).then(({ data }) => {
@@ -67,9 +67,9 @@ const SessionLog = () => {
       .order("start_time", { ascending: true })
       .limit(10)
       .then(({ data }: any) => setUpcoming(data || []));
-  };
+  }, [user]);
 
-  useEffect(() => { fetchData(); }, [user]);
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   if (loading || fetching) {
     return (

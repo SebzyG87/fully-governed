@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Shirt, Plus, Pencil, Pause, Play, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -41,7 +41,7 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetch = async () => {
+  const fetchProducts = useCallback(async () => {
     if (!user) return;
     setLoading(true);
     const { data } = await supabase.from("clothing_products")
@@ -50,21 +50,21 @@ const Products = () => {
       .order("created_at", { ascending: false });
     setProducts((data as Product[]) || []);
     setLoading(false);
-  };
+  }, [user]);
 
-  useEffect(() => { fetch(); }, [user]);
+  useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
   const togglePause = async (id: string, current: string) => {
     const newStatus = current === "live" ? "paused" : "live";
     await supabase.from("clothing_products").update({ status: newStatus }).eq("id", id);
     toast({ title: newStatus === "live" ? "Product resumed" : "Product paused" });
-    fetch();
+    fetchProducts();
   };
 
   const deleteProduct = async (id: string) => {
     await supabase.from("clothing_products").delete().eq("id", id);
     toast({ title: "Product deleted" });
-    fetch();
+    fetchProducts();
   };
 
   return (

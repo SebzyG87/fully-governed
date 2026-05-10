@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Crown, Calendar, User, LogOut, Star, Shield, FileText, ShoppingBag, Users, Clock, Pencil, X as XIcon, PoundSterling, Upload, Shirt, Music } from "lucide-react";
@@ -85,7 +85,7 @@ const Dashboard = () => {
     }
   }, [loading, profile]);
 
-  const fetchBookings = () => {
+  const fetchBookings = useCallback(() => {
     if (!user) return;
     (supabase
       .from("bookings")
@@ -125,9 +125,9 @@ const Dashboard = () => {
           setRecentActivity([]);
         }
       });
-  };
+  }, [ratingBookingId, user]);
 
-  useEffect(() => { fetchBookings(); }, [user]);
+  useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
   const handleCancel = async () => {
     if (!cancelId) return;
