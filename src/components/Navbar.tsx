@@ -108,12 +108,16 @@ const Navbar = () => {
               </Link>
             )}
 
-            <Link to={user ? "/dashboard" : "/auth"} className="text-muted-foreground hover:text-interactive transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+            <Link
+              to={user ? "/dashboard" : "/auth"}
+              className="text-muted-foreground hover:text-interactive transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center gap-2 rounded-sm border border-border/70 bg-card/60 px-3 font-bebas text-sm tracking-wider"
+            >
               {user?.user_metadata?.avatar_url ? (
                 <img src={user.user_metadata.avatar_url} alt="Profile" className="w-7 h-7 rounded-full border border-border" />
               ) : (
                 <User className="w-5 h-5" />
               )}
+              <span className="hidden sm:inline">{user ? "DASHBOARD" : "SIGN IN"}</span>
             </Link>
 
             <button
