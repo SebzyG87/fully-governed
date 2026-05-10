@@ -89,7 +89,7 @@ const Auth = () => {
     try {
       if (isLogin) {
         await signIn(email, password);
-        toast({ title: "Welcome back 👑" });
+        toast({ title: "Welcome back" });
       } else {
         if (!firstName || !lastName || !email || !password) {
           toast({ title: "Please fill in all required fields", variant: "destructive" });
@@ -121,7 +121,7 @@ const Auth = () => {
         setPendingProfile({ fullName, phone: phone || null, passwordHint: password });
         setShowVerification(true);
         setResendTimer(60);
-        toast({ title: "Verification code sent! 📧" });
+        toast({ title: "Verification code sent" });
       }
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
@@ -165,7 +165,7 @@ const Auth = () => {
         }
       }
 
-      toast({ title: "Email verified! Welcome aboard 🚀" });
+      toast({ title: "Email verified. Welcome aboard" });
       navigate(redirectTo, { replace: true });
     } catch (err: any) {
       toast({ title: "Verification Failed", description: "Code incorrect or expired. Click resend to get a new one.", variant: "destructive" });
@@ -190,7 +190,7 @@ const Auth = () => {
       if (error) throw error;
       
       setResendTimer(60);
-      setResendStatus("New code sent ✓");
+      setResendStatus("New code sent");
       setTimeout(() => setResendStatus(""), 3000);
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
@@ -259,7 +259,7 @@ const Auth = () => {
         avatar_url: user.user_metadata?.avatar_url || null,
       }).eq("user_id", user.id);
 
-      toast({ title: "Profile complete! 🎤" });
+      toast({ title: "Profile complete" });
       navigate(redirectTo, { replace: true });
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
@@ -366,7 +366,7 @@ const Auth = () => {
                 <div>
                   <Label htmlFor="new-password" className="text-muted-foreground uppercase text-[10px] tracking-widest">New Password</Label>
                   <div className="relative mt-1">
-                    <Input id="new-password" type={showPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required placeholder="••••••••" className="bg-background pr-10" />
+                    <Input id="new-password" type={showPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required placeholder="********" className="bg-background pr-10" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -445,7 +445,7 @@ const Auth = () => {
                   <div className="space-y-1.5">
                     <Label htmlFor="password" className="text-muted-foreground uppercase text-[10px] tracking-widest ml-1">Password</Label>
                     <div className="relative">
-                      <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" className="bg-white/5 border-white/10 h-11 pr-10" />
+                      <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="********" className="bg-white/5 border-white/10 h-11 pr-10" />
                       <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white">
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -455,7 +455,7 @@ const Auth = () => {
                   {!isLogin && (
                     <div className="space-y-1.5">
                       <Label htmlFor="confirmPassword" className="text-muted-foreground uppercase text-[10px] tracking-widest ml-1">Confirm Password</Label>
-                      <Input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required placeholder="••••••••" className="bg-white/5 border-white/10 h-11" />
+                      <Input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required placeholder="********" className="bg-white/5 border-white/10 h-11" />
                     </div>
                   )}
 
