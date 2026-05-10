@@ -24,12 +24,19 @@ interface Event {
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {
-    supabase.from("events").select("*").eq("status", "published").order("event_date", { ascending: true }).then(({ data }) => {
-      setEvents((data as Event[]) || []);
+    supabase.from("events").select("*").eq("status", "published").order("event_date", { ascending: true }).then(({ data, error }) => {
+      if (error) {
+        setLoadError("Events are being set up. Please check back soon.");
+        setEvents([]);
+      } else {
+        setLoadError(null);
+        setEvents((data as Event[]) || []);
+      }
       setLoading(false);
     });
   }, []);
@@ -50,7 +57,7 @@ const Events = () => {
         toast({ title: "RSVP failed", description: error.message, variant: "destructive" });
       }
     } else {
-      toast({ title: "You're in! 🎉" });
+      toast({ title: "You're in!" });
     }
   };
 
@@ -68,10 +75,15 @@ const Events = () => {
           <div className="flex justify-center py-12">
             <Crown className="w-8 h-8 text-primary animate-pulse-gold" />
           </div>
+        ) : loadError ? (
+          <div className="text-center py-16">
+            <CalendarDays className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground font-barlow text-lg">{loadError}</p>
+          </div>
         ) : events.length === 0 ? (
           <div className="text-center py-16">
             <CalendarDays className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground font-barlow text-lg">No upcoming events — check back soon</p>
+            <p className="text-muted-foreground font-barlow text-lg">No upcoming events - check back soon</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -81,12 +93,12 @@ const Events = () => {
                 <div className="p-6 space-y-3">
                   <h3 className="text-2xl text-foreground">{event.title.toUpperCase()}</h3>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground font-mono">
-                    <span className="flex items-center gap-1"><CalendarDays className="w-3 h-3" /> {format(new Date(event.event_date), "d MMM yyyy · HH:mm")}</span>
+                    <span className="flex items-center gap-1"><CalendarDays className="w-3 h-3" /> {format(new Date(event.event_date), "d MMM yyyy - HH:mm")}</span>
                     <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {event.rsvp_count}/{event.max_capacity}</span>
                   </div>
                   {event.description && <p className="text-sm text-muted-foreground">{event.description}</p>}
                   <div className="flex items-center justify-between pt-2">
-                    <span className="font-mono text-primary">{Number(event.ticket_price) > 0 ? `£${Number(event.ticket_price).toFixed(2)}` : "FREE"}</span>
+                    <span className="font-mono text-primary">{Number(event.ticket_price) > 0 ? `GBP ${Number(event.ticket_price).toFixed(2)}` : "FREE"}</span>
                     <Button size="sm" onClick={() => handleRSVP(event)} className="font-bebas tracking-wider">
                       <Ticket className="w-4 h-4 mr-1" /> RSVP
                     </Button>
@@ -103,3 +115,4 @@ const Events = () => {
 };
 
 export default Events;
+
