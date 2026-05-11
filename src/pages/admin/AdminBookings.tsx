@@ -119,9 +119,9 @@ const AdminBookings = () => {
               {filtered.map((b) => (
                 <tr key={b.id} className="border-b border-border/50 hover:bg-accent/30 transition-colors">
                   <td className="py-3 px-2 font-mono text-foreground">{format(new Date(b.start_time), "d MMM yy")}</td>
-                  <td className="py-3 px-2 font-mono text-muted-foreground">{format(new Date(b.start_time), "HH:mm")}–{format(new Date(b.end_time), "HH:mm")}</td>
-                  <td className={`py-3 px-2 font-bebas tracking-wider ${roomColor(b.rooms?.color || "")}`}>{b.rooms?.name || "—"}</td>
-                  <td className="py-3 px-2 text-foreground">{b.profiles?.full_name || "—"}</td>
+                  <td className="py-3 px-2 font-mono text-muted-foreground">{format(new Date(b.start_time), "HH:mm")}-{format(new Date(b.end_time), "HH:mm")}</td>
+                  <td className={`py-3 px-2 font-bebas tracking-wider ${roomColor(b.rooms?.color || "")}`}>{b.rooms?.name || "-"}</td>
+                  <td className="py-3 px-2 text-foreground">{b.profiles?.full_name || "-"}</td>
                   <td className="py-3 px-2 text-muted-foreground">{b.session_type}</td>
                   <td className="py-3 px-2 text-muted-foreground font-mono">{b.num_guests || 0}</td>
                   <td className="py-3 px-2">
