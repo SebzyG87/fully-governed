@@ -110,8 +110,8 @@ const Clothing = () => {
               className="max-w-2xl mx-auto text-center py-20 bg-card border border-border rounded-lg"
             >
               <Shirt className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-              <h3 className="font-bebas text-2xl tracking-wider text-foreground mb-2">CLOTHING STORE COMING SOON</h3>
-              <p className="text-muted-foreground font-barlow text-lg mb-6">Want to design your own line of apparel?</p>
+              <h3 className="font-bebas text-2xl tracking-wider text-foreground mb-2">NO PUBLISHED CLOTHING YET</h3>
+              <p className="text-muted-foreground font-barlow text-lg mb-6">Start with the designer and publish the first artist apparel drop.</p>
               <Link to="/artist-clothing/designer"><Button className="font-bebas text-lg tracking-wider px-8 h-12">START DESIGNING</Button></Link>
             </motion.div>
           )}

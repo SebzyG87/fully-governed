@@ -22,10 +22,12 @@ serve(async (req) => {
             httpClient: Stripe.createFetchHttpClient(),
         });
 
-        const { trackId, amount, type, roomName, bookingDate, userId } = await req.json();
+        const { trackId, productId, productName, amount, type, roomName, bookingDate, userId } = await req.json();
 
         const metadata: Record<string, string> = {};
         if (trackId) metadata.trackId = trackId;
+        if (productId) metadata.productId = productId;
+        if (productName) metadata.productName = productName;
         if (type) metadata.type = type;
         if (roomName) metadata.roomName = roomName;
         if (bookingDate) metadata.bookingDate = bookingDate;

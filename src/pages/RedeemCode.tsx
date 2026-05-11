@@ -119,7 +119,7 @@ const RedeemCode = () => {
                         </div>
 
                         <Button asChild className="w-full font-bebas text-lg tracking-wider mt-4">
-                            <Link to="/dashboard/vault">GO TO MY VAULT</Link>
+                            <Link to="/dashboard/my-vault">GO TO MY VAULT</Link>
                         </Button>
                         <Button variant="outline" onClick={() => { setSuccess(null); setCode(''); }} className="w-full font-bebas tracking-wider">
                             REDEEM ANOTHER CODE
