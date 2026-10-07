@@ -32,7 +32,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     bio: "Mono Luke is a versatile creative producer specializing in music production, mixing/mastering, 3D modeling, and dynamic motion graphics. As an engineer and visual designer, Mono brings ideas to life across auditory, design, and physical mediums.",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
     skills: ["Music Production", "Mixing & Mastering", "3D Modelling", "Motion Graphics", "VFX", "Audio Engineering", "Graphic Design"],
-    ratePlaceholder: "Rates starting from £45/hr (project packages available)",
+    ratePlaceholder: "Request a quote",
     availabilityPlaceholder: "Monday - Friday (10:00 - 18:00)",
     portfolio: ["Demo Project: Boiler Room Live Mix", "Motion Graphic: Lyric Video Concept", "3D Model: Studio Synth Showcase", "Single Cover Art Showcase"],
     socialLinks: {

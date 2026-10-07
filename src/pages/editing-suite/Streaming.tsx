@@ -13,8 +13,8 @@ const services = [
     title: "LIVE STREAMING PRODUCTION",
     description: "Full production setup, switching, graphics overlay and multi-platform simulcasting.",
     items: [
-      { service: "Hourly Production", rate: "£50–£100/hr" },
-      { service: "Full Event Package", rate: "£200–£500/event" },
+      { service: "Hourly Production", rate: "Request a quote" },
+      { service: "Full Event Package", rate: "Request a quote" },
     ],
   },
   {
@@ -22,8 +22,8 @@ const services = [
     title: "GAMING RECORDING & EDITING",
     description: "Gameplay capture, highlight reels, montages and YouTube/TikTok-ready clips.",
     items: [
-      { service: "Hourly Editing", rate: "£35–£60/hr" },
-      { service: "Highlight Reel", rate: "£100–£300/reel" },
+      { service: "Hourly Editing", rate: "Request a quote" },
+      { service: "Highlight Reel", rate: "Request a quote" },
     ],
   },
   {
@@ -31,7 +31,7 @@ const services = [
     title: "STREAMING SETUP CONSULTATION",
     description: "Equipment recommendations, layout design, software configuration and remote support.",
     items: [
-      { service: "Consultation Session", rate: "£80–£150/session" },
+      { service: "Consultation Session", rate: "Request a quote" },
     ],
   },
 ];

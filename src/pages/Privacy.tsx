@@ -25,7 +25,7 @@ const Privacy = () => (
           </section>
           <section>
             <h2 className="font-bebas text-2xl text-foreground tracking-wider">4. Your Rights (GDPR)</h2>
-            <p>You have the right to access, correct, or request deletion of your personal data at any time. To make a request, email us at <a href="mailto:musicfullygoverned@gmail.com" className="text-primary hover:underline">musicfullygoverned@gmail.com</a>. We will respond within 30 days.</p>
+            <p>You have the right to access, correct, or request deletion of your personal data at any time. To make a request, email us at <a href="mailto:contracts@fullygovernedstudios.co.uk" className="text-primary hover:underline">contracts@fullygovernedstudios.co.uk</a>. We will respond within 30 days.</p>
           </section>
           <section>
             <h2 className="font-bebas text-2xl text-foreground tracking-wider">5. Cookies</h2>
@@ -33,7 +33,7 @@ const Privacy = () => (
           </section>
           <section>
             <h2 className="font-bebas text-2xl text-foreground tracking-wider">6. Contact</h2>
-            <p>Data queries: <a href="mailto:musicfullygoverned@gmail.com" className="text-primary hover:underline">musicfullygoverned@gmail.com</a></p>
+            <p>Data queries: <a href="mailto:contracts@fullygovernedstudios.co.uk" className="text-primary hover:underline">contracts@fullygovernedstudios.co.uk</a></p>
           </section>
         </div>
       </motion.div>

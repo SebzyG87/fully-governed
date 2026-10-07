@@ -5,16 +5,16 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const sections = [
-  { title: "FOR ARTISTS", description: "Upload, price, and sell your music directly. Keep 85% of every sale.", href: "/vinyl/artists", icon: Disc3 },
+  { title: "FOR ARTISTS", description: "Submit releases and agree sales terms in writing.", href: "/vinyl/artists", icon: Disc3 },
   { title: "FOR FANS", description: "Buy music you actually own. WAV quality, permanent Vault access, physical formats.", href: "/vinyl/fans", icon: Users },
   { title: "STREAM MONETIZATION", description: "How the platform generates revenue for artists through multiple streams.", href: "/vinyl/streaming", icon: Headphones },
   { title: "OWNABLE PRODUCTS", description: "Digital downloads, limited pressings, USB cards, NFC cards and more.", href: "/vinyl/products", icon: ShoppingBag },
 ];
 
 const stats = [
-  { value: "85%", label: "to Artists" },
-  { value: "Studio Certified", label: "on every release" },
-  { value: "5", label: "physical formats" },
+  { value: "Per agreement", label: "artist revenue share" },
+  { value: "Reviewed", label: "before publication" },
+  { value: "NFC", label: "artist keyring plan" },
 ];
 
 const VinylHub = () => (

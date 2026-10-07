@@ -192,7 +192,7 @@ const Navbar = () => {
                 <div className="flex gap-6">
                   <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
                   <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-                  <a href="mailto:info@fullygoverned.com" className="hover:text-foreground transition-colors">info@fullygoverned.com</a>
+                  <a href="mailto:contracts@fullygovernedstudios.co.uk" className="hover:text-foreground transition-colors">contracts@fullygovernedstudios.co.uk</a>
                 </div>
               </div>
             </div>

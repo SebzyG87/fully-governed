@@ -16,7 +16,7 @@ const Gaming = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Creation Center</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">GAMING & STREAMING</h1>
-          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Live streaming setup, gameplay recording, streaming booth rental and full equipment access.</p>
+          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Book the Stream Room for self-operated use. Gaming and streaming production setups are confirmed by quote.</p>
         </motion.div>
 
         <div className="max-w-3xl mx-auto space-y-8">
@@ -24,8 +24,8 @@ const Gaming = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Price</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Hourly</td><td className="p-4 text-right text-primary font-mono">£35–£60/hr</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Per Event</td><td className="p-4 text-right text-primary font-mono">£200–£500/event</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Stream Room dry hire</td><td className="p-4 text-right text-primary font-mono">£45/hr</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Gaming or live-stream production</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
               </tbody>
             </table>
           </div>
@@ -41,7 +41,7 @@ const Gaming = () => {
 
           <div className="bg-card border border-border rounded-lg p-6">
             <h2 className="font-bebas text-2xl text-foreground tracking-wider mb-3">EQUIPMENT</h2>
-            <p className="text-sm text-muted-foreground font-barlow">PS5, Xbox Series X, streaming system, gimbal cameras, LED lighting, 75-inch TV.</p>
+            <p className="text-sm text-muted-foreground font-barlow">Equipment and production setup are confirmed with the studio before booking.</p>
           </div>
 
           <div className="flex gap-4 justify-center">

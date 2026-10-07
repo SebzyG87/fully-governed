@@ -8,11 +8,11 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 const courses = [
-  { icon: Music, title: "BEAT MAKING", description: "Learn the fundamentals of beat production using FL Studio and Logic Pro. From drum patterns to melodies.", level: "Beginner", price: "£30/hr" },
-  { icon: Mic, title: "MUSIC PRODUCTION", description: "Full music production workflow — arrangement, sound selection, mixing, and mastering basics.", level: "Intermediate", price: "£30/hr" },
-  { icon: Monitor, title: "MIXING BASICS", description: "Take your tracks to the next level. Learn EQ, compression, stereo imaging and mastering workflows.", level: "Intermediate", price: "£30/hr" },
-  { icon: Music, title: "MUSIC THEORY", description: "Scales, chords, progressions, and song structure. Essential foundations for any genre.", level: "Beginner", price: "£30/hr" },
-  { icon: GraduationCap, title: "ARTIST DEVELOPMENT", description: "Build your brand, develop your sound, and create a release strategy. One-on-one mentoring.", level: "All Levels", price: "£30/hr" },
+  { icon: Music, title: "BEAT MAKING", description: "Learn the fundamentals of beat production using FL Studio and Logic Pro. From drum patterns to melodies.", level: "Beginner", price: "Request a quote" },
+  { icon: Mic, title: "MUSIC PRODUCTION", description: "Full music production workflow — arrangement, sound selection, mixing, and mastering basics.", level: "Intermediate", price: "Request a quote" },
+  { icon: Monitor, title: "MIXING BASICS", description: "Take your tracks to the next level. Learn EQ, compression, stereo imaging and mastering workflows.", level: "Intermediate", price: "Request a quote" },
+  { icon: Music, title: "MUSIC THEORY", description: "Scales, chords, progressions, and song structure. Essential foundations for any genre.", level: "Beginner", price: "Request a quote" },
+  { icon: GraduationCap, title: "ARTIST DEVELOPMENT", description: "Build your brand, develop your sound, and create a release strategy. One-on-one mentoring.", level: "All Levels", price: "Request a quote" },
 ];
 
 const Academy = () => {

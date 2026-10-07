@@ -16,7 +16,7 @@ const Podcasting = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Creation Center</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">PODCASTING</h1>
-          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Podcast recording booth, full equipment setup, editing support, distribution setup.</p>
+          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Self-service audio recording, self-operated video-room hire, and finished-episode production packages.</p>
         </motion.div>
 
         <div className="max-w-3xl mx-auto space-y-8">
@@ -24,15 +24,16 @@ const Podcasting = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Price</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Hourly</td><td className="p-4 text-right text-primary font-mono">£40–£70/hr</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Podcast Series</td><td className="p-4 text-right text-primary font-mono">£150–£400</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Podcast room, audio-only self-service</td><td className="p-4 text-right text-primary font-mono">£49.99/hr</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Video room, self-operated</td><td className="p-4 text-right text-primary font-mono">£70/hr</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Finished podcast production</td><td className="p-4 text-right text-primary font-mono">From £150/episode</td></tr>
               </tbody>
             </table>
           </div>
 
           <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="font-bebas text-2xl text-foreground tracking-wider mb-3">EQUIPMENT</h2>
-            <p className="text-sm text-muted-foreground font-barlow">Multi-mic podcasting rig, sound-treated room, streaming capability.</p>
+            <h2 className="font-bebas text-2xl text-foreground tracking-wider mb-3">ROOM SETUP</h2>
+            <p className="text-sm text-muted-foreground font-barlow">Equipment and access are confirmed with the studio before your booking.</p>
           </div>
 
           <div className="flex gap-4 justify-center">

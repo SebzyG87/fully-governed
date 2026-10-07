@@ -8,9 +8,9 @@ export const STUDIO_CONTACT_CONFIG = {
 
 export const STUDIO_ADDRESS = {
   name: "Fully Governed",
-  line1: "V22 Building Studio 1B",
-  line2: "175-176 Hither Green Lane",
-  city: "Lewisham",
+  line1: "HMEZZ 1B, V22 Building",
+  line2: "174-186 Hither Green Lane",
+  city: "Hither Green, Lewisham, London",
   postcode: "SE13 6QB",
   country: "United Kingdom",
 };

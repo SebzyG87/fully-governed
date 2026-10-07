@@ -17,7 +17,7 @@ const RadioPage = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Recording & Radio</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">INTERNET RADIO</h1>
-          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Live show hosting, pre-recorded show airing, playlist curation, artist interviews.</p>
+          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">FGS Radio is being prepared as an online station for approved releases and studio-produced shows. Live broadcasting will begin after the streaming service and required music licences are in place.</p>
         </motion.div>
 
         <div className="max-w-3xl mx-auto space-y-8">
@@ -25,15 +25,15 @@ const RadioPage = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Price</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Hourly</td><td className="p-4 text-right text-primary font-mono">£50–£100/hr</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Per Series</td><td className="p-4 text-right text-primary font-mono">£200–£500</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Stream Room dry hire</td><td className="p-4 text-right text-primary font-mono">£45/hr</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Podcast production</td><td className="p-4 text-right text-primary font-mono">From £150/episode</td></tr>
               </tbody>
             </table>
           </div>
 
           <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="font-bebas text-2xl text-foreground tracking-wider mb-3">EQUIPMENT</h2>
-            <p className="text-sm text-muted-foreground font-barlow">Room 2 — Fully Governed Media content creation centre. Green screen, 4K camera, lighting rigs, streaming setup, photography, TikTok and YouTube content. Everything for professional digital content.</p>
+            <h2 className="font-bebas text-2xl text-foreground tracking-wider mb-3">ROOM & PRODUCTION</h2>
+            <p className="text-sm text-muted-foreground font-barlow">The Stream Room is available for self-operated dry hire. Confirm the room setup and equipment needed with the studio before booking.</p>
           </div>
 
           <RoomViewButtons roomName="Content Creation Centre" />

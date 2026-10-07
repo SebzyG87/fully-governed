@@ -19,6 +19,7 @@ import { getBookingPaymentRequirement } from "@/lib/bookingPolicy";
 import { BookingPaymentPlaceholder } from "@/components/payments/BookingPaymentPlaceholder";
 import { getPackagePricing, STUDIO_PACKAGE_PRICING } from "@/lib/mockPackages";
 import { getRoomSupportRequirement } from "@/lib/studioOpsConfig";
+import { getBookingPrice } from "@/lib/bookingPricing";
 
 type Room = Tables<"rooms">;
 type Booking = Tables<"bookings">;
@@ -26,6 +27,7 @@ type Booking = Tables<"bookings">;
 const HOURS = Array.from({ length: 16 }, (_, i) => i + 8);
 
 const CUSTOMER_DURATIONS = [
+  { label: "2 Hours", value: 2 },
   { label: "4 Hours", value: 4 },
   { label: "8 Hours", value: 8 },
   { label: "12 Hours", value: 12 },
@@ -69,30 +71,6 @@ interface Engineer {
   speciality: string | null;
 }
 
-const calculateSessionPrice = (roomName: string, duration: number, engineer?: string): number | null => {
-  const roomLabel = roomName;
-  
-  if (roomLabel === "Recording Studio") {
-    if (duration === 16) return 250;
-    if (duration === 4) return 100;
-    const rate = !engineer || engineer === "" ? 15 : 30;
-    return duration * rate;
-  }
-  
-  if (roomLabel === "Multi-Use Room") {
-    if (duration === 16) return 450;
-    if (duration === 4) return 200;
-    return duration * 60;
-  }
-  
-  if (roomLabel === "Content Creation Centre") {
-    const rate = !engineer || engineer === "" ? 40 : 75;
-    return duration * rate;
-  }
-  
-  return null;
-};
-
 const Book = () => {
   const { user, role, loading } = useAuth();
   const navigate = useNavigate();
@@ -130,9 +108,6 @@ const Book = () => {
   const [engineers, setEngineers] = useState<Engineer[]>([]);
   const [selectedEngineer, setSelectedEngineer] = useState("");
   const [showQuoteModal, setShowQuoteModal] = useState(false);
-  const [quoteName, setQuoteName] = useState("");
-  const [quoteEmail, setQuoteEmail] = useState("");
-  const [quoteDetails, setQuoteDetails] = useState("");
   const [monthBookings, setMonthBookings] = useState<Booking[]>([]);
   const [showDraftBanner, setShowDraftBanner] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -487,26 +462,6 @@ const Book = () => {
     fetchBookings();
   };
 
-  const saveFreeBooking = async () => {
-    const bookingId = await createBooking({ status: "confirmed", paymentStatus: "paid", total: 0, deposit: 0, balance: 0 });
-    if (bookingId) {
-      toast({ title: "Session booked!" });
-      // Award loyalty points: 10 pts per booked hour
-      const loyaltyPts = duration * 10;
-      await supabase.from("fg_loyalty_points" as any).insert({
-        user_id: user.id,
-        points: loyaltyPts,
-        reason: `Session booked — ${roomNameMapping[selectedRoom.name] || selectedRoom.name} (${duration}hr)`,
-        source: "booking",
-        reference_id: null,
-      });
-      // Increment profile loyalty_points total
-      const { data: currentProfile } = await supabase.from("profiles").select("loyalty_points").eq("user_id", user.id).single();
-      await supabase.from("profiles").update({ loyalty_points: (currentProfile?.loyalty_points || 0) + loyaltyPts }).eq("user_id", user.id);
-      resetBookingForm();
-    }
-  };
-
   const startStripeCheckout = async () => {
     if (!selectedRoom || !user || !pendingBookingPrice) return;
     const slot = getSelectedSlot();
@@ -594,10 +549,15 @@ const Book = () => {
       return;
     }
 
-    const price = calculateSessionPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, duration, selectedEngineer);
+    const price = getBookingPrice(
+      roomNameMapping[selectedRoom.name] || selectedRoom.name,
+      duration,
+      Boolean(selectedEngineer),
+      sessionType,
+    );
 
-    if (!price || price === 0) {
-      await saveFreeBooking();
+    if (price === null) {
+      setShowQuoteModal(true);
       return;
     }
 
@@ -616,7 +576,7 @@ const Book = () => {
   }, [selectedRoom, selectedEngineer, sessionType]);
 
   const currentSessionPrice = selectedRoom
-    ? calculateSessionPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, duration, selectedEngineer)
+    ? getBookingPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, duration, Boolean(selectedEngineer), sessionType)
     : null;
   const selectedSlot = getSelectedSlot();
   const currentPaymentPlan = currentSessionPrice && selectedSlot
@@ -844,7 +804,7 @@ const Book = () => {
                           <Label className="text-muted-foreground text-xs font-mono uppercase tracking-wider">Select Specialist</Label>
                           <div className="grid gap-2">
                             {[
-                              { slug: "mono-luke", name: "Mono Luke", role: "Producer & Creative", rate: "£45/hr", availability: "Mon-Fri 10am-6pm", services: "Vocal Recording, Mixing, Mastering, 3D, Design" },
+                              { slug: "mono-luke", name: "Mono Luke", role: "Producer & Creative", rate: "Request a quote", availability: "Availability confirmed on request", services: "Vocal Recording, Mixing, Mastering, 3D, Design" },
                               { slug: "seb-green", name: "Seb Green", role: "Systems & Content", rate: "POA", availability: "By Appointment Only", services: "Digital Systems, Operations, Content Strategy" }
                             ].map((prod) => (
                               <button
@@ -907,9 +867,9 @@ const Book = () => {
                           <AlertTriangle className="w-3.5 h-3.5 text-primary" /> Booking & Cancellation Policy
                         </h4>
                         <ul className="space-y-1.5 text-muted-foreground font-barlow leading-relaxed">
-                          <li>• <strong className="text-foreground">Balance Deadline:</strong> Deposit locks the booking. Balance must be paid 48 hours before start, or the room is released and payment lost.</li>
-                          <li>• <strong className="text-foreground">Late Bookings:</strong> Bookings made within 48 hours require immediate full payment.</li>
-                          <li>• <strong className="text-foreground">Reschedule rules:</strong> First reschedule allowed up to 24h before booking. Second not guaranteed. Less than 24h notice forfeits all payments.</li>
+                          <li>• <strong className="text-foreground">48+ hours:</strong> Full credit.</li>
+                          <li>• <strong className="text-foreground">24–48 hours:</strong> 50% charge.</li>
+                          <li>• <strong className="text-foreground">Less than 24 hours:</strong> 100% charge. Contact the studio about cancellation or credit handling; your signed booking terms control.</li>
                           <li>• <strong className="text-foreground">Liability:</strong> Producers are financially liable for any damage caused by staff or clients they bring.</li>
                         </ul>
                       </div>
@@ -1007,7 +967,7 @@ const Book = () => {
                     <div className="p-3 bg-background/50 rounded-md border border-border w-full max-w-xs mx-auto">
                       <p className="text-primary font-bebas text-lg tracking-wide">{roomNameMapping[selectedRoom.name]?.toUpperCase() || selectedRoom.name.toUpperCase()}</p>
                       <p className="text-muted-foreground font-barlow text-sm">{selectedDuration} HOUR SESSION</p>
-                      <p className="text-foreground font-mono font-bold mt-1 text-base">£{calculateSessionPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, selectedDuration) || "—"}</p>
+                      <p className="text-foreground font-mono font-bold mt-1 text-base">{getBookingPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, selectedDuration, false, sessionType) === null ? "Request a quote" : `£${getBookingPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, selectedDuration, false, sessionType)}`}</p>
                     </div>
                   </div>
                   <p className="text-foreground animate-pulse font-barlow text-lg mt-4">Select a date to continue →</p>
@@ -1045,8 +1005,18 @@ const Book = () => {
             </div>
             <Button
               className="w-full font-bebas text-lg tracking-wider h-12"
-              onClick={() => {
-                toast({ title: "Quote request sent! 📩", description: "We'll get back to you within 24 hours." });
+              onClick={async () => {
+                const { error } = await supabase.from("quote_requests").insert({
+                  name: quoteName,
+                  email: quoteEmail,
+                  service: selectedRoomDisplayName || "Studio booking",
+                  description: quoteDetails,
+                });
+                if (error) {
+                  toast({ title: "Quote request failed", description: "Please try again or contact the studio.", variant: "destructive" });
+                  return;
+                }
+                toast({ title: "Quote request sent", description: "We'll get back to you within 24 hours." });
                 setShowQuoteModal(false);
                 setQuoteName("");
                 setQuoteEmail("");

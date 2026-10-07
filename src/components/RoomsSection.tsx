@@ -1,8 +1,5 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import roomStudioImg from "@/assets/hero-studio.jpg";
-import roomMultiImg from "@/assets/room-multi.jpg";
-import roomContentImg from "@/assets/room-content.jpg";
 import { RoomViewButtons } from "@/components/RoomGalleryModal";
 
 interface PriceItem {
@@ -32,22 +29,19 @@ const rooms: Room[] = [
     colorClass: "room-gold",
     borderClass: "border-room-gold",
     glowClass: "glow-gold",
-    image: roomStudioImg,
+    image: "/images/rooms/360/recording-room-01.jpeg",
     description:
-      "Room 1B — Our flagship recording space. Black and gold aesthetic with cloud ceiling, full acoustic treatment, MLV soundproofing, and red royal seating. Equipped with Neumann TLM 103, Apollo Twin, and KRK studio monitors. Professional and premium from the moment you walk in.",
+      "Room 1B — Our flagship music recording space in Lewisham. Ask the studio to confirm equipment and engineer availability for your session.",
     features: [
-      "Soundproofed vocal booth",
-      "In-house engineers & producers",
-      "Streaming equipment",
-      "Video-recorded sessions",
-      "Beats, stems & mix/master",
+      "Music recording dry hire",
+      "Engineer available as an add-on",
+      "Two-hour minimum booking",
+      "Four-hour block preferred",
     ],
     pricing: [
-      { label: "Artist + Engineer", price: "£30/hr" },
-      { label: "Dry Hire (no engineer)", price: "£15/hr" },
-      { label: "Label Artist + Engineer", price: "£20/hr" },
-      { label: "Block 4hr Session", price: "£100" },
-      { label: "Full Day", price: "£250" },
+      { label: "Music Studio dry hire", price: "£12.50/hr" },
+      { label: "Annual rate", price: "£7.50/hr" },
+      { label: "Engineer add-on", price: "£25 flat" },
     ],
     sessionTypes: [
       "Artist Recording + Engineer",
@@ -65,23 +59,19 @@ const rooms: Room[] = [
     colorClass: "room-red",
     borderClass: "border-room-red",
     glowClass: "glow-red",
-    image: roomMultiImg,
+    image: "/images/rooms/360/multi-use-room-01.jpeg",
     description:
       "Room 1A — Our editing suite and multi-purpose space. Post-production, video editing, animation, podcast recording, interviews, workshops, listening parties, and private events. Configure it however you need.",
     features: [
-      "AI camera for live streaming",
-      'Xbox Series X + retro gaming',
-      '65" TV + Fire Stick',
-      "Coffee machine & kitchen area",
-      "High-end comfy seating",
-      "Board games, dominos, cards",
-      "Free Wi-Fi",
+      "Audio-only self-service podcast hire",
+      "Self-operated video room hire",
+      "Podcast production packages",
+      "Setup confirmed before booking",
     ],
     pricing: [
-      { label: "Podcast/Interview Room", price: "£60/hr" },
-      { label: "Block 4hr Promotional", price: "£200" },
-      { label: "Full Day", price: "£450" },
-      { label: "In-House Rate", price: "POA" },
+      { label: "Podcast audio-only, self-service", price: "£49.99/hr" },
+      { label: "Video room, self-operated", price: "£70/hr" },
+      { label: "Managed podcast packages", price: "From £150/episode" },
     ],
     sessionTypes: [
       "Podcast",
@@ -99,26 +89,18 @@ const rooms: Room[] = [
     colorClass: "room-purple",
     borderClass: "border-room-purple",
     glowClass: "glow-purple",
-    image: roomContentImg,
+    image: "/images/rooms/360/content-room-01.jpeg",
     description:
-      "Room 2 — Fully Governed Media content creation centre. Green screen, 4K camera, lighting rigs, streaming setup, photography, TikTok and YouTube content. Everything for professional digital content.",
+      "Room 2 — Fully Governed Media content creation centre. Book the Stream Room for self-operated production; confirm your required setup with the studio.",
     features: [
-      "Green room + white room rail system",
-      "Gimbal mounted cameras",
-      "DJ standalone system + speakers",
-      "Radio broadcasting rig",
-      "PS5 + latest games",
-      '75" TV + bar area',
-      "Mini pool table",
-      "LED light strips & sofa bed",
-      "24hr access + private entrance",
-      "On-site caretaker/handyman",
+      "Stream Room dry hire",
+      "Internet radio and production enquiries",
+      "Equipment and access confirmed with the studio",
     ],
     pricing: [
-      { label: "Content Room Hire", price: "£75/hr" },
-      { label: "Creator Dry Hire", price: "£40/hr" },
-      { label: "In-House Project Rate", price: "POA" },
-      { label: "Full Day / Events", price: "POA" },
+      { label: "Stream Room dry hire", price: "£45/hr" },
+      { label: "Engineer add-on", price: "£25 flat + room hire" },
+      { label: "Managed production", price: "Request a quote" },
     ],
     sessionTypes: [
       "Video Shoot",

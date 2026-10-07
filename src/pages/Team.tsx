@@ -167,10 +167,10 @@ export default function Team() {
         >
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Producers offer standard studio rates with full project backing guarantees.</span>
+            <span>Service scope and rates are confirmed with you before booking.</span>
           </div>
           <div>
-            <span>Read our studio booking policy for details on reschedule guarantees.</span>
+            <span>Cancellation and credit terms are set out in the booking information.</span>
           </div>
         </motion.div>
       </main>

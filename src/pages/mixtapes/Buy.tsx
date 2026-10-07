@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 
-const FORMAT_TABS = ["All", "Digital Download", "USB", "NFT Edition"] as const;
+const FORMAT_TABS = ["All", "Digital Download"] as const;
 type FormatTab = (typeof FORMAT_TABS)[number];
 
 interface Product {
@@ -22,8 +22,6 @@ interface Product {
 }
 
 const formatBadgeClass = (f: string) => {
-  if (f === "NFT Edition") return "bg-primary/20 text-primary border-primary/30";
-  if (f === "USB") return "bg-accent/20 text-accent-foreground border-accent/30";
   return "bg-secondary text-secondary-foreground border-border";
 };
 
@@ -49,22 +47,11 @@ const Buy = () => {
             title: t.title,
             artist: t.genre || "Unknown Artist",
             format: "Digital Download",
-            price: Number(t.price) || 4.99,
+            price: Number(t.price),
             coverUrl: t.cover_url || undefined,
           });
-          if (t.is_nft) {
-            mapped.push({
-              id: t.id + "-nft",
-              trackId: t.id,
-              title: t.title,
-              artist: t.genre || "Unknown Artist",
-              format: "NFT Edition",
-              price: Number(t.price) * 3 || 14.99,
-              coverUrl: t.cover_url || undefined,
-            });
-          }
         });
-        setProducts(mapped);
+        setProducts(mapped.filter((product) => Number.isFinite(product.price) && product.price > 0));
       }
       setLoading(false);
     };
@@ -85,7 +72,7 @@ const Buy = () => {
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Mixtapes</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">BUY MIXTAPES</h1>
           <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">
-            Available in digital download, USB and NFT edition formats.
+            Only published releases with an approved price are listed.
           </p>
         </motion.div>
 
@@ -169,7 +156,7 @@ const Buy = () => {
 
           {/* Stripe note */}
           <p className="text-center text-xs text-muted-foreground font-mono pt-4">
-            🔒 Secure checkout via Stripe.
+            Checkout is available for listed releases only.
           </p>
         </div>
       </div>

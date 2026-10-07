@@ -44,28 +44,23 @@ const Earnings = () => {
     return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
   });
   const monthRevenue = thisMonth.reduce((s, o) => s + Number(o.total_amount), 0);
-  const pendingPayout = totalRevenue * 0.7;
   const unitsSold = delivered.reduce((s, o) => s + o.quantity, 0);
 
   const stats = [
     { label: "Total Revenue", value: `£${totalRevenue.toFixed(2)}` },
     { label: "Revenue This Month", value: `£${monthRevenue.toFixed(2)}` },
-    { label: "Pending Payout", value: `£${pendingPayout.toFixed(2)}` },
+    { label: "Artist share", value: "Per agreement" },
     { label: "Units Sold", value: unitsSold },
   ];
-
-  const handleRequestPayout = () => {
-    toast({ title: "Payout request submitted! Processed within 3–5 working days." });
-  };
 
   const handleDownload = () => {
     const w = window.open("", "_blank");
     if (!w) return;
     w.document.write(`<html><head><title>Earnings Report</title><style>body{font-family:sans-serif;padding:2rem}table{width:100%;border-collapse:collapse;margin-top:1rem}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head><body>`);
-    w.document.write(`<h1>Clothing Earnings Report</h1><p>Total Revenue: £${totalRevenue.toFixed(2)} · Your Cut (70%): £${pendingPayout.toFixed(2)} · Units: ${unitsSold}</p>`);
-    w.document.write(`<table><tr><th>Date</th><th>Amount</th><th>Your Cut</th></tr>`);
+    w.document.write(`<h1>Clothing Sales Report</h1><p>Gross sales: £${totalRevenue.toFixed(2)} · Artist share: per signed agreement · Units: ${unitsSold}</p>`);
+    w.document.write(`<table><tr><th>Date</th><th>Gross amount</th><th>Artist share</th></tr>`);
     delivered.forEach(o => {
-      w.document.write(`<tr><td>${new Date(o.created_at).toLocaleDateString()}</td><td>£${Number(o.total_amount).toFixed(2)}</td><td>£${(Number(o.total_amount) * 0.7).toFixed(2)}</td></tr>`);
+      w.document.write(`<tr><td>${new Date(o.created_at).toLocaleDateString()}</td><td>£${Number(o.total_amount).toFixed(2)}</td><td>Per agreement</td></tr>`);
     });
     w.document.write(`</table></body></html>`);
     w.document.close();
@@ -80,7 +75,7 @@ const Earnings = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">My Clothing</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">EARNINGS</h1>
-          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">You keep 70% of every sale after production costs and platform fee.</p>
+          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Gross sales are shown below. Your share is set out in the signed agreement for each product.</p>
         </motion.div>
 
         {/* Stats */}
@@ -99,7 +94,7 @@ const Earnings = () => {
             <p className="font-barlow text-sm text-muted-foreground">Payments processed via Stripe Connect — payouts within 3–5 working days.</p>
           </div>
           <div className="flex gap-3">
-            <Button onClick={handleRequestPayout} className="bg-primary text-primary-foreground">Request Payout</Button>
+            <Button disabled className="bg-primary text-primary-foreground">Payouts not connected</Button>
             <Button variant="outline" onClick={handleDownload} className="gap-1"><Download className="w-4 h-4" /> Report</Button>
           </div>
         </div>
@@ -114,7 +109,7 @@ const Earnings = () => {
                   <th className="py-3 px-2">Date</th>
                   <th className="py-3 px-2">Qty</th>
                   <th className="py-3 px-2">Gross Revenue</th>
-                  <th className="py-3 px-2">Your Cut (70%)</th>
+                  <th className="py-3 px-2">Artist share</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,7 +118,7 @@ const Earnings = () => {
                     <td className="py-3 px-2">{new Date(o.created_at).toLocaleDateString()}</td>
                     <td className="py-3 px-2">{o.quantity}</td>
                     <td className="py-3 px-2">£{Number(o.total_amount).toFixed(2)}</td>
-                    <td className="py-3 px-2 text-primary">£{(Number(o.total_amount) * 0.7).toFixed(2)}</td>
+                    <td className="py-3 px-2 text-primary">Per agreement</td>
                   </tr>
                 ))}
               </tbody>

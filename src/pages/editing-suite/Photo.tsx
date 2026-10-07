@@ -23,8 +23,8 @@ const Photo = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/30"><th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">Service</th><th className="text-right p-4 font-bebas text-base tracking-wider text-foreground">Rate</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Per image (retouching, correction, compositing)</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£5–£20/image</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Album artwork package</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£100–£300/album</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Per image (retouching, correction, compositing)</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Album artwork package</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
               </tbody>
             </table>
           </div>

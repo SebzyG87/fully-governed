@@ -13,18 +13,16 @@ import { useSEO } from "@/hooks/useSEO";
 interface EarningStats {
     totalSales: number;
     totalRevenue: number;
-    artistShare: number;
-    pendingRevenue: number;
+    uniqueBuyers: number;
     salesThisMonth: number;
 }
 
 const Earnings = () => {
-    const { user, profile } = useAuth();
+    const { user } = useAuth();
     const [stats, setStats] = useState<EarningStats>({
         totalSales: 0,
         totalRevenue: 0,
-        artistShare: 0,
-        pendingRevenue: 0,
+        uniqueBuyers: 0,
         salesThisMonth: 0
     });
     const [loading, setLoading] = useState(true);
@@ -59,8 +57,6 @@ const Earnings = () => {
 
                     if (!error && sales) {
                         const totalRevenue = sales.reduce((sum, s) => sum + Number(s.amount), 0);
-                        const artistShare = totalRevenue * 0.85; // 85% split
-                        
                         const now = new Date();
                         const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
                         const monthlySales = sales.filter(s => s.created_at >= thisMonthStart).length;
@@ -68,8 +64,7 @@ const Earnings = () => {
                         setStats({
                             totalSales: sales.length,
                             totalRevenue,
-                            artistShare,
-                            pendingRevenue: 0, // In a real app, this might come from un-payout funds
+                            uniqueBuyers: new Set(sales.map((sale) => sale.buyer_id).filter(Boolean)).size,
                             salesThisMonth: monthlySales
                         });
 
@@ -107,8 +102,8 @@ const Earnings = () => {
                             <PoundSterling className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                            <p className="text-xs text-muted-foreground font-barlow uppercase">Available to Payout</p>
-                            <p className="text-2xl font-mono text-foreground">£{stats.artistShare.toFixed(2)}</p>
+                            <p className="text-xs text-muted-foreground font-barlow uppercase">Artist share</p>
+                            <p className="text-sm font-barlow text-foreground">Set by signed agreement</p>
                         </div>
                     </div>
                 </motion.div>
@@ -142,12 +137,12 @@ const Earnings = () => {
 
                     <Card className="bg-card border-border">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">ARTIST SHARE (85%)</CardTitle>
+                            <CardTitle className="text-sm font-medium text-muted-foreground">ARTIST SHARE</CardTitle>
                             <PoundSterling className="h-4 w-4 text-emerald-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-mono text-emerald-500">£{stats.artistShare.toFixed(2)}</div>
-                            <p className="text-xs text-muted-foreground font-barlow mt-1 uppercase">Lifetime earnings</p>
+                            <div className="text-sm font-barlow text-emerald-500">Per signed agreement</div>
+                            <p className="text-xs text-muted-foreground font-barlow mt-1 uppercase">Share calculation is not connected</p>
                         </CardContent>
                     </Card>
 
@@ -157,7 +152,7 @@ const Earnings = () => {
                             <Music className="h-4 w-4 text-primary" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-mono">{Math.floor(stats.totalSales * 0.8)}</div>
+                            <div className="text-2xl font-mono">{stats.uniqueBuyers}</div>
                             <p className="text-xs text-muted-foreground font-barlow mt-1 uppercase">Unique collectors</p>
                         </CardContent>
                     </Card>
@@ -204,7 +199,7 @@ const Earnings = () => {
                                                     </span>
                                                 </td>
                                                 <td className="p-4 text-right font-mono text-muted-foreground">£{Number(sale.amount).toFixed(2)}</td>
-                                                <td className="p-4 text-right font-mono text-emerald-500 font-bold">+£{(Number(sale.amount) * 0.85).toFixed(2)}</td>
+                                                <td className="p-4 text-right font-mono text-muted-foreground">Per agreement</td>
                                             </tr>
                                         ))
                                     )}
@@ -216,44 +211,12 @@ const Earnings = () => {
                     {/* Breakdown */}
                     <div className="space-y-4">
                         <h2 className="font-bebas text-2xl text-foreground tracking-wider uppercase">REVENUE BREAKDOWN</h2>
-                        <div className="bg-card border border-border rounded-lg p-6 space-y-6">
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs font-mono text-muted-foreground uppercase">
-                                    <span>Artist Share</span>
-                                    <span>85%</span>
-                                </div>
-                                <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                                    <div className="h-full bg-emerald-500" style={{ width: '85%' }} />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs font-mono text-muted-foreground uppercase">
-                                    <span>Studio Fee</span>
-                                    <span>10%</span>
-                                </div>
-                                <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                                    <div className="h-full bg-primary" style={{ width: '10%' }} />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs font-mono text-muted-foreground uppercase">
-                                    <span>Processing</span>
-                                    <span>5%</span>
-                                </div>
-                                <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                                    <div className="h-full bg-muted-foreground/50" style={{ width: '5%' }} />
-                                </div>
-                            </div>
-
-                            <div className="pt-6 border-t border-border">
-                                <h3 className="font-bebas text-lg text-foreground mb-2">NEXT PAYOUT</h3>
-                                <p className="text-sm text-muted-foreground font-barlow mb-4">
-                                    Payouts are processed weekly on Mondays via Stripe Connect.
-                                </p>
-                                <Button className="w-full font-bebas tracking-wide" disabled={stats.artistShare < 10}>
-                                    {stats.artistShare < 10 ? "MIN £10 FOR PAYOUT" : "REQUEST PAYOUT"}
-                                </Button>
-                            </div>
+                        <div className="bg-card border border-border rounded-lg p-6 space-y-4">
+                            <h3 className="font-bebas text-lg text-foreground">ARTIST PAYMENT TERMS</h3>
+                            <p className="text-sm text-muted-foreground font-barlow">Your share is set out in the signed agreement for each product. This dashboard currently shows gross sales only; it does not calculate or issue artist payouts.</p>
+                            <Button className="w-full font-bebas tracking-wide" disabled>
+                                PAYOUTS NOT CONNECTED
+                            </Button>
                         </div>
                     </div>
                 </div>

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { MapPin, Mail, Clock, Train } from "lucide-react";
+import { MapPin, Mail, Clock, Train, Phone } from "lucide-react";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -81,21 +81,28 @@ const Contact = () => {
               <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
               <div>
                 <h3 className="font-bebas text-xl text-foreground tracking-wider">ADDRESS</h3>
-                <p className="text-sm text-muted-foreground font-barlow">174–178 V22 Building, Unit 1B–1C, Lewisham, London (Gated Community)</p>
+                <p className="text-sm text-muted-foreground font-barlow">HMEZZ 1B, V22 Building, 174–186 Hither Green Lane, Hither Green, Lewisham, London SE13 6QB</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <Mail className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
               <div>
                 <h3 className="font-bebas text-xl text-foreground tracking-wider">EMAIL</h3>
-                <a href="mailto:musicfullygoverned@gmail.com" className="text-sm text-primary font-barlow hover:underline">musicfullygoverned@gmail.com</a>
+                <a href="mailto:contracts@fullygovernedstudios.co.uk" className="text-sm text-primary font-barlow hover:underline">contracts@fullygovernedstudios.co.uk</a>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Phone className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bebas text-xl text-foreground tracking-wider">TELEPHONE</h3>
+                <a href="tel:+447950116217" className="text-sm text-primary font-barlow hover:underline">07950 116217</a>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <Clock className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
               <div>
                 <h3 className="font-bebas text-xl text-foreground tracking-wider">HOURS</h3>
-                <p className="text-sm text-muted-foreground font-barlow">Open 24 hours a day, 7 days a week</p>
+                <p className="text-sm text-muted-foreground font-barlow">Visits and sessions are by booking. Confirm access times with the studio.</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -105,7 +112,7 @@ const Contact = () => {
                 <p className="text-sm text-muted-foreground font-barlow">
                   🚂 Lewisham Station — 5 min walk (trains to London Bridge, Cannon Street, Charing Cross)<br />
                   🚂 Hither Green Station — 5 min walk (trains to London Bridge)<br />
-                  🚗 <strong>Parking & Vehicles:</strong> Free secure gated parking available. Please provide your vehicle registration upon booking or arrival.
+                  🚗 <strong>Parking:</strong> Ask the studio to confirm availability and access arrangements when booking.
                 </p>
               </div>
             </div>

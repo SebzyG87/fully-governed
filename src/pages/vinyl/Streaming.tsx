@@ -4,12 +4,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const rows = [
-  { stream: "Sales Commission", details: "Studio takes commission on all sales", rate: "10–20% per transaction" },
-  { stream: "Ad-Supported Streaming", details: "Revenue from ads on free streams", rate: "£0.002–£0.005 per stream" },
-  { stream: "Subscription Streaming", details: "Monthly split with artists", rate: "60% artists / 40% platform" },
-  { stream: "Artist Premium Subscription", details: "Advanced tools for artists", rate: "£15 per artist per month" },
-  { stream: "Platform Integration Fees", details: "Social and website linking", rate: "£50–£100 per setup" },
-  { stream: "Packaging & Fulfilment", details: "USB, packaging, shipping markup", rate: "£2–£5 per unit" },
+  { stream: "Artist / producer share", details: "Agreed for each product in the signed contract.", rate: "Agreed in writing" },
+  { stream: "NFC keyring sales", details: "Price, production costs and shares are agreed before sale.", rate: "Per signed agreement" },
+  { stream: "FGS Radio airplay", details: "Broadcast begins after the stream and required music licences are active.", rate: "No rate published" },
 ];
 
 const Streaming = () => (
@@ -20,7 +17,7 @@ const Streaming = () => (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
         <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Digital Vinyl Platform</p>
         <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">HOW STREAMING REVENUE WORKS</h1>
-        <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Informational overview of how the platform generates revenue for artists.</p>
+        <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Artist payments and product shares are set out in the agreement for each release or keyring.</p>
       </motion.div>
 
       <div className="bg-card border border-border rounded-lg overflow-hidden">
@@ -29,8 +26,8 @@ const Streaming = () => (
             <thead>
               <tr className="border-b border-border bg-secondary/30">
                 <th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">Revenue Stream</th>
-                <th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">Details</th>
-                <th className="text-right p-4 font-bebas text-base tracking-wider text-foreground">Rate</th>
+                <th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">How terms are set</th>
+                <th className="text-right p-4 font-bebas text-base tracking-wider text-foreground">Terms</th>
               </tr>
             </thead>
             <tbody className="font-barlow">
@@ -48,7 +45,7 @@ const Streaming = () => (
 
       <div className="bg-card border border-border rounded-lg p-6 text-center">
         <p className="text-sm text-muted-foreground font-barlow">
-          Full streaming monetization launches in Phase 4 of the platform roadmap. See our{" "}
+          Live radio and streaming monetization are not available yet. See our{" "}
           <Link to="/story" className="text-primary hover:underline">Story page</Link>{" "}
           for the full timeline.
         </p>

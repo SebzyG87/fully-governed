@@ -142,9 +142,11 @@ const Dashboard = () => {
 
   const handleCancel = async () => {
     if (!cancelId) return;
-    const { error } = await supabase.from("bookings").update({ status: "cancelled" }).eq("id", cancelId);
+    const { data: cancelled, error } = await supabase.rpc("fg_cancel_own_booking" as any, { _booking_id: cancelId });
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else if (!cancelled) {
+      toast({ title: "Could not cancel session", description: "Only your upcoming bookings can be cancelled here.", variant: "destructive" });
     } else {
       toast({ title: "Session cancelled" });
       fetchBookings();

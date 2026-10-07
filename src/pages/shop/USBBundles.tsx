@@ -27,10 +27,10 @@ const USBBundles = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Bundle</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Price</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Beat Pack USB (10 beats)</td><td className="p-4 text-right text-primary font-mono">£25</td></tr>
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Mixtape Collection USB</td><td className="p-4 text-right text-primary font-mono">£15</td></tr>
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Producer Kit USB (samples + loops)</td><td className="p-4 text-right text-primary font-mono">£30</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Custom Bundle (artist selection)</td><td className="p-4 text-right text-primary font-mono">From £20</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Beat Pack USB (10 beats)</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Mixtape Collection USB</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Producer Kit USB (samples + loops)</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Custom Bundle (artist selection)</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
               </tbody>
             </table>
           </div>

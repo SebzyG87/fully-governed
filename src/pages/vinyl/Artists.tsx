@@ -22,7 +22,7 @@ const sellItems = [
   { title: "Exclusive Beat Sales", icon: Zap },
   { title: "Producer Stems", icon: Music },
   { title: "USB Content", icon: Usb },
-  { title: "NFT-Ready Editions", icon: Package },
+  { title: "NFC Artist Keyrings", icon: Package },
 ];
 
 const Artists = () => (
@@ -34,7 +34,7 @@ const Artists = () => (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
         <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Digital Vinyl Platform</p>
         <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">FOR ARTISTS</h1>
-        <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Sell directly to fans. Keep 85% of every sale.</p>
+        <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Artist sales and revenue shares are governed by the signed agreement for each product.</p>
       </motion.div>
 
       {/* Section 1 — Upload Stepper */}
@@ -73,18 +73,14 @@ const Artists = () => (
       {/* Section 3 — Payment split */}
       <section className="space-y-6">
         <h2 className="font-bebas text-2xl text-foreground tracking-wider text-center">PAYMENT SPLIT</h2>
-        <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
-          <div className="flex-[85] bg-primary/20 border border-primary rounded-lg p-6 text-center">
-            <p className="font-bebas text-4xl text-primary">85%</p>
-            <p className="font-barlow text-sm text-foreground mt-1">Artist</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+          <div className="bg-primary/20 border border-primary rounded-lg p-6 text-center">
+            <p className="font-bebas text-2xl text-primary">Artist share</p>
+            <p className="font-barlow text-sm text-foreground mt-1">Set in the signed agreement</p>
           </div>
-          <div className="flex-[10] bg-card border border-border rounded-lg p-6 text-center">
-            <p className="font-bebas text-4xl text-foreground">10%</p>
-            <p className="font-barlow text-sm text-muted-foreground mt-1">Studio</p>
-          </div>
-          <div className="flex-[5] bg-card border border-border rounded-lg p-6 text-center">
-            <p className="font-bebas text-4xl text-muted-foreground">5%</p>
-            <p className="font-barlow text-sm text-muted-foreground mt-1">Processing</p>
+          <div className="bg-card border border-border rounded-lg p-6 text-center">
+            <p className="font-bebas text-2xl text-foreground">FGS share</p>
+            <p className="font-barlow text-sm text-muted-foreground mt-1">Set in the signed agreement</p>
           </div>
         </div>
       </section>
@@ -93,16 +89,14 @@ const Artists = () => (
       <section className="max-w-2xl mx-auto">
         <div className="bg-card border-2 border-primary rounded-lg p-8 text-center space-y-4">
           <p className="font-mono text-xs tracking-[0.3em] text-primary uppercase">Artist Premium</p>
-          <p className="font-bebas text-4xl text-foreground tracking-wider">£15<span className="text-lg text-muted-foreground">/month</span></p>
+          <p className="font-bebas text-2xl text-foreground tracking-wider">Ask us for current terms</p>
           <ul className="text-sm text-muted-foreground font-barlow space-y-1">
             <li>• Analytics dashboard</li>
             <li>• Bulk uploads</li>
             <li>• Custom storefront</li>
             <li>• Priority admin review</li>
           </ul>
-          <Button className="bg-primary text-primary-foreground font-bebas text-lg tracking-wider px-8">
-            GET PREMIUM
-          </Button>
+          <Button asChild className="bg-primary text-primary-foreground font-bebas text-lg tracking-wider px-8"><Link to="/contact">CONTACT US</Link></Button>
         </div>
       </section>
 
@@ -110,8 +104,8 @@ const Artists = () => (
       <section className="max-w-2xl mx-auto">
         <div className="bg-card border border-border rounded-lg p-6 text-center">
           <h3 className="font-bebas text-xl text-foreground tracking-wider mb-2">PLATFORM INTEGRATION FEE</h3>
-          <p className="font-bebas text-3xl text-primary">£50–£100</p>
-          <p className="text-sm text-muted-foreground font-barlow mt-1">One-time setup fee for social and website linking</p>
+          <p className="font-bebas text-2xl text-primary">Request a quote</p>
+          <p className="text-sm text-muted-foreground font-barlow mt-1">Product setup and integration terms are agreed in writing.</p>
         </div>
       </section>
 

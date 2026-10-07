@@ -162,7 +162,7 @@ const HelpWidget = () => {
                     Visit Full Help Centre <ArrowRight className="w-4 h-4 text-primary" />
                   </Link>
                   <a
-                    href="mailto:info@fullygoverned.com"
+                    href="mailto:contracts@fullygovernedstudios.co.uk"
                     className="block text-xs text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Contact Us directly

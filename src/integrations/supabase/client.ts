@@ -4,13 +4,25 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
+
+const previewFetch: typeof fetch = async () => new Response(
+  JSON.stringify({ message: "Supabase is not configured for this local preview." }),
+  { status: 503, headers: { "Content-Type": "application/json" } },
+);
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+export const supabase = createClient(
+  SUPABASE_URL || "http://127.0.0.1:54321",
+  SUPABASE_PUBLISHABLE_KEY || "local-preview-anon-key",
+  {
+  global: isSupabaseConfigured ? undefined : { fetch: previewFetch },
   auth: {
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
   }
-});
+  },
+);

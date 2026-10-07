@@ -2,58 +2,52 @@ import { motion } from "framer-motion";
 import { Mic, Camera, Users, Wifi, Monitor, Headphones } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import heroStudio from "@/assets/hero-studio.jpg";
-import roomContent from "@/assets/room-content.jpg";
-import roomMulti from "@/assets/room-multi.jpg";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { View } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const rooms = [
   {
+    slug: "recording",
     name: "Recording Studio",
-    image: heroStudio,
+    image: "/images/rooms/360/recording-room-01.jpeg",
     color: "border-room-studio",
     features: [
-      { icon: Mic, label: "Professional vocal booth" },
-      { icon: Headphones, label: "Industry-standard monitors" },
-      { icon: Monitor, label: "Full Logic Pro / FL Studio setup" },
-      { icon: Wifi, label: "High-speed Wi-Fi" },
+      { icon: Mic, label: "Music recording room" },
+      { icon: Headphones, label: "Engineer available as an add-on" },
+      { icon: Monitor, label: "Equipment confirmed before booking" },
+      { icon: Wifi, label: "Session setup agreed with the studio" },
     ],
-    description: "Room 1B — Our flagship recording space. Black and gold aesthetic with cloud ceiling, full acoustic treatment, MLV soundproofing, and red royal seating. Equipped with Neumann TLM 103, Apollo Twin, and KRK studio monitors. Professional and premium from the moment you walk in.",
+    description: "Room 1B is the Fully Governed music recording room. Contact the studio to confirm the equipment and engineer needed for your session.",
   },
   {
+    slug: "multi-use",
     name: "Multi-Use Room",
-    image: roomMulti,
+    image: "/images/rooms/360/multi-use-room-01.jpeg",
     color: "border-room-multi",
     features: [
-      { icon: Users, label: "Capacity for 20+ guests" },
-      { icon: Mic, label: "Live performance ready" },
-      { icon: Monitor, label: "Projector & screen" },
-      { icon: Headphones, label: "PA system" },
+      { icon: Users, label: "Multi-use room" },
+      { icon: Mic, label: "Podcast audio-only hire" },
+      { icon: Monitor, label: "Self-operated video room" },
+      { icon: Headphones, label: "Production setup confirmed before booking" },
     ],
     description: "Room 1A — Our editing suite and multi-purpose space. Post-production, video editing, animation, podcast recording, interviews, workshops, listening parties, and private events. Configure it however you need.",
   },
   {
+    slug: "content-centre",
     name: "Content Creation Centre",
     subBrand: "Fully Governed Media",
-    image: roomContent,
+    image: "/images/rooms/360/content-room-01.jpeg",
     color: "border-room-content",
     features: [
-      { icon: Camera, label: "Green screen & lighting rigs" },
-      { icon: Monitor, label: "4K camera setup" },
-      { icon: Mic, label: "Podcast-ready audio" },
-      { icon: Wifi, label: "Streaming capable" },
+      { icon: Camera, label: "Stream Room dry hire" },
+      { icon: Monitor, label: "Self-operated production" },
+      { icon: Mic, label: "Setup confirmed with the studio" },
+      { icon: Wifi, label: "Internet radio and content enquiries" },
     ],
-    description: "Room 2 — Fully Governed Media content creation centre. Green screen, 4K camera, lighting rigs, streaming setup, photography, TikTok and YouTube content. Everything for professional digital content.",
+    description: "Room 2 is Fully Governed Media's content creation centre. Contact the studio to confirm the equipment and setup available for your session.",
   },
 ];
 
 const Tour = () => {
-  const [showViewer, setShowViewer] = useState(false);
-  const [activeRoom, setActiveRoom] = useState<typeof rooms[0] | null>(null);
-
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Navbar />
@@ -79,12 +73,9 @@ const Tour = () => {
             <div className={`relative group ${i % 2 === 1 ? "lg:order-2" : ""}`}>
               <img src={room.image} alt={room.name} className={`w-full rounded-lg border-2 ${room.color} object-cover aspect-video`} />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                <Button
-                  onClick={() => { setActiveRoom(room); setShowViewer(true); }}
-                  className="font-bebas tracking-wider"
-                >
-                  <View className="w-4 h-4 mr-2" /> ENTER 360° VIEW
-                </Button>
+                <Link to={`/360-tour?room=${room.slug}`} className="inline-flex items-center rounded-sm bg-primary px-4 py-2 font-bebas tracking-wider text-primary-foreground">
+                  ENTER 360° VIEW
+                </Link>
               </div>
             </div>
             <div className={i % 2 === 1 ? "lg:order-1" : ""}>
@@ -107,30 +98,6 @@ const Tour = () => {
       </div>
       <Footer />
 
-      {/* 360 Viewer Dialog Placeholder */}
-      <Dialog open={showViewer} onOpenChange={setShowViewer}>
-        <DialogContent className="max-w-4xl bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bebas tracking-wider text-foreground">
-              {activeRoom?.name} — 360° TOUR
-            </DialogTitle>
-            <DialogDescription className="text-muted-foreground font-barlow">
-              Explore the {activeRoom?.name.toLowerCase()} in full 360 degrees.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="w-full aspect-video bg-black rounded-lg flex items-center justify-center relative overflow-hidden group">
-            <div className="absolute inset-0 opacity-20 blur-sm">
-              {activeRoom && <img src={activeRoom.image} className="w-full h-full object-cover" alt="" />}
-            </div>
-            <div className="text-center relative z-10 z-20">
-              <View className="w-12 h-12 text-primary mx-auto mb-4 opacity-50" />
-              <p className="text-muted-foreground font-mono text-sm max-w-sm mx-auto">
-                [Pannellum / 360° Viewer Component ready for integration once client's panoramic photos are provided]
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

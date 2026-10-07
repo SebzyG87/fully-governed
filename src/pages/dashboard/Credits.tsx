@@ -34,7 +34,7 @@ const Credits = () => {
                 <h2 className="text-7xl font-bebas text-primary tracking-tighter">{balance}</h2>
                 <span className="text-2xl font-bebas text-muted-foreground">HOURS</span>
               </div>
-              <p className="text-sm font-barlow text-muted-foreground pt-4">Valid for all rooms & self-service sessions.</p>
+              <p className="text-sm font-barlow text-muted-foreground pt-4">Package eligibility is confirmed with the studio before purchase.</p>
             </div>
             <Button className="w-full md:w-auto font-bebas text-xl tracking-widest h-16 px-10 gap-2 bg-primary hover:bg-interactive transition-all" onClick={() => navigate("/pricing")}>
               <Plus className="w-6 h-6" /> ADD CREDITS
@@ -45,9 +45,9 @@ const Credits = () => {
         {/* Quick Add Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { label: "1 HOUR", price: "£25", hours: 1, tag: "Pay As You Go" },
-            { label: "5 HOURS", price: "£110", hours: 5, tag: "Saves £15" },
-            { label: "10 HOURS", price: "£199", hours: 10, tag: "BEST VALUE" },
+            { label: "25 HOURS", price: "£250", hours: 25, tag: "CREATIVE TIME" },
+            { label: "50 HOURS", price: "£500", hours: 50, tag: "CREATIVE TIME" },
+            { label: "100 HOURS", price: "£750", hours: 100, tag: "CREATIVE TIME" },
           ].map((bundle) => (
             <button key={bundle.label} onClick={() => navigate("/pricing")} className="group bg-card border border-border rounded-xl p-5 text-left hover:border-primary transition-all flex flex-col justify-between h-full">
               <div>
@@ -88,7 +88,7 @@ const Credits = () => {
         {/* Warning card */}
         <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 flex gap-3 text-amber-500/80">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
-          <p className="text-xs font-barlow leading-relaxed">Studio credits cannot be exchanged for cash or transferred between accounts. Credits are valid across all 3 studios but do not include dedicated engineering services unless specified.</p>
+          <p className="text-xs font-barlow leading-relaxed">Creative time packages are subject to availability and the agreed service. Engineer services are not included unless specified in writing.</p>
         </div>
       </div>
     </div>

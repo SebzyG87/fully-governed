@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/button";
 const sections = [
   {
     title: "CORE EDITING SERVICES",
-    description: "Video editing, animation, photo & graphics, audio, QR codes and add-ons.",
+    description: "Video editing, animation, photo and graphics, audio, NFC/QR production and add-ons.",
     href: "/editing-suite/core",
     icon: Video,
   },
   {
     title: "STREAMING & GAMING",
-    description: "Live streaming production, gaming recording, highlight reels and setup consultation.",
+    description: "Streaming and gaming production enquiries; equipment and setup are confirmed by quote.",
     href: "/editing-suite/streaming",
     icon: Zap,
   },
@@ -26,7 +26,7 @@ const sections = [
   },
   {
     title: "PLATFORM-ENABLED SERVICES",
-    description: "Digital Vinyl production, USB preloading, direct-to-fan setup and NFT assets.",
+    description: "Digital releases, USB preloading, direct-to-fan setup and NFC/QR production.",
     href: "/editing-suite/platform",
     icon: Sparkles,
   },
@@ -51,12 +51,12 @@ const quickServices = [
 ];
 
 const quickPricing = [
-  { service: "Mixing & Mastering", rate: "£50–£100/track" },
-  { service: "Video Editing", rate: "£40–£60/hr" },
-  { service: "Animation Editing", rate: "£40–£70/hr" },
-  { service: "Audio Editing", rate: "£30–£50/hr" },
-  { service: "Live Streaming", rate: "£35–£100/hr" },
-  { service: "Audiobook / Voiceover", rate: "£80–£150/hr" },
+  { service: "Edit Suite intro rate", rate: "£10/hr" },
+  { service: "Edit Suite standard rate", rate: "£20/hr" },
+  { service: "Edit Suite annual rate", rate: "£19.99/hr" },
+  { service: "Additional editing", rate: "Request a quote" },
+  { service: "Revision", rate: "Request a quote" },
+  { service: "Custom editing and production", rate: "Request a quote" },
 ];
 
 const Editing = () => (

@@ -5,8 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const sections = [
-  { title: "RECORDING STUDIO", description: "Room 1B — Our flagship recording space. Black and gold aesthetic with cloud ceiling, full acoustic treatment, MLV soundproofing, and red royal seating. Professional and premium from the moment you walk in.", href: "/recording-radio/studio", icon: Mic2 },
-  { title: "INTERNET RADIO", description: "Live show hosting, pre-recorded airing, playlist curation, artist interviews.", href: "/recording-radio/radio", icon: Radio },
+  { title: "RECORDING STUDIO", description: "Room 1B music studio dry hire, with an engineer available as an add-on.", href: "/recording-radio/studio", icon: Mic2 },
+  { title: "INTERNET RADIO", description: "FGS Radio is being prepared for approved releases and studio-produced shows. Live broadcasting is not available yet.", href: "/recording-radio/radio", icon: Radio },
   { title: "RADIO PRODUCTION", description: "Show formatting, jingle creation, sound design, distribution.", href: "/recording-radio/production", icon: Music },
 ];
 

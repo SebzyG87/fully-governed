@@ -22,10 +22,11 @@ const Shows = () => {
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="bg-card border border-border rounded-lg overflow-hidden">
             <table className="w-full text-sm">
-              <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Price</th></tr></thead>
+              <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Programme share</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Creator</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Per Event</td><td className="p-4 text-right text-primary font-mono">£500–£2,000</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Per Series</td><td className="p-4 text-right text-primary font-mono">£1,500–£5,000</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Start / New</td><td className="p-4 text-right text-primary font-mono">30%</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Growing / Established</td><td className="p-4 text-right text-primary font-mono">50%</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Fully Monetised</td><td className="p-4 text-right text-primary font-mono">Agreed per show</td></tr>
               </tbody>
             </table>
           </div>
@@ -34,6 +35,7 @@ const Shows = () => {
             <h2 className="font-bebas text-2xl text-foreground tracking-wider mb-3">EQUIPMENT</h2>
             <p className="text-sm text-muted-foreground font-barlow">Full lighting system, multi-camera setup, audio system, dance space, seating/audience area.</p>
           </div>
+          <p className="mx-auto max-w-3xl text-xs leading-relaxed text-muted-foreground">The programme is limited to 25 approved shows. Show rights and creator licences are governed by the signed show agreement; capacity, scheduling and approval apply. Audience or revenue is not guaranteed.</p>
 
           <div className="flex gap-4 justify-center">
             <Link to="/book"><Button className="font-bebas text-lg tracking-wider px-8 h-12">BOOK NOW</Button></Link>

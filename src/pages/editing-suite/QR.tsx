@@ -3,7 +3,6 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import QuoteRequestModal from "@/components/QuoteRequestModal";
 
 const QR = () => {
@@ -12,38 +11,23 @@ const QR = () => {
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Navbar />
       <div className="grain-overlay" />
-      <div className="container pt-24 pb-16 space-y-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Editing Suite</p>
-          <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">QR CODE CREATION</h1>
-          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Branded QR code design, tracking-enabled QR codes, bulk QR options, dynamic QR codes.</p>
-        </motion.div>
-        <div className="max-w-3xl mx-auto space-y-8">
-          <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="border-b border-border bg-secondary/30"><th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">Service</th><th className="text-right p-4 font-bebas text-base tracking-wider text-foreground">Rate</th></tr></thead>
-              <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Per QR code (branded, dynamic, tracking-enabled)</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£10–£30/code</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Pack of 10 codes</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£50–£150/pack</td></tr>
-              </tbody>
-            </table>
+      <main className="container space-y-10 pt-24 pb-16">
+        <motion.header initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-3xl text-center">
+          <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-primary">Fashion, print & NFC</p>
+          <h1 className="font-bebas text-5xl text-foreground md:text-7xl">NFC & QR PRODUCTION</h1>
+          <p className="mx-auto mt-3 max-w-xl font-barlow text-muted-foreground">Physical smart tags and QR items that connect your product or release to a digital destination.</p>
+        </motion.header>
+        <section className="mx-auto max-w-3xl" aria-label="NFC and QR prices">
+          <div className="divide-y divide-border border-y border-border">
+            <div className="flex items-center justify-between gap-4 py-5"><h2 className="font-barlow text-foreground">Single NFC/QR item</h2><p className="font-mono text-primary">£12</p></div>
+            <div className="flex items-center justify-between gap-4 py-5"><h2 className="font-barlow text-foreground">NFC / QR packs</h2><p className="font-mono text-primary">£35–£125</p></div>
           </div>
-          <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="font-bebas text-2xl text-foreground tracking-wider mb-3">ADD-ONS</h2>
-            <ul className="space-y-2 text-sm text-muted-foreground font-barlow">
-              <li>• Custom landing pages</li>
-              <li>• Analytics dashboard</li>
-              <li>• Integration with digital vinyl products</li>
-            </ul>
-          </div>
-          <div className="flex gap-4 justify-center">
-            <Link to="/book"><Button className="font-bebas text-lg tracking-wider px-8 h-12">BOOK NOW</Button></Link>
-            <Button variant="outline" onClick={() => setQuoteOpen(true)} className="font-bebas text-lg tracking-wider px-8 h-12">REQUEST A QUOTE</Button>
-          </div>
-        </div>
-      </div>
+          <p className="mt-3 text-xs text-muted-foreground">Materials and the destination setup are confirmed with the order. Physical production is subject to design, stock and equipment checks.</p>
+        </section>
+        <div className="text-center"><Button onClick={() => setQuoteOpen(true)}>Request NFC/QR production</Button></div>
+      </main>
       <Footer />
-      <QuoteRequestModal open={quoteOpen} onOpenChange={setQuoteOpen} prefilledService="QR Code Creation" />
+      <QuoteRequestModal open={quoteOpen} onOpenChange={setQuoteOpen} prefilledService="NFC/QR production" />
     </div>
   );
 };

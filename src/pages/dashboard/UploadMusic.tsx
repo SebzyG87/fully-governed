@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -25,8 +24,6 @@ const UploadMusic = () => {
     const [title, setTitle] = useState("");
     const [genre, setGenre] = useState("Hip Hop / Rap");
     const [price, setPrice] = useState("0.99");
-    const [isNft, setIsNft] = useState(false);
-    const [copyLimit, setCopyLimit] = useState("");
     const [releaseType, setReleaseType] = useState("Single");
 
     // File state
@@ -42,19 +39,22 @@ const UploadMusic = () => {
         }
 
         setIsSubmitting(true);
+        let uploadedAudioPath: string | null = null;
+        let uploadedCoverPath: string | null = null;
         try {
             let audioUrl = null;
             let coverUrl = null;
 
             // 1. Upload audio file to 'tracks' bucket
             if (audioFile) {
-                const audioExt = audioFile.name.split('.').pop();
-                const audioFileName = `${user.id}-${Date.now()}.${audioExt}`;
+                const audioExt = audioFile.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') || 'audio';
+                const audioFileName = `${user.id}/${crypto.randomUUID()}.${audioExt}`;
                 const { error: audioError } = await supabase.storage
                     .from('tracks')
                     .upload(audioFileName, audioFile);
 
                 if (audioError) throw audioError;
+                uploadedAudioPath = audioFileName;
 
                 const { data: audioData } = supabase.storage.from('tracks').getPublicUrl(audioFileName);
                 audioUrl = audioData.publicUrl;
@@ -62,28 +62,27 @@ const UploadMusic = () => {
 
             // 2. Upload cover file to 'covers' bucket
             if (coverFile) {
-                const coverExt = coverFile.name.split('.').pop();
-                const coverFileName = `${user.id}-${Date.now()}.${coverExt}`;
+                const coverExt = coverFile.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') || 'image';
+                const coverFileName = `${user.id}/${crypto.randomUUID()}.${coverExt}`;
                 const { error: coverError } = await supabase.storage
                     .from('covers')
                     .upload(coverFileName, coverFile);
 
                 if (coverError) throw coverError;
+                uploadedCoverPath = coverFileName;
 
                 const { data: coverData } = supabase.storage.from('covers').getPublicUrl(coverFileName);
                 coverUrl = coverData.publicUrl;
             }
 
             // 3. Insert record into music_tracks
-            const { error: dbError } = await supabase
+            const { error: dbError } = await (supabase.from('music_tracks') as any)
                 .from('music_tracks')
                 .insert({
                     user_id: user.id,
                     title,
                     genre,
                     price: parseFloat(price) || 0,
-                    is_nft: isNft,
-                    nft_copy_limit: isNft && copyLimit ? parseInt(copyLimit) : null,
                     file_url: audioUrl,
                     cover_url: coverUrl,
                     release_type: releaseType, // Added release type
@@ -96,6 +95,10 @@ const UploadMusic = () => {
             toast({ title: "Success!", description: "Track submitted for review." });
 
         } catch (error: any) {
+            await Promise.all([
+                uploadedAudioPath ? supabase.storage.from('tracks').remove([uploadedAudioPath]) : Promise.resolve(),
+                uploadedCoverPath ? supabase.storage.from('covers').remove([uploadedCoverPath]) : Promise.resolve(),
+            ]);
             toast({ title: "Upload Failed", description: error.message || "An error occurred during upload.", variant: "destructive" });
         } finally {
             setIsSubmitting(false);
@@ -200,24 +203,6 @@ const UploadMusic = () => {
                                         <Input id="price" type="number" step="0.01" min="0" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="0.99" className="bg-background" />
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Advanced Settings */}
-                            <div className="p-4 bg-background border border-border rounded-lg space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <Label className="text-base">Studio Certified Release</Label>
-                                        <p className="text-sm text-muted-foreground font-barlow">Mark this as a premium limited-edition release.</p>
-                                    </div>
-                                    <Switch checked={isNft} onCheckedChange={setIsNft} />
-                                </div>
-
-                                {isNft && (
-                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-2">
-                                        <Label htmlFor="limit">Total Copies Available</Label>
-                                        <Input id="limit" type="number" min="1" value={copyLimit} onChange={(e) => setCopyLimit(e.target.value)} placeholder="e.g. 50" className="bg-background mt-2 w-1/3" />
-                                    </motion.div>
-                                )}
                             </div>
 
                             {/* Submit */}

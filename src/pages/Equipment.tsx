@@ -27,66 +27,12 @@ const statusIcon: Record<string, JSX.Element> = {
   maintenance: <XCircle className="w-4 h-4 text-destructive" />,
 };
 
-// Section 22 — full equipment tables
+// Only equipment marked operational in the supplied register is advertised.
 const studioEquipment = {
-  "WORKSTATIONS": [
-    "Apple Mac Studio M2 Ultra",
-    "Apple MacBook Pro 16\" M3 Pro",
-    "Custom PC (video editing / gaming)",
-  ],
-  "DISPLAYS": [
-    "Samsung 49\" Ultra-Wide Curved Monitor",
-    "Dell UltraSharp 27\" 4K (x2)",
-    "BenQ PD3200U 32\" 4K",
-  ],
-  "AUDIO": [
-    "Neumann TLM 103 Condenser Mic",
-    "Universal Audio Apollo Twin X Interface",
-    "DBX 286s Mic Preamp / Channel Strip",
-    "MLV Mass Loaded Vinyl Soundproofing panels",
-    "Focusrite Scarlett 18i20 (3rd Gen)",
-    "Shure SM7B Dynamic Mic",
-    "Audio-Technica ATH-M50x (x4)",
-    "KRK Rokit 8 G4 Studio Monitors (pair)",
-    "Akai MPC Live II",
-    "Native Instruments Komplete Kontrol S61",
-    "Roland SP-404 MKII",
-  ],
-  "CAMERAS & LIGHTING": [
-    "Sony A7 IV Mirrorless Camera",
-    "Sony 24-70mm f/2.8 GM II Lens",
-    "Elgato Ring Light",
-    "Aputure 120D II LED Panel (x2)",
-    "DJI RS3 Pro Gimbal",
-    "Elgato Cam Link 4K",
-  ],
-  "STREAMING & GAMING": [
-    "Elgato Stream Deck XL",
-    "Elgato HD60 X Capture Card",
-    "Razer Kiyo Pro Webcam",
-    "Corsair K100 RGB Keyboard",
-    "Logitech G Pro X Superlight Mouse",
-  ],
-  "STORAGE & NETWORK": [
-    "Synology DS920+ NAS (16TB RAID)",
-    "Samsung T7 Shield 2TB SSD (x3)",
-    "10Gbps Ethernet Switch",
-  ],
-  "SOFTWARE": [
-    "Logic Pro X",
-    "Ableton Live Suite 11",
-    "FL Studio 21 Producer",
-    "Adobe Creative Cloud (Full Suite)",
-    "DaVinci Resolve Studio",
-    "OBS Studio",
-    "Streamlabs Desktop",
-  ],
-  "STUDIO AMENITIES": [
-    "Red royal velvet sofas and seating",
-    "Mini fridge (stocked with drinks)",
-    "Microwave",
-    "Cloud ceiling acoustic treatment",
-    "Full acoustic treatment throughout",
+  "VERIFIED OPERATIONAL EQUIPMENT": [
+    "Melco CV700 embroidery machine",
+    "Bambu H2D 3D printer",
+    "Heat press",
   ],
 };
 
@@ -123,11 +69,19 @@ const Equipment = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">What We've Got</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">EQUIPMENT</h1>
-          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Full inventory across all three rooms.</p>
+          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Equipment confirmed operational in the supplied register. Ask the studio to confirm availability for your booking.</p>
         </motion.div>
 
-        {/* Static Section 22 equipment tables */}
+        {/* Verified equipment from the supplied operational register */}
         <div className="max-w-4xl mx-auto space-y-6">
+          <figure className="overflow-hidden border border-border">
+            <img
+              src="/images/rooms/360/production-workshop.jpeg"
+              alt="Fully Governed production workshop"
+              className="aspect-video w-full object-cover"
+            />
+            <figcaption className="border-t border-border px-4 py-2 text-sm text-muted-foreground">Production workshop</figcaption>
+          </figure>
           {Object.entries(studioEquipment).map(([category, items], ci) => (
             <motion.div
               key={category}

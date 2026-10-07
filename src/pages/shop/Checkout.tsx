@@ -121,7 +121,7 @@ const Checkout = () => {
           .eq("id", productId)
           .maybeSingle();
 
-        calculatedPrice = amountParam || Number(productData?.base_price) || 0;
+        calculatedPrice = Number(productData?.base_price) || 0;
         item = {
           ...(productData || {}),
           id: productId,
@@ -145,14 +145,15 @@ const Checkout = () => {
           body: {
             trackId,
             productId,
-            productName: item.displayName,
             type: item.checkoutType,
-            amount: calculatedPrice,
-            userId: user?.id,
           },
         });
 
         if (error) throw error;
+        if (!Number.isFinite(Number(data?.amount)) || Number(data.amount) <= 0) {
+          throw new Error("The server returned an invalid checkout amount.");
+        }
+        setCheckoutItem({ ...item, checkoutAmount: Number(data.amount) });
         setClientSecret(data.clientSecret);
       } catch (err: any) {
         setPaymentError(err?.message || "Stripe checkout is not available right now.");
@@ -175,7 +176,9 @@ const Checkout = () => {
   const isTrackCheckout = checkoutItem?.checkoutType === "track";
   const basePrice = Number(checkoutItem?.price) || 0;
   const discountAmount = isTrackCheckout ? basePrice * discountDetails.rate : 0;
-  const finalPrice = basePrice - discountAmount;
+  const finalPrice = Number.isFinite(Number(checkoutItem?.checkoutAmount))
+    ? Number(checkoutItem.checkoutAmount)
+    : basePrice - discountAmount;
   const returnPath = isTrackCheckout ? "/dashboard/my-vault?success=true" : "/artist-clothing/orders?success=true";
 
   return (
@@ -230,17 +233,6 @@ const Checkout = () => {
                 <span>{formatPrice(finalPrice)}</span>
               </div>
 
-              {checkoutItem?.is_nft && (
-                <div className="mt-4 p-3 bg-primary/10 border border-primary/20 rounded text-center">
-                  <p className="text-xs text-primary font-mono flex items-center justify-center gap-2 uppercase tracking-widest">
-                    <ShieldCheck className="w-4 h-4" />
-                    STUDIO CERTIFIED LIMITED PRESSING
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {checkoutItem.nft_copy_limit} copies maximum worldwide.
-                  </p>
-                </div>
-              )}
             </div>
           </motion.div>
 

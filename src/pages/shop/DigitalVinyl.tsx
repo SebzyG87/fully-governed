@@ -47,7 +47,7 @@ const DigitalVinyl = () => {
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Shop</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">DIGITAL VINYL</h1>
           <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">
-            Browse exclusive digital vinyl releases from Fully Governed artists. Stream, collect, and support local talent.
+            Browse approved releases from Fully Governed artists. Purchases are available only where an approved price is set.
           </p>
         </motion.div>
 
@@ -79,11 +79,6 @@ const DigitalVinyl = () => {
                     ) : (
                       <Disc3 className="w-16 h-16 text-muted-foreground/50" />
                     )}
-                    {track.is_nft && (
-                      <span className="absolute top-2 right-2 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded">
-                        STUDIO CERTIFIED
-                      </span>
-                    )}
                   </div>
 
                   <div className="space-y-1 mb-4 flex-grow">
@@ -95,7 +90,7 @@ const DigitalVinyl = () => {
                   </div>
 
                   <div className="flex items-center gap-2 mt-auto">
-                    <span className="font-mono text-lg text-foreground mr-auto">£{track.price}</span>
+                    <span className="font-mono text-lg text-foreground mr-auto">{Number(track.price) > 0 ? `£${Number(track.price).toFixed(2)}` : "Price to be confirmed"}</span>
                     <Button
                       variant="outline"
                       className={`font-bebas tracking-wider border-border hover:border-interactive hover:text-interactive transition-all ${currentTrack?.id === track.id ? 'border-interactive text-interactive' : ''
@@ -110,15 +105,10 @@ const DigitalVinyl = () => {
                     >
                       {currentTrack?.id === track.id && isPlaying ? "PAUSE" : "PREVIEW"}
                     </Button>
-                    <Button asChild className="font-bebas tracking-wider">
+                    {Number(track.price) > 0 && <Button asChild className="font-bebas tracking-wider">
                       <Link to={`/shop/checkout?trackId=${track.id}`}>BUY NOW</Link>
-                    </Button>
+                    </Button>}
                   </div>
-                  {track.is_nft && track.nft_copy_limit && (
-                    <p className="text-xs text-muted-foreground text-center mt-3 font-barlow">
-                      Limited Pressing: {track.nft_copy_limit} copies
-                    </p>
-                  )}
                 </motion.div>
               ))}
             </div>

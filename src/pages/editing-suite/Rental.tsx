@@ -8,10 +8,11 @@ import QuoteRequestModal from "@/components/QuoteRequestModal";
 import { RoomViewButtons } from "@/components/RoomGalleryModal";
 
 const rentalOptions = [
-  { type: "Full Multi-Purpose Room", hourly: "£30–£50", daily: "£200–£350", weekly: "£800–£1,200", monthly: "£2,500–£4,000" },
-  { type: "Editing Room Only", hourly: "£20–£30", daily: "£120–£180", weekly: "—", monthly: "—" },
-  { type: "Radio Studio Only", hourly: "£25–£40", daily: "£150–£250", weekly: "—", monthly: "—" },
-  { type: "Content Creation Area Only", hourly: "£15–£25", daily: "£100–£150", weekly: "—", monthly: "—" },
+  { type: "Music Studio dry hire", hourly: "£12.50", details: "2-hour minimum; 4-hour block preferred" },
+  { type: "Podcast room, audio-only", hourly: "£49.99", details: "Self-service" },
+  { type: "Video room", hourly: "£70", details: "Self-operated" },
+  { type: "Stream Room", hourly: "£45", details: "Dry hire" },
+  { type: "Edit Suite", hourly: "£10 / £20 / £19.99", details: "Intro / Standard / Annual; annual minimum 25 hours/month" },
 ];
 
 const Rental = () => {
@@ -34,10 +35,8 @@ const Rental = () => {
               <thead>
                 <tr className="border-b border-border bg-secondary/30">
                   <th className="text-left py-4 px-4 text-foreground font-bebas tracking-wider">Rental Type</th>
-                  <th className="text-center py-4 px-4 text-foreground font-bebas tracking-wider">Hourly</th>
-                  <th className="text-center py-4 px-4 text-foreground font-bebas tracking-wider">Daily (8hrs)</th>
-                  <th className="text-center py-4 px-4 text-foreground font-bebas tracking-wider">Weekly (5 days)</th>
-                  <th className="text-center py-4 px-4 text-foreground font-bebas tracking-wider">Monthly</th>
+                  <th className="text-center py-4 px-4 text-foreground font-bebas tracking-wider">Hourly rate</th>
+                  <th className="text-left py-4 px-4 text-foreground font-bebas tracking-wider">Terms</th>
                 </tr>
               </thead>
               <tbody>
@@ -45,9 +44,7 @@ const Rental = () => {
                   <tr key={option.type} className={i < rentalOptions.length - 1 ? "border-b border-border" : ""}>
                     <td className="py-4 px-4 text-foreground font-barlow font-medium">{option.type}</td>
                     <td className="py-4 px-4 text-primary font-mono text-center">{option.hourly}</td>
-                    <td className="py-4 px-4 text-primary font-mono text-center">{option.daily}</td>
-                    <td className="py-4 px-4 text-primary font-mono text-center">{option.weekly}</td>
-                    <td className="py-4 px-4 text-primary font-mono text-center">{option.monthly}</td>
+                    <td className="py-4 px-4 text-muted-foreground font-barlow">{option.details}</td>
                   </tr>
                 ))}
               </tbody>

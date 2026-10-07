@@ -22,8 +22,8 @@ const Marketing = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Service</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Per Campaign</td><td className="p-4 text-right text-primary font-mono">£150–£400</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Annual Strategy Package</td><td className="p-4 text-right text-primary font-mono">£500–£1,200</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Per Campaign</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Annual Strategy Package</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
               </tbody>
             </table>
           </div>

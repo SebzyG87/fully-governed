@@ -13,14 +13,14 @@ const socials = [
     icon: MessageCircle,
     label: "WHATSAPP",
     description: "Quick bookings, questions & direct contact",
-    href: "https://wa.me/447000000000",
+    href: "https://wa.me/447506224965",
     cta: "MESSAGE US",
   },
   {
     icon: MapPin,
     label: "GOOGLE MAPS",
     description: "Find us, leave a review & share with friends",
-    href: "https://maps.google.com/?q=Fully+Governed+Lewisham",
+    href: "https://maps.google.com/?q=V22+Building%2C+174-186+Hither+Green+Lane%2C+Lewisham+SE13+6QB",
     cta: "GET DIRECTIONS",
   },
 ];

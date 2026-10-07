@@ -11,7 +11,7 @@ const sections = [
   { title: "DESIGN TOOL", description: "Create custom clothing — t-shirts, hoodies, caps, tote bags with your artwork.", href: "/artist-clothing/designer", icon: Palette },
   { title: "MY PRODUCTS", description: "Manage your created products — drafts, under review, live, paused.", href: "/artist-clothing/products", icon: Shirt },
   { title: "ORDERS", description: "View all orders for your products and fulfilment status.", href: "/artist-clothing/orders", icon: Package },
-  { title: "EARNINGS", description: "Revenue dashboard — you keep 70% of every sale after production costs.", href: "/artist-clothing/earnings", icon: DollarSign },
+  { title: "EARNINGS", description: "View gross delivered sales; artist shares are set by signed agreement.", href: "/artist-clothing/earnings", icon: DollarSign },
 ];
 
 const ArtistClothing = () => {
@@ -27,7 +27,7 @@ const ArtistClothing = () => {
 
       const { data: orders } = await supabase.from("clothing_orders").select("total_amount, fulfillment_status").or(`artist_id.eq.${user.id},seller_id.eq.${user.id}`);
       const delivered = orders?.filter(o => o.fulfillment_status === "delivered") || [];
-      const earnings = delivered.reduce((s, o) => s + Number(o.total_amount) * 0.7, 0);
+      const earnings = delivered.reduce((s, o) => s + Number(o.total_amount), 0);
       const pending = orders?.filter(o => o.fulfillment_status === "pending").length || 0;
 
       setStats({ total, live, earnings, pending });
@@ -38,7 +38,7 @@ const ArtistClothing = () => {
   const statCards = [
     { label: "Total Products", value: stats.total },
     { label: "Live Products", value: stats.live },
-    { label: "Total Earnings", value: `£${stats.earnings.toFixed(2)}` },
+    { label: "Gross Sales", value: `£${stats.earnings.toFixed(2)}` },
     { label: "Pending Orders", value: stats.pending },
   ];
 

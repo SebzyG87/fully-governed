@@ -12,18 +12,17 @@ const Footer = () => {
               <span className="font-bebas text-xl tracking-widest text-foreground">FULLY GOVERNED</span>
             </div>
             <p className="text-xs text-muted-foreground font-barlow">
-              Professional music studio & content creation centre in Lewisham, South East London. Open 24/7.
+              Music studio and content creation centre in Lewisham, South East London. Visits by booking.
             </p>
           </div>
 
           <div>
             <h3 className="font-bebas text-lg text-foreground tracking-wider mb-3">GETTING HERE</h3>
             <div className="space-y-2 text-xs text-muted-foreground font-barlow">
-              <p>174–178 V22 Building, Unit 1B–1C<br />Lewisham, London (Gated Community)</p>
-              <p>🚂 Lewisham Station — 5 min walk<br />(trains to London Bridge, Cannon Street, Charing Cross)</p>
-              <p>🚂 Hither Green Station — 5 min walk<br />(trains to London Bridge)</p>
+              <p>HMEZZ 1B, V22 Building<br />174–186 Hither Green Lane, Lewisham SE13 6QB</p>
+              <p>🚂 Hither Green and Lewisham stations serve the area</p>
               <p>🚌 Buses: <a href="https://tfl.gov.uk/plan-a-journey/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Plan your journey</a></p>
-              <p>🅿️ Secure on-site parking</p>
+              <p>Contact the studio to confirm parking and building access</p>
             </div>
           </div>
 
@@ -55,11 +54,12 @@ const Footer = () => {
               <a href="https://wa.me/447506224965" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-interactive transition-colors" aria-label="WhatsApp">
                 <MessageCircle className="w-5 h-5" />
               </a>
-              <a href="https://maps.google.com/?q=Fully+Governed+Lewisham" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-interactive transition-colors" aria-label="Google Maps">
+              <a href="https://maps.google.com/?q=V22+Building%2C+174-186+Hither+Green+Lane%2C+Lewisham+SE13+6QB" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-interactive transition-colors" aria-label="Google Maps">
                 <MapPin className="w-5 h-5" />
               </a>
             </div>
-            <p className="text-xs text-muted-foreground font-barlow break-words">musicfullygoverned@gmail.com</p>
+            <p className="text-xs text-muted-foreground font-barlow break-words">contracts@fullygovernedstudios.co.uk</p>
+            <p className="text-xs text-muted-foreground font-barlow">07950 116217</p>
           </div>
         </div>
 

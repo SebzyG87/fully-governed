@@ -27,6 +27,7 @@ serve(async (req) => {
   const appUrl          = Deno.env.get("APP_URL") ?? "http://localhost:5173";
   const supabaseUrl     = Deno.env.get("SUPABASE_URL")!;
   const serviceKey      = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const anonKey         = Deno.env.get("SUPABASE_ANON_KEY") ?? Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
 
   if (!stripeSecretKey) {
     return new Response(
@@ -35,35 +36,84 @@ serve(async (req) => {
     );
   }
 
+  const authorization = req.headers.get("Authorization");
+  if (!authorization || !anonKey) {
+    return new Response(
+      JSON.stringify({ error: "A signed-in account is required to start checkout." }),
+      { status: authorization ? 503 : 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     const {
       booking_id,
       payment_type = "deposit", // "deposit" | "full" | "balance"
       amount_pence,              // amount in pence (e.g. 4000 = £40)
-      line_item_name,
-      customer_email,
     } = await req.json();
 
-    if (!booking_id || !amount_pence) {
+    if (!booking_id || !amount_pence || !["deposit", "full", "balance"].includes(payment_type)) {
       return new Response(
         JSON.stringify({ error: "booking_id and amount_pence are required." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const stripe   = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16", httpClient: Stripe.createFetchHttpClient() });
+    const stripe = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16", httpClient: Stripe.createFetchHttpClient() });
     const supabase = createClient(supabaseUrl, serviceKey);
+    const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: authorization } } });
+    const { data: { user }, error: authError } = await userClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Your session has expired. Please sign in again." }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { data: booking, error: bookingError } = await supabase
+      .from("bookings")
+      .select("id, user_id, status, total_amount, deposit_amount, outstanding_balance, rooms(name)")
+      .eq("id", booking_id)
+      .maybeSingle();
+
+    if (bookingError || !booking) {
+      return new Response(JSON.stringify({ error: "Booking not found." }), {
+        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (booking.user_id !== user.id) {
+      return new Response(JSON.stringify({ error: "You can only pay for your own booking." }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (booking.status !== "pending_payment") {
+      return new Response(JSON.stringify({ error: "This booking is no longer awaiting payment." }), {
+        status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const dueAmount = payment_type === "full"
+      ? Number(booking.total_amount)
+      : payment_type === "balance"
+        ? Number(booking.outstanding_balance)
+        : Number(booking.deposit_amount);
+    const dueAmountPence = Math.round(dueAmount * 100);
+    if (!Number.isFinite(dueAmountPence) || dueAmountPence <= 0 || Math.round(Number(amount_pence)) !== dueAmountPence) {
+      return new Response(JSON.stringify({ error: "The amount does not match the saved booking." }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const room = Array.isArray(booking.rooms) ? booking.rooms[0] : booking.rooms;
+    const roomName = room?.name ?? "Studio booking";
 
     const session = await stripe.checkout.sessions.create({
       mode:              "payment",
       payment_method_types: ["card"],
-      customer_email:    customer_email ?? undefined,
+      customer_email:    user.email ?? undefined,
       line_items: [
         {
           price_data: {
             currency:     "gbp",
-            unit_amount:  Math.round(amount_pence),
-            product_data: { name: line_item_name ?? "Studio booking" },
+          unit_amount:  dueAmountPence,
+          product_data: { name: `${roomName} booking` },
           },
           quantity: 1,
         },
@@ -77,13 +127,18 @@ serve(async (req) => {
     });
 
     // Mark booking as pending checkout
-    await supabase
+    const { error: updateError } = await supabase
       .from("bookings")
       .update({
         payment_provider:     "stripe",
         payment_provider_ref: session.id,
       })
       .eq("id", booking_id);
+
+    if (updateError) {
+      await stripe.checkout.sessions.expire(session.id);
+      throw updateError;
+    }
 
     return new Response(
       JSON.stringify({ checkout_url: session.url, session_id: session.id }),

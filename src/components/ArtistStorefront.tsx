@@ -100,10 +100,10 @@ const ArtistStorefront = ({ userId }: ArtistStorefrontProps) => {
                                 <h4 className="font-bebas text-2xl tracking-wider truncate text-foreground" title={track.title}>{track.title}</h4>
                             </div>
                             <div className="flex items-center justify-between mt-4">
-                                <span className="font-mono text-lg text-foreground">£{track.price}</span>
-                                <Button size="sm" asChild className="font-bebas tracking-wider" variant={track.is_nft ? "default" : "secondary"}>
+                                <span className="font-mono text-sm text-foreground">{Number(track.price) > 0 ? `£${Number(track.price).toFixed(2)}` : "Price to be confirmed"}</span>
+                                {Number(track.price) > 0 && <Button size="sm" asChild className="font-bebas tracking-wider" variant="secondary">
                                     <Link to={`/shop/checkout?trackId=${track.id}`}>BUY</Link>
-                                </Button>
+                                </Button>}
                             </div>
                         </div>
                     </motion.div>

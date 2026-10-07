@@ -24,8 +24,8 @@ const Campaigns = () => {
             <div className="bg-card border border-border rounded-lg overflow-hidden">
               <table className="w-full text-sm">
                 <tbody className="font-barlow">
-                  <tr className="border-b border-border"><td className="p-3 text-muted-foreground">Monthly Management</td><td className="p-3 text-right text-primary font-mono">£200–£600/month</td></tr>
-                  <tr><td className="p-3 text-muted-foreground">Per Campaign</td><td className="p-3 text-right text-primary font-mono">£1,500–£4,000</td></tr>
+                  <tr className="border-b border-border"><td className="p-3 text-muted-foreground">Monthly Management</td><td className="p-3 text-right text-primary font-mono">Request a quote</td></tr>
+                  <tr><td className="p-3 text-muted-foreground">Per Campaign</td><td className="p-3 text-right text-primary font-mono">Request a quote</td></tr>
                 </tbody>
               </table>
             </div>
@@ -37,8 +37,8 @@ const Campaigns = () => {
             <div className="bg-card border border-border rounded-lg overflow-hidden">
               <table className="w-full text-sm">
                 <tbody className="font-barlow">
-                  <tr className="border-b border-border"><td className="p-3 text-muted-foreground">Per Region</td><td className="p-3 text-right text-primary font-mono">£300–£800</td></tr>
-                  <tr><td className="p-3 text-muted-foreground">National Campaign</td><td className="p-3 text-right text-primary font-mono">£1,000–£3,000</td></tr>
+                  <tr className="border-b border-border"><td className="p-3 text-muted-foreground">Per Region</td><td className="p-3 text-right text-primary font-mono">Request a quote</td></tr>
+                  <tr><td className="p-3 text-muted-foreground">National Campaign</td><td className="p-3 text-right text-primary font-mono">Request a quote</td></tr>
                 </tbody>
               </table>
             </div>
@@ -49,8 +49,8 @@ const Campaigns = () => {
             <div className="bg-card border border-border rounded-lg overflow-hidden">
               <table className="w-full text-sm">
                 <tbody className="font-barlow">
-                  <tr className="border-b border-border"><td className="p-3 text-muted-foreground">Strategy & Setup</td><td className="p-3 text-right text-primary font-mono">£500–£2,000</td></tr>
-                  <tr><td className="p-3 text-muted-foreground">Ongoing Management</td><td className="p-3 text-right text-primary font-mono">£800–£5,000/month</td></tr>
+                  <tr className="border-b border-border"><td className="p-3 text-muted-foreground">Strategy & Setup</td><td className="p-3 text-right text-primary font-mono">Request a quote</td></tr>
+                  <tr><td className="p-3 text-muted-foreground">Ongoing Management</td><td className="p-3 text-right text-primary font-mono">Request a quote</td></tr>
                 </tbody>
               </table>
             </div>

@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import heroImg from "@/assets/hero-studio.jpg";
 import { useEffect, useState } from "react";
 
 const HeroSection = () => {
@@ -20,7 +19,7 @@ const HeroSection = () => {
       {/* Background image */}
       <div className="absolute inset-0">
         <img
-          src={heroImg}
+            src="/images/rooms/360/recording-room-01.jpeg"
           alt="Fully Governed recording studio mixing console"
           className="w-full h-full object-cover"
         />
@@ -48,7 +47,7 @@ const HeroSection = () => {
             Lewisham, South East London.
           </p>
           <p className="font-mono text-xs text-muted-foreground tracking-widest mb-10">
-            174–178 V22 BUILDING · UNIT 1B–1C · GATED COMMUNITY
+            V22 BUILDING · 174–186 HITHER GREEN LANE · SE13 6QB
           </p>
         </motion.div>
 

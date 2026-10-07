@@ -109,7 +109,7 @@ const AdminSettings = () => {
           </div>
           <div>
             <Label className="text-muted-foreground text-xs">Address</Label>
-            <Input value="174-178 V22 Building, Unit 1B-1C, Lewisham" disabled className="mt-1 bg-background opacity-60" />
+            <Input value="HMEZZ 1B, V22 Building, 174-186 Hither Green Lane, Hither Green, Lewisham, London SE13 6QB" disabled className="mt-1 bg-background opacity-60" />
           </div>
         </div>
       </div>

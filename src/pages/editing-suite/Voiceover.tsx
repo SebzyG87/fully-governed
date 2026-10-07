@@ -13,8 +13,8 @@ const services = [
     title: "VOICEOVER RECORDING",
     description: "Professional voiceover for commercials, documentaries, animations and corporate videos.",
     items: [
-      { service: "Hourly Recording", rate: "£40–£70/hr" },
-      { service: "Per Project", rate: "£150–£400" },
+      { service: "Hourly Recording", rate: "Request a quote" },
+      { service: "Per Project", rate: "Request a quote" },
     ],
   },
   {
@@ -22,8 +22,8 @@ const services = [
     title: "AUDIOBOOK RECORDING & EDITING",
     description: "Full audiobook production from recording to final mastered files ready for distribution.",
     items: [
-      { service: "Per Finished Hour", rate: "£80–£150" },
-      { service: "Full Book Package", rate: "£500–£2,000" },
+      { service: "Per Finished Hour", rate: "Request a quote" },
+      { service: "Full Book Package", rate: "Request a quote" },
     ],
   },
   {
@@ -31,7 +31,7 @@ const services = [
     title: "VOICE DIRECTION & COACHING",
     description: "Improve your delivery, tone and technique with professional voice coaching sessions.",
     items: [
-      { service: "Coaching Session", rate: "£60–£120/session" },
+      { service: "Coaching Session", rate: "Request a quote" },
     ],
   },
   {
@@ -39,8 +39,8 @@ const services = [
     title: "RADIO SHOW PRODUCTION",
     description: "End-to-end radio show production including recording, editing and mastering.",
     items: [
-      { service: "Hourly Production", rate: "£30–£50/hr" },
-      { service: "Per Episode", rate: "£100–£300/episode" },
+      { service: "Hourly Production", rate: "Request a quote" },
+      { service: "Per Episode", rate: "See podcast production packages" },
     ],
   },
 ];

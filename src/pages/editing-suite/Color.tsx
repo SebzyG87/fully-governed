@@ -23,8 +23,8 @@ const ColorGrading = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/30"><th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">Service</th><th className="text-right p-4 font-bebas text-base tracking-wider text-foreground">Rate</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Hourly colour grading</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£50–£80/hr</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Full project grade</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£200–£500/project</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Hourly colour grading</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Full project grade</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
               </tbody>
             </table>
           </div>

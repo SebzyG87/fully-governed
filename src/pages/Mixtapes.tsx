@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 const sections = [
   { title: "CURRENT MIXTAPES", description: "Active releases with cover art, tracklist preview, play and buy options.", href: "/mixtapes/current", icon: Disc3 },
   { title: "ARCHIVE", description: "Full searchable catalogue of past mixtapes. Filter by year, artist, genre.", href: "/mixtapes/archive", icon: Archive },
-  { title: "BUY MIXTAPES", description: "Shop-style listing. Digital download, USB, NFT edition formats.", href: "/mixtapes/buy", icon: ShoppingBag },
+  { title: "BUY MIXTAPES", description: "Browse available artist releases and download formats.", href: "/mixtapes/buy", icon: ShoppingBag },
 ];
 
 const Mixtapes = () => (

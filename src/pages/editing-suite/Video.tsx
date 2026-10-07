@@ -29,9 +29,9 @@ const VideoEditing = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/30"><th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">Service</th><th className="text-right p-4 font-bebas text-base tracking-wider text-foreground">Rate</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Session reels</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£20–£50/reel</td></tr>
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Blog & interview videos (5–10 min)</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£150–£500/video · £45–£80/hr</td></tr>
-                <tr><td className="p-4 text-muted-foreground">General video editing</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£30–£60/hr · £180–£220/day (8hrs)</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Session reels</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Blog & interview videos (5–10 min)</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
+                <tr><td className="p-4 text-muted-foreground">General video editing</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
               </tbody>
             </table>
           </div>

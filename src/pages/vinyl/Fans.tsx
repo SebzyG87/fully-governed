@@ -6,15 +6,14 @@ import Footer from "@/components/Footer";
 
 const benefits = [
   "WAV quality playback",
-  "Permanent Vault access",
-  "Studio Certified badge on every purchase",
-  "Multiple physical formats",
+  "Listen to approved digital releases",
+  "Artist terms and prices shown on each release",
 ];
 
 const formats = [
   { title: "USB CARD", description: "Branded USB preloaded with music — plug in and play.", icon: Usb },
   { title: "QR POSTCARD", description: "Physical card — scan to unlock instantly in your Vault.", icon: QrCode },
-  { title: "NFC CARD", description: "Tap your phone — instant Vault access, no app needed.", icon: Smartphone },
+  { title: "NFC KEYRING", description: "Planned tap-to-listen artist product; not yet available to order.", icon: Smartphone },
 ];
 
 const Fans = () => (

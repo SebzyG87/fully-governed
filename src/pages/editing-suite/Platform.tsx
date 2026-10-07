@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Disc3, Usb, Users, Sparkles, FileText, Megaphone, GraduationCap } from "lucide-react";
+import { Disc3, Usb, Users, Sparkles, FileText, Megaphone, GraduationCap, Smartphone } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -12,42 +12,42 @@ const services = [
     icon: Disc3,
     title: "DIGITAL VINYL PRODUCTION",
     description: "Professional formatting and packaging for Digital Vinyl releases (WAV/FLAC + artwork).",
-    items: [{ service: "Per Project", rate: "£50–£300" }],
+    items: [{ service: "Per Project", rate: "Request a quote" }],
   },
   {
     icon: Usb,
     title: "USB STICK PRELOADING",
     description: "Custom branded USB sticks preloaded with your music, videos and behind-the-scenes content.",
     items: [
-      { service: "Per Unit", rate: "£10–£50" },
-      { service: "Bundle Packages", rate: "£100–£800" },
+      { service: "Per Unit", rate: "Request a quote" },
+      { service: "Bundle Packages", rate: "Request a quote" },
     ],
   },
   {
     icon: Users,
     title: "DIRECT-TO-FAN SETUP",
     description: "Get your products listed on the Digital Vinyl platform and start selling to fans.",
-    items: [{ service: "Setup Fee", rate: "£50–£150" }],
+    items: [{ service: "Setup Fee", rate: "Request a quote" }],
   },
   {
     icon: Sparkles,
-    title: "NFT-READY ASSET CREATION",
-    description: "Prepare your music, artwork and videos as limited edition NFT-ready collectibles.",
-    items: [{ service: "Per Project", rate: "£50–£500" }],
+    title: "NFC ARTIST KEYRINGS",
+    description: "Artist keyrings are prepared per artist agreement and link to an assigned digital destination.",
+    items: [{ service: "Per Project", rate: "Request a quote" }],
   },
   {
     icon: FileText,
     title: "CONTENT STRATEGY",
     description: "Full content strategy planning for your release cycle and online presence.",
-    items: [{ service: "Per Project", rate: "£300–£800" }],
+    items: [{ service: "Per Project", rate: "Request a quote" }],
   },
   {
     icon: Megaphone,
     title: "CONTENT PRODUCTION",
     description: "Video, photo and written content produced to brief.",
     items: [
-      { service: "Hourly", rate: "£30–£60/hr" },
-      { service: "Per Piece", rate: "£50–£200" },
+      { service: "Hourly", rate: "Request a quote" },
+      { service: "Per Piece", rate: "Request a quote" },
     ],
   },
   {
@@ -55,17 +55,26 @@ const services = [
     title: "TRAINING & WORKSHOPS",
     description: "Learn the tools and techniques for self-sufficient content creation.",
     items: [
-      { service: "Per Session", rate: "£50–£100" },
-      { service: "Full Course", rate: "£200–£500" },
+      { service: "Per Session", rate: "Request a quote" },
+      { service: "Full Course", rate: "Request a quote" },
+    ],
+  },
+  {
+    icon: Smartphone,
+    title: "NFC & QR PRODUCTION",
+    description: "Physical tags and smart items linked to a digital destination.",
+    items: [
+      { service: "Single NFC/QR item", rate: "£12" },
+      { service: "NFC / QR packs", rate: "£35–£125" },
     ],
   },
 ];
 
 const uniqueAddOns = [
-  { name: "AI-Enhanced Editing", rate: "£45–£75/hr" },
-  { name: "Archive Footage Restoration", rate: "£50–£80/hr" },
-  { name: "Branded Asset Packs", rate: "£100–£400" },
-  { name: "Interactive Video Editing", rate: "£300–£1,200" },
+  { name: "AI-Enhanced Editing", rate: "Request a quote" },
+  { name: "Archive Footage Restoration", rate: "Request a quote" },
+  { name: "Branded Asset Packs", rate: "Request a quote" },
+  { name: "Interactive Video Editing", rate: "Request a quote" },
 ];
 
 const Platform = () => {
@@ -121,7 +130,7 @@ const Platform = () => {
 
         <div className="text-center bg-card border border-border rounded-lg p-8 max-w-2xl mx-auto">
           <h3 className="font-bebas text-2xl text-foreground tracking-wider mb-2">WANT TO SELL ON THE PLATFORM?</h3>
-          <p className="text-sm text-muted-foreground font-barlow mb-4">Artists keep 85% of sales. 10% studio tech fee, 5% payment processing.</p>
+          <p className="text-sm text-muted-foreground font-barlow mb-4">Artist and studio shares are agreed in the signed contract for each product.</p>
           <Link to="/vinyl/artists"><Button variant="outline" className="font-bebas tracking-wider">LEARN MORE ABOUT SELLING</Button></Link>
         </div>
 

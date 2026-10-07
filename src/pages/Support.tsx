@@ -12,8 +12,8 @@ const supportServices = [
     title: "TECHNICAL SUPPORT",
     description: "On-demand troubleshooting for websites, ordering systems and digital tools. Team training on digital tools.",
     pricing: [
-      { service: "Hourly Support", rate: "£30–£60/hr" },
-      { service: "Monthly Retainer (24/7 priority)", rate: "£200–£400/month" },
+      { service: "Hourly Support", rate: "Request a quote" },
+      { service: "Priority support retainer", rate: "Request a quote" },
     ],
   },
   {
@@ -21,8 +21,8 @@ const supportServices = [
     title: "WEBSITE DEVELOPMENT & MAINTENANCE",
     description: "Responsive website builds with portfolio, services and payment gateway sections. Timeline: 4–6 weeks for initial build.",
     pricing: [
-      { service: "Initial Build", rate: "£1,500–£3,000" },
-      { service: "Monthly Maintenance", rate: "£100–£300/month" },
+      { service: "Initial Build", rate: "Request a quote" },
+      { service: "Monthly Maintenance", rate: "Request a quote" },
     ],
   },
   {
@@ -30,8 +30,8 @@ const supportServices = [
     title: "APP & PLATFORM INTEGRATION",
     description: "Third-party app integrations, booking systems, analytics tools. Timeline: 2–3 weeks post-website launch.",
     pricing: [
-      { service: "Integration Package", rate: "£500–£1,200" },
-      { service: "Ad-hoc Tasks", rate: "£50–£150/task" },
+      { service: "Integration Package", rate: "Request a quote" },
+      { service: "Ad-hoc Tasks", rate: "Request a quote" },
     ],
   },
   {
@@ -39,7 +39,7 @@ const supportServices = [
     title: "DIGITAL MARKETING TOOLS",
     description: "Email marketing platform setup and management (e.g. Mailchimp), landing pages for campaigns, local SEO optimisation.",
     pricing: [
-      { service: "Monthly Management", rate: "£200–£500/month" },
+      { service: "Monthly Management", rate: "Request a quote" },
     ],
   },
   {
@@ -47,8 +47,8 @@ const supportServices = [
     title: "CAMPAIGN MANAGEMENT",
     description: "Full campaign strategy, setup, optimisation, analytics and ad management.",
     pricing: [
-      { service: "Strategy & Setup", rate: "£500–£2,000 (one-time)" },
-      { service: "Ongoing Management", rate: "£800–£5,000/month" },
+      { service: "Strategy & Setup", rate: "Request a quote" },
+      { service: "Ongoing Management", rate: "Request a quote" },
     ],
   },
   {
@@ -56,7 +56,7 @@ const supportServices = [
     title: "FUTURE DEVELOPMENT",
     description: "Custom mobile app development and AI-powered features. Contact us to register interest.",
     pricing: [
-      { service: "Custom Mobile App", rate: "£5,000–£12,000 (3–6 months)" },
+      { service: "Custom Mobile App", rate: "Request a quote" },
       { service: "AI Features", rate: "POA (phased rollout)" },
     ],
   },

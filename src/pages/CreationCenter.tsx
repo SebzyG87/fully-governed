@@ -6,11 +6,11 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
 const sections = [
-  { title: "GAMING & STREAMING", description: "Live streaming setup, gameplay recording, streaming booth rental, equipment access.", href: "/creation-center/gaming", icon: Gamepad2 },
+  { title: "GAMING & STREAMING", description: "Stream Room dry hire and production requests by quote.", href: "/creation-center/gaming", icon: Gamepad2 },
   { title: "MODELING & PORTFOLIO", description: "Photo shoots, video shoots, portfolio creation, casting calls, model agency integration.", href: "/creation-center/modeling", icon: Camera },
   { title: "SHOW PRODUCTION", description: "Talk shows, reality shows, live events, stage setup, lighting, sound, camera crew.", href: "/creation-center/shows", icon: Tv },
-  { title: "CONTENT CREATION", description: "Blogging, vlogging, social media content, short films, documentaries, green screen.", href: "/creation-center/content", icon: Film },
-  { title: "PODCASTING", description: "Podcast recording booth, full equipment setup, editing support, distribution setup.", href: "/creation-center/podcasting", icon: Mic },
+  { title: "CONTENT CREATION", description: "Self-operated Stream Room hire; confirm equipment and setup with the studio.", href: "/creation-center/content", icon: Film },
+  { title: "PODCASTING", description: "Audio-only self-service hire, self-operated video hire and finished-episode production.", href: "/creation-center/podcasting", icon: Mic },
 ];
 
 const CreationCenter = () => (

@@ -23,7 +23,7 @@ const Campaign = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/30"><th className="text-left p-4 font-bebas text-base tracking-wider text-foreground">Service</th><th className="text-right p-4 font-bebas text-base tracking-wider text-foreground">Rate</th></tr></thead>
               <tbody className="font-barlow">
-                <tr><td className="p-4 text-muted-foreground">Full campaign video production</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">£500–£2,000/project</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Full campaign video production</td><td className="p-4 text-right text-primary font-mono whitespace-nowrap">Request a quote</td></tr>
               </tbody>
             </table>
           </div>

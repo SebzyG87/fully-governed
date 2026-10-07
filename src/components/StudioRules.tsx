@@ -18,7 +18,7 @@ const rules = [
   { icon: Lightbulb, text: "Turn off lights after dry hire" },
   { icon: ClipboardList, text: "All sessions must be logged online or manually" },
   { icon: ShieldCheck, text: "Respect all equipment — PAC tested and insured" },
-  { icon: Car, text: "Register vehicle on arrival for secure parking" },
+  { icon: Car, text: "Ask the studio to confirm parking availability" },
 ];
 
 const StudioRules = () => {

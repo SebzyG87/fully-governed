@@ -31,9 +31,7 @@ export const BookingPaymentPlaceholder = ({
         <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Payment step</p>
         <h3 className="font-bebas text-2xl tracking-wide text-foreground">{packageInfo.packageName}</h3>
         <p className="text-sm text-muted-foreground">
-          {paymentType === "full"
-            ? "This booking starts within 48 hours, so full payment is required now."
-            : "Pay the deposit now to hold the slot. The remaining balance is due 48 hours before the session."}
+          {paymentType === "full" ? "Review the payment amount and booking terms before continuing." : "Review the deposit and booking terms before continuing."}
         </p>
       </div>
     </div>
@@ -54,13 +52,13 @@ export const BookingPaymentPlaceholder = ({
     <div className="flex items-start gap-2 rounded-xl border border-amber-500/25 bg-amber-500/10 p-3 text-xs text-amber-100">
       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
       <div className="space-y-1">
-        <p className="font-semibold text-foreground">Strict Booking Policy Active:</p>
-        <p>Deposit locks the slot. Full balance must be paid 48 hours before session start, or your slot will be released and payment lost if booked by someone else.</p>
-        <p className="text-[11px] opacity-90 mt-1">First reschedule allowed up to 24h before booking. Second is not guaranteed. Cancellations within 24h lose payments.</p>
+        <p className="font-semibold text-foreground">Cancellation schedule</p>
+        <p>48 hours or more: full credit. 24–48 hours: 50% charge. Less than 24 hours: 100% charge.</p>
+        <p className="text-[11px] opacity-90 mt-1">Your signed booking agreement controls. Contact the studio about cancellation or credit handling.</p>
       </div>
     </div>
     <p className="text-xs text-muted-foreground">
-      Deposit and strict rescheduling handling are enforced by the studio management. All rates are subject to room setup blockage rules.
+      The booking minimum is 2 hours; a 4-hour block is preferred. Please confirm any setup requirements with the studio.
     </p>
 
     {onCheckout && (
