@@ -7,13 +7,13 @@ import Auth from "./Auth";
 const mocks = vi.hoisted(() => ({
   resetPassword: vi.fn(),
   updateUser: vi.fn(),
-  signInWithOtp: vi.fn(),
+  signUp: vi.fn(),
 }));
 
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({
     signIn: vi.fn(),
-    signUp: vi.fn(),
+    signUp: mocks.signUp,
     resetPassword: mocks.resetPassword,
     verifyOtp: vi.fn(),
     resendVerification: vi.fn(),
@@ -27,7 +27,6 @@ vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     auth: {
       updateUser: mocks.updateUser,
-      signInWithOtp: mocks.signInWithOtp,
       verifyOtp: vi.fn(),
       signInWithOAuth: vi.fn(),
     },
@@ -59,7 +58,7 @@ describe("Auth", () => {
   beforeEach(() => {
     mocks.resetPassword.mockReset();
     mocks.updateUser.mockReset();
-    mocks.signInWithOtp.mockReset();
+    mocks.signUp.mockReset();
   });
 
   it("shows email, password, Google, and forgot-password login options", () => {
@@ -91,8 +90,8 @@ describe("Auth", () => {
     expect(screen.getByRole("button", { name: /update password/i })).toBeInTheDocument();
   });
 
-  it("sends signup metadata without including the password", async () => {
-    mocks.signInWithOtp.mockResolvedValue({ error: null });
+  it("creates an account and explains email-link confirmation", async () => {
+    mocks.signUp.mockResolvedValue(undefined);
     renderAuth("/auth");
 
     fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
@@ -103,9 +102,14 @@ describe("Auth", () => {
     fireEvent.change(screen.getByLabelText(/confirm password/i), { target: { value: "test-password-123" } });
     fireEvent.click(screen.getByRole("button", { name: /create account/i }));
 
-    await waitFor(() => expect(mocks.signInWithOtp).toHaveBeenCalled());
-    const [options] = mocks.signInWithOtp.mock.calls[0];
-    expect(options.options.data).toEqual({ full_name: "Test Customer", phone: null });
+    await waitFor(() => expect(mocks.signUp).toHaveBeenCalledWith(
+      "booking-test@example.com",
+      "test-password-123",
+      "Test Customer",
+      "",
+      "customer",
+    ));
     expect(screen.getByText(/check your email/i)).toBeInTheDocument();
+    expect(screen.getByText(/confirmation link/i)).toBeInTheDocument();
   });
 });

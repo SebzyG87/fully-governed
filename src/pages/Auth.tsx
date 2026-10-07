@@ -32,8 +32,6 @@ const Auth = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showProfileCompletion, setShowProfileCompletion] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
-  const [pendingProfile, setPendingProfile] = useState<{ fullName: string; phone: string | null; password: string } | null>(null);
-  const [code, setCode] = useState("");
   const [isRecovery, setIsRecovery] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [googleFullName, setGoogleFullName] = useState("");
@@ -41,7 +39,7 @@ const Auth = () => {
   const [resendTimer, setResendTimer] = useState(0);
   const [resendStatus, setResendStatus] = useState("");
   
-  const { signIn, signUp, resetPassword, verifyOtp, resendVerification, user, profile, loading } = useAuth();
+  const { signIn, signUp, resetPassword, resendVerification, user, profile, loading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -103,24 +101,10 @@ const Auth = () => {
         }
         const fullName = `${firstName} ${lastName}`.trim();
         
-        // Use signInWithOtp with shouldCreateUser:true to force 6-digit code flow
-        const { error } = await supabase.auth.signInWithOtp({
-          email,
-          options: {
-            shouldCreateUser: true,
-            data: {
-              full_name: fullName,
-              phone: phone || null,
-            },
-          },
-        });
-
-        if (error) throw error;
-
-        setPendingProfile({ fullName, phone: phone || null, password });
+        await signUp(email, password, fullName, phone, "customer");
         setShowVerification(true);
         setResendTimer(60);
-        toast({ title: "Verification code sent" });
+        toast({ title: "Confirmation email sent" });
       }
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
@@ -128,67 +112,12 @@ const Auth = () => {
     setSubmitting(false);
   };
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (code.length < 4) {
-      toast({ title: "Please enter your verification code", variant: "destructive" });
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: 'email',
-      });
-
-      if (error) throw error;
-
-      if (data.user && pendingProfile) {
-        await supabase.auth.updateUser({ password: pendingProfile.password });
-
-        const { data: existingProfile } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('user_id', data.user.id)
-          .single();
-
-        if (!existingProfile) {
-          await supabase.from('profiles').insert({
-            user_id: data.user.id,
-            full_name: pendingProfile.fullName,
-            phone: pendingProfile.phone || null,
-            membership_tier: 'customer',
-            loyalty_points: 0,
-          });
-        }
-      }
-
-      toast({ title: "Email verified. Welcome aboard" });
-      navigate(redirectTo, { replace: true });
-    } catch (err: any) {
-      toast({ title: "Verification Failed", description: "Code incorrect or expired. Click resend to get a new one.", variant: "destructive" });
-    }
-    setSubmitting(false);
-  };
-
   const handleResendCode = async () => {
     if (resendTimer > 0) return;
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: { 
-          shouldCreateUser: true,
-          data: pendingProfile ? {
-          full_name: pendingProfile.fullName,
-          phone: pendingProfile.phone,
-        } : {}
-        },
-      });
-      if (error) throw error;
-      
+      await resendVerification(email);
       setResendTimer(60);
-      setResendStatus("New code sent");
+      setResendStatus("New confirmation email sent");
       setTimeout(() => setResendStatus(""), 3000);
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
@@ -320,43 +249,24 @@ const Auth = () => {
                   <div className="space-y-2">
                     <h2 className="text-2xl text-white font-bebas tracking-wider uppercase">Check Your Email</h2>
                     <p className="text-sm text-muted-foreground font-barlow">
-                      We've sent a verification code to:
+                      We've sent a confirmation link to:
                     </p>
                     <p className="text-primary font-mono text-base font-semibold">{email}</p>
-                    <p className="text-xs text-muted-foreground pt-4">Enter the code below to activate your account.</p>
+                    <p className="text-xs text-muted-foreground pt-4">Open the link in that email to activate your account, then return here to continue.</p>
                   </div>
-                  
-                  <form onSubmit={handleVerifyOtp} className="space-y-6">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={code}
-                      onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                      placeholder="Enter your code"
-                      className="w-full text-center text-3xl font-mono tracking-[0.5em] bg-white/5 border border-white/10 rounded-xl px-4 py-5 text-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-white/10 placeholder:tracking-normal"
-                      autoFocus
-                    />
-                    
-                    <div className="space-y-4">
-                      <Button type="submit" disabled={submitting || code.length < 4} className="w-full h-12 font-bebas text-xl tracking-widest glow-gold">
-                        {submitting ? "VERIFYING..." : "VERIFY ACCOUNT"}
-                      </Button>
-                      
-                      <div className="text-center space-y-2">
-                        {resendTimer > 0 ? (
-                          <p className="text-xs text-muted-foreground font-mono">Resend code in {resendTimer}s</p>
-                        ) : (
-                          <button type="button" onClick={handleResendCode} className="text-xs text-primary hover:underline hover:text-interactive transition-all">
-                            Didn't get it? Resend code
-                          </button>
-                        )}
-                        {resendStatus && <p className="text-[10px] text-green-500 mt-1 uppercase tracking-tighter">{resendStatus}</p>}
-                        <button type="button" onClick={() => { setShowVerification(false); setCode(""); }} className="text-xs text-muted-foreground hover:text-white flex items-center justify-center gap-1 w-full">
-                          <ArrowLeft className="w-3 h-3" /> Use a different email
-                        </button>
-                      </div>
-                    </div>
-                  </form>
+                  <div className="space-y-3">
+                    {resendTimer > 0 ? (
+                      <p className="text-xs text-muted-foreground font-mono">Resend email in {resendTimer}s</p>
+                    ) : (
+                      <button type="button" onClick={handleResendCode} className="text-xs text-primary hover:underline hover:text-interactive transition-all">
+                        Didn't get it? Resend confirmation email
+                      </button>
+                    )}
+                    {resendStatus && <p className="text-[10px] text-green-500 mt-1 uppercase tracking-tighter">{resendStatus}</p>}
+                    <button type="button" onClick={() => setShowVerification(false)} className="text-xs text-muted-foreground hover:text-white flex items-center justify-center gap-1 w-full">
+                      <ArrowLeft className="w-3 h-3" /> Use a different email
+                    </button>
+                  </div>
                 </div>
             ) : isRecovery ? (
               <motion.form key="recovery" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleUpdatePassword} className="space-y-4">
