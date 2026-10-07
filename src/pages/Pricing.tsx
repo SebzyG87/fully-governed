@@ -2,15 +2,16 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { studioRates } from "@/lib/studioRates";
 
 const roomRates = [
-  { name: "Music Studio dry hire", details: "2-hour minimum · preferred 4-hour block", price: "£12.50 / hour" },
-  { name: "Music Studio annual rate", details: "Annual booking arrangement", price: "£7.50 / hour" },
-  { name: "Podcast room, audio-only self-service", details: "4 broadcast mics, headphones, RØDECaster Pro II; raw WAV/MP3", price: "£49.99 / hour" },
-  { name: "Video room, self-operated", details: "306 sq. ft. room; client brings or operates cameras", price: "£70 / hour" },
-  { name: "Stream Room dry hire", details: "Self-operated room hire", price: "£45 / hour" },
+  { name: "Music Studio dry hire", details: "2-hour minimum · preferred 4-hour block", price: `£${studioRates.recordingHourly.toFixed(2)} / hour` },
+  { name: "Music Studio annual rate", details: "Annual booking arrangement", price: `£${studioRates.recordingAnnualHourly.toFixed(2)} / hour` },
+  { name: "Podcast room, audio-only self-service", details: "4 broadcast mics, headphones, RØDECaster Pro II; raw WAV/MP3", price: `£${studioRates.podcastSelfServiceHourly.toFixed(2)} / hour` },
+  { name: "Video room, self-operated", details: "306 sq. ft. room; client brings or operates cameras", price: `£${studioRates.videoSelfOperatedHourly} / hour` },
+  { name: "Stream Room dry hire", details: "Self-operated room hire", price: `£${studioRates.streamRoomHourly} / hour` },
   { name: "Edit Suite", details: "Intro / Standard / Annual · annual plan has a 25-hour monthly minimum", price: "£10 / £20 / £19.99 per hour" },
-  { name: "Engineer add-on", details: "Added to room hire", price: "£25 flat" },
+  { name: "Engineer add-on", details: "Added to room hire", price: `£${studioRates.engineerAddOn} flat` },
   { name: "Creative time packs", details: "25 / 50 / 100 hours", price: "£250 / £500 / £750" },
 ];
 

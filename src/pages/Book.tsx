@@ -703,6 +703,7 @@ const Book = () => {
                       key={day.toISOString()}
                       disabled={past}
                       onClick={() => { setSelectedDate(day); setSelectedHour(null); }}
+                      aria-label={`${format(day, "EEEE, d MMMM")}${avail === null ? "" : `, ${avail === "open" ? "available" : avail === "partial" ? "partially booked" : "fully booked"}`}`}
                       className={`py-1.5 rounded text-sm font-mono transition-all flex flex-col items-center gap-0.5 ${past ? "text-muted-foreground/30 cursor-not-allowed" : selected ? `${roomBgMap[selectedRoom.color] ?? "bg-primary"} text-primary-foreground font-bold` : today ? "ring-1 ring-primary text-foreground" : "text-foreground hover:bg-accent"}`}
                     >
                       {format(day, "d")}
@@ -712,6 +713,11 @@ const Book = () => {
                     </button>
                   );
                 })}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-3 text-xs text-muted-foreground" aria-label="Calendar availability key">
+                <span className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />Green: available</span>
+                <span className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" />Amber: partly booked</span>
+                <span className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-destructive" />Red: fully booked</span>
               </div>
               {/* Next Available Slot button */}
               <Button variant="outline" size="sm" onClick={findNextAvailableSlot} className="w-full mt-3 font-mono text-xs">

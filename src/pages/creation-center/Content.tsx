@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import QuoteRequestModal from "@/components/QuoteRequestModal";
+import { studioRates } from "@/lib/studioRates";
 
 const Content = () => {
   const [quoteOpen, setQuoteOpen] = useState(false);
@@ -24,7 +25,7 @@ const Content = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Price</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Stream Room dry hire</td><td className="p-4 text-right text-primary font-mono">£45/hr</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Stream Room dry hire</td><td className="p-4 text-right text-primary font-mono">£{studioRates.streamRoomHourly}/hr</td></tr>
                 <tr><td className="p-4 text-muted-foreground">Managed content production</td><td className="p-4 text-right text-primary font-mono">Request a quote</td></tr>
               </tbody>
             </table>

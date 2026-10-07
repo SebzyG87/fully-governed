@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { RoomViewButtons } from "@/components/RoomGalleryModal";
+import { studioRates } from "@/lib/studioRates";
 
 const Studio = () => (
   <div className="min-h-screen bg-background pb-20 md:pb-0">
@@ -21,9 +22,9 @@ const Studio = () => (
           <table className="w-full text-sm">
             <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Session Type</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th></tr></thead>
             <tbody className="font-barlow">
-              <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Standard dry hire</td><td className="p-4 text-right text-primary font-mono">£12.50/hr</td></tr>
-              <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Annual dry hire</td><td className="p-4 text-right text-primary font-mono">£7.50/hr</td></tr>
-              <tr><td className="p-4 text-muted-foreground">Engineer add-on</td><td className="p-4 text-right text-primary font-mono">£25 flat + room hire</td></tr>
+              <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Standard dry hire</td><td className="p-4 text-right text-primary font-mono">£{studioRates.recordingHourly.toFixed(2)}/hr</td></tr>
+              <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Annual dry hire</td><td className="p-4 text-right text-primary font-mono">£{studioRates.recordingAnnualHourly.toFixed(2)}/hr</td></tr>
+              <tr><td className="p-4 text-muted-foreground">Engineer add-on</td><td className="p-4 text-right text-primary font-mono">£{studioRates.engineerAddOn} flat + room hire</td></tr>
             </tbody>
           </table>
         </div>

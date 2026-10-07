@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import QuoteRequestModal from "@/components/QuoteRequestModal";
+import { studioRates } from "@/lib/studioRates";
 
 const Podcasting = () => {
   const [quoteOpen, setQuoteOpen] = useState(false);
@@ -24,9 +25,9 @@ const Podcasting = () => {
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-secondary/50"><th className="text-left p-4 font-bebas text-lg tracking-wider text-foreground">Rate</th><th className="text-right p-4 font-bebas text-lg tracking-wider text-foreground">Price</th></tr></thead>
               <tbody className="font-barlow">
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Podcast room, audio-only self-service</td><td className="p-4 text-right text-primary font-mono">£49.99/hr</td></tr>
-                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Video room, self-operated</td><td className="p-4 text-right text-primary font-mono">£70/hr</td></tr>
-                <tr><td className="p-4 text-muted-foreground">Finished podcast production</td><td className="p-4 text-right text-primary font-mono">From £150/episode</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Podcast room, audio-only self-service</td><td className="p-4 text-right text-primary font-mono">£{studioRates.podcastSelfServiceHourly.toFixed(2)}/hr</td></tr>
+                <tr className="border-b border-border"><td className="p-4 text-muted-foreground">Video room, self-operated</td><td className="p-4 text-right text-primary font-mono">£{studioRates.videoSelfOperatedHourly}/hr</td></tr>
+                <tr><td className="p-4 text-muted-foreground">Finished podcast production</td><td className="p-4 text-right text-primary font-mono">From £{studioRates.managedPodcastPerEpisodeFrom}/episode</td></tr>
               </tbody>
             </table>
           </div>

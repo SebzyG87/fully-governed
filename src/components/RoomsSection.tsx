@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { RoomViewButtons } from "@/components/RoomGalleryModal";
+import { studioRates } from "@/lib/studioRates";
 
 interface PriceItem {
   label: string;
@@ -39,9 +40,9 @@ const rooms: Room[] = [
       "Four-hour block preferred",
     ],
     pricing: [
-      { label: "Music Studio dry hire", price: "£12.50/hr" },
-      { label: "Annual rate", price: "£7.50/hr" },
-      { label: "Engineer add-on", price: "£25 flat" },
+      { label: "Music Studio dry hire", price: `£${studioRates.recordingHourly.toFixed(2)}/hr` },
+      { label: "Annual rate", price: `£${studioRates.recordingAnnualHourly.toFixed(2)}/hr` },
+      { label: "Engineer add-on", price: `£${studioRates.engineerAddOn} flat` },
     ],
     sessionTypes: [
       "Artist Recording + Engineer",
@@ -69,9 +70,9 @@ const rooms: Room[] = [
       "Setup confirmed before booking",
     ],
     pricing: [
-      { label: "Podcast audio-only, self-service", price: "£49.99/hr" },
-      { label: "Video room, self-operated", price: "£70/hr" },
-      { label: "Managed podcast packages", price: "From £150/episode" },
+      { label: "Podcast audio-only, self-service", price: `£${studioRates.podcastSelfServiceHourly.toFixed(2)}/hr` },
+      { label: "Video room, self-operated", price: `£${studioRates.videoSelfOperatedHourly}/hr` },
+      { label: "Managed podcast packages", price: `From £${studioRates.managedPodcastPerEpisodeFrom}/episode` },
     ],
     sessionTypes: [
       "Podcast",
@@ -97,8 +98,8 @@ const rooms: Room[] = [
       "Equipment and access confirmed with the studio",
     ],
     pricing: [
-      { label: "Stream Room dry hire", price: "£45/hr" },
-      { label: "Engineer add-on", price: "£25 flat + room hire" },
+      { label: "Stream Room dry hire", price: `£${studioRates.streamRoomHourly}/hr` },
+      { label: "Engineer add-on", price: `£${studioRates.engineerAddOn} flat + room hire` },
       { label: "Managed production", price: "Request a quote" },
     ],
     sessionTypes: [
@@ -137,7 +138,6 @@ const RoomCard = ({ room, index }: { room: Room; index: number }) => (
           <p className="text-primary font-mono text-[10px] uppercase tracking-[0.2em] mt-0.5">Fully Governed Media</p>
         )}
       </div>
-      {room.id !== "content" && <div className="border-b border-border bg-card px-4 py-3"><RoomViewButtons roomName={room.subtitle} /></div>}
     </div>
 
     {/* Content */}
@@ -188,6 +188,12 @@ const RoomCard = ({ room, index }: { room: Room; index: number }) => (
           ))}
         </div>
       </div>
+
+      {room.id !== "content" && (
+        <div className="mt-4">
+          <RoomViewButtons roomName={room.subtitle} showTourLink={false} galleryButtonLabel="VIEW 360° ROOM GALLERY" />
+        </div>
+      )}
 
       {/* Book CTA */}
       <div className="mt-4">

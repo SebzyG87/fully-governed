@@ -8,6 +8,8 @@ const PanoramaViewer = lazy(() => import("@/components/PanoramaViewer").then((mo
 
 interface RoomGalleryModalProps {
   roomName: string;
+  showTourLink?: boolean;
+  galleryButtonLabel?: string;
 }
 
 const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose: () => void; images: string[] }) => {
@@ -85,7 +87,7 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
   );
 };
 
-export const RoomViewButtons = ({ roomName }: RoomGalleryModalProps) => {
+export const RoomViewButtons = ({ roomName, showTourLink = true, galleryButtonLabel = "ROOM PHOTOS" }: RoomGalleryModalProps) => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const name = roomName.toLowerCase();
   const images = name.includes("recording")
@@ -98,11 +100,13 @@ export const RoomViewButtons = ({ roomName }: RoomGalleryModalProps) => {
     <>
       <div className="flex flex-wrap gap-3 justify-center">
         <Button variant="outline" className="font-bebas tracking-wider" onClick={() => setGalleryOpen(true)}>
-          <Images className="w-4 h-4 mr-2" /> ROOM PHOTOS
+          <Images className="w-4 h-4 mr-2" /> {galleryButtonLabel}
         </Button>
-        <Button asChild className="font-bebas tracking-wider">
-          <Link to={`/360-tour?room=${tourRoom}`}>OPEN 360° TOUR</Link>
-        </Button>
+        {showTourLink && (
+          <Button asChild className="font-bebas tracking-wider">
+            <Link to={`/360-tour?room=${tourRoom}`}>OPEN 360° TOUR</Link>
+          </Button>
+        )}
       </div>
       {galleryOpen && (
         <GalleryModal roomName={roomName} images={imagePaths} onClose={() => setGalleryOpen(false)} />

@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import QuoteRequestModal from "@/components/QuoteRequestModal";
 import { RoomViewButtons } from "@/components/RoomGalleryModal";
+import { studioRates } from "@/lib/studioRates";
 
 const rentalOptions = [
-  { type: "Music Studio dry hire", hourly: "£12.50", details: "2-hour minimum; 4-hour block preferred" },
-  { type: "Podcast room, audio-only", hourly: "£49.99", details: "Self-service" },
-  { type: "Video room", hourly: "£70", details: "Self-operated" },
-  { type: "Stream Room", hourly: "£45", details: "Dry hire" },
+  { type: "Music Studio dry hire", hourly: `£${studioRates.recordingHourly.toFixed(2)}`, details: "2-hour minimum; 4-hour block preferred" },
+  { type: "Podcast room, audio-only", hourly: `£${studioRates.podcastSelfServiceHourly.toFixed(2)}`, details: "Self-service" },
+  { type: "Video room", hourly: `£${studioRates.videoSelfOperatedHourly}`, details: "Self-operated" },
+  { type: "Stream Room", hourly: `£${studioRates.streamRoomHourly}`, details: "Dry hire" },
   { type: "Edit Suite", hourly: "£10 / £20 / £19.99", details: "Intro / Standard / Annual; annual minimum 25 hours/month" },
 ];
 
