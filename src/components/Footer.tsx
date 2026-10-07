@@ -37,9 +37,9 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <h3 className="font-bebas text-lg text-foreground tracking-wider mb-3">CONNECT</h3>
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
               <a href="https://instagram.com/fullygoverned" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-interactive transition-colors" aria-label="Instagram">
                 <Instagram className="w-5 h-5" />
               </a>
@@ -59,7 +59,7 @@ const Footer = () => {
                 <MapPin className="w-5 h-5" />
               </a>
             </div>
-            <p className="text-xs text-muted-foreground font-barlow">musicfullygoverned@gmail.com</p>
+            <p className="text-xs text-muted-foreground font-barlow break-words">musicfullygoverned@gmail.com</p>
           </div>
         </div>
 

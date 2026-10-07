@@ -16,52 +16,124 @@ export type Database = {
     Tables: {
       bookings: {
         Row: {
+          admin_notes: string | null
           amendment_count: number
           beat_needed: boolean | null
+          cancelled_at: string | null
+          checked_in_at: string | null
+          client_notes: string | null
+          completed_at: string | null
+          confirmed_at: string | null
           created_at: string
+          deposit_amount: number | null
           end_time: string
+          excluded_services: Json | null
+          extras_purchased: Json | null
           id: string
+          included_services: Json | null
           is_private: boolean | null
+          no_show_at: string | null
           notes: string | null
           num_guests: number | null
+          outstanding_balance: number | null
+          overtime_owed: number | null
+          overtime_rules: Json | null
+          package_purchased: string | null
+          payment_provider: string | null
+          payment_provider_ref: string | null
+          payment_status: string | null
+          producer_notes: string | null
+          refund_status: string | null
           room_id: string
           security_required: boolean | null
           session_type: string
           start_time: string
+          started_at: string | null
           status: string
+          total_amount: number | null
+          updated_at: string | null
           user_id: string
+          verification_status: string | null
         }
         Insert: {
+          admin_notes?: string | null
           amendment_count?: number
           beat_needed?: boolean | null
+          cancelled_at?: string | null
+          checked_in_at?: string | null
+          client_notes?: string | null
+          completed_at?: string | null
+          confirmed_at?: string | null
           created_at?: string
+          deposit_amount?: number | null
           end_time: string
+          excluded_services?: Json | null
+          extras_purchased?: Json | null
           id?: string
+          included_services?: Json | null
           is_private?: boolean | null
+          no_show_at?: string | null
           notes?: string | null
           num_guests?: number | null
+          outstanding_balance?: number | null
+          overtime_owed?: number | null
+          overtime_rules?: Json | null
+          package_purchased?: string | null
+          payment_provider?: string | null
+          payment_provider_ref?: string | null
+          payment_status?: string | null
+          producer_notes?: string | null
+          refund_status?: string | null
           room_id: string
           security_required?: boolean | null
           session_type: string
           start_time: string
+          started_at?: string | null
           status?: string
+          total_amount?: number | null
+          updated_at?: string | null
           user_id: string
+          verification_status?: string | null
         }
         Update: {
+          admin_notes?: string | null
           amendment_count?: number
           beat_needed?: boolean | null
+          cancelled_at?: string | null
+          checked_in_at?: string | null
+          client_notes?: string | null
+          completed_at?: string | null
+          confirmed_at?: string | null
           created_at?: string
+          deposit_amount?: number | null
           end_time?: string
+          excluded_services?: Json | null
+          extras_purchased?: Json | null
           id?: string
+          included_services?: Json | null
           is_private?: boolean | null
+          no_show_at?: string | null
           notes?: string | null
           num_guests?: number | null
+          outstanding_balance?: number | null
+          overtime_owed?: number | null
+          overtime_rules?: Json | null
+          package_purchased?: string | null
+          payment_provider?: string | null
+          payment_provider_ref?: string | null
+          payment_status?: string | null
+          producer_notes?: string | null
+          refund_status?: string | null
           room_id?: string
           security_required?: boolean | null
           session_type?: string
           start_time?: string
+          started_at?: string | null
           status?: string
+          total_amount?: number | null
+          updated_at?: string | null
           user_id?: string
+          verification_status?: string | null
         }
         Relationships: [
           {
@@ -72,6 +144,457 @@ export type Database = {
             referencedColumns: ["id"]
           }
         ]
+      }
+      fg_ai_call_logs: {
+        Row: {
+          ai_provider: string | null
+          booking_enquiry_status: string | null
+          call_summary: string | null
+          call_type: string | null
+          caller_number: string | null
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          follow_up_task_id: string | null
+          id: string
+          linked_user_id: string | null
+          started_at: string | null
+          transcript: string | null
+        }
+        Insert: {
+          ai_provider?: string | null
+          booking_enquiry_status?: string | null
+          call_summary?: string | null
+          call_type?: string | null
+          caller_number?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          follow_up_task_id?: string | null
+          id?: string
+          linked_user_id?: string | null
+          started_at?: string | null
+          transcript?: string | null
+        }
+        Update: {
+          ai_provider?: string | null
+          booking_enquiry_status?: string | null
+          call_summary?: string | null
+          call_type?: string | null
+          caller_number?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          follow_up_task_id?: string | null
+          id?: string
+          linked_user_id?: string | null
+          started_at?: string | null
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      fg_booking_assignments: {
+        Row: {
+          assigned_by: string | null
+          assignment_role: string
+          assignment_status: string
+          booking_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          staff_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          assignment_role: string
+          assignment_status?: string
+          booking_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          staff_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string | null
+          assignment_role?: string
+          assignment_status?: string
+          booking_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          staff_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fg_booking_assignments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      fg_booking_lifecycle_events: {
+        Row: {
+          booking_id: string
+          changed_by: string | null
+          created_at: string
+          from_status: string | null
+          id: string
+          note: string | null
+          to_status: string
+        }
+        Insert: {
+          booking_id: string
+          changed_by?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          to_status: string
+        }
+        Update: {
+          booking_id?: string
+          changed_by?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fg_booking_lifecycle_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      fg_cleaning_tasks: {
+        Row: {
+          assigned_cleaner_id: string | null
+          booking_id: string | null
+          checklist: Json
+          cleaning_window_end: string | null
+          cleaning_window_start: string | null
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string
+          id: string
+          issue_report: string | null
+          notes: string | null
+          room_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_cleaner_id?: string | null
+          booking_id?: string | null
+          checklist?: Json
+          cleaning_window_end?: string | null
+          cleaning_window_start?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          id?: string
+          issue_report?: string | null
+          notes?: string | null
+          room_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_cleaner_id?: string | null
+          booking_id?: string | null
+          checklist?: Json
+          cleaning_window_end?: string | null
+          cleaning_window_start?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          id?: string
+          issue_report?: string | null
+          notes?: string | null
+          room_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fg_cleaning_tasks_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      fg_client_verifications: {
+        Row: {
+          admin_status: string | null
+          booking_id: string | null
+          created_at: string
+          guest_name: string | null
+          id: string
+          id_document_url: string | null
+          is_guest: boolean
+          rejected_reason: string | null
+          selfie_url: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          verification_notes: string | null
+          verified_at: string | null
+          verified_by: string | null
+          waiver_signed_at: string | null
+        }
+        Insert: {
+          admin_status?: string | null
+          booking_id?: string | null
+          created_at?: string
+          guest_name?: string | null
+          id?: string
+          id_document_url?: string | null
+          is_guest?: boolean
+          rejected_reason?: string | null
+          selfie_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          verification_notes?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          waiver_signed_at?: string | null
+        }
+        Update: {
+          admin_status?: string | null
+          booking_id?: string | null
+          created_at?: string
+          guest_name?: string | null
+          id?: string
+          id_document_url?: string | null
+          is_guest?: boolean
+          rejected_reason?: string | null
+          selfie_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          verification_notes?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          waiver_signed_at?: string | null
+        }
+        Relationships: []
+      }
+      fg_email_queue: {
+        Row: {
+          attempts: number
+          booking_id: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          payload: Json
+          provider_message_id: string | null
+          recipient_email: string
+          recipient_user_id: string | null
+          send_after: string
+          sent_at: string | null
+          status: string
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          booking_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json
+          provider_message_id?: string | null
+          recipient_email: string
+          recipient_user_id?: string | null
+          send_after?: string
+          sent_at?: string | null
+          status?: string
+          template_key: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          booking_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json
+          provider_message_id?: string | null
+          recipient_email?: string
+          recipient_user_id?: string | null
+          send_after?: string
+          sent_at?: string | null
+          status?: string
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fg_incidents: {
+        Row: {
+          booking_id: string | null
+          created_at: string
+          id: string
+          incident_type: string
+          notes: string | null
+          reported_by: string | null
+          resolved: boolean
+          resolved_at: string | null
+          resolved_by: string | null
+          room_id: string | null
+          severity: string
+          updated_at: string
+          visible_to_client: boolean
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string
+          id?: string
+          incident_type: string
+          notes?: string | null
+          reported_by?: string | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          room_id?: string | null
+          severity?: string
+          updated_at?: string
+          visible_to_client?: boolean
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string
+          id?: string
+          incident_type?: string
+          notes?: string | null
+          reported_by?: string | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          room_id?: string | null
+          severity?: string
+          updated_at?: string
+          visible_to_client?: boolean
+        }
+        Relationships: []
+      }
+      fg_room_buffers: {
+        Row: {
+          buffer_minutes: number
+          cleaning_required: boolean
+          created_at: string
+          id: string
+          room_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          buffer_minutes?: number
+          cleaning_required?: boolean
+          created_at?: string
+          id?: string
+          room_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          buffer_minutes?: number
+          cleaning_required?: boolean
+          created_at?: string
+          id?: string
+          room_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fg_room_buffers_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: true
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      fg_session_notes: {
+        Row: {
+          author_id: string
+          booking_id: string
+          content: string
+          created_at: string
+          id: string
+          note_type: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          booking_id: string
+          content: string
+          created_at?: string
+          id?: string
+          note_type?: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          booking_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          note_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fg_session_notes_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      fg_studio_settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_value?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       clothing_orders: {
         Row: {
@@ -420,6 +943,7 @@ export type Database = {
           pin: string | null
           soundcloud: string | null
           spotify: string | null
+          studio_role: string | null
           tiktok: string | null
           twitter: string | null
           updated_at: string
@@ -446,6 +970,7 @@ export type Database = {
           pin?: string | null
           soundcloud?: string | null
           spotify?: string | null
+          studio_role?: string | null
           tiktok?: string | null
           twitter?: string | null
           updated_at?: string
@@ -472,6 +997,7 @@ export type Database = {
           pin?: string | null
           soundcloud?: string | null
           spotify?: string | null
+          studio_role?: string | null
           tiktok?: string | null
           twitter?: string | null
           updated_at?: string
@@ -960,11 +1486,162 @@ export type Database = {
         }
         Relationships: []
       }
+      fg_ban_registry: {
+        Row: {
+          audit_trail: Json
+          ban_status: string
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          linked_incident_id: string | null
+          linked_user_id: string | null
+          person_name: string
+          person_type: string
+          reason: string
+          required_action: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          review_status: string
+          risk_status: string
+          updated_at: string
+        }
+        Insert: {
+          audit_trail?: Json
+          ban_status?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          linked_incident_id?: string | null
+          linked_user_id?: string | null
+          person_name: string
+          person_type?: string
+          reason: string
+          required_action?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          review_status?: string
+          risk_status?: string
+          updated_at?: string
+        }
+        Update: {
+          audit_trail?: Json
+          ban_status?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          linked_incident_id?: string | null
+          linked_user_id?: string | null
+          person_name?: string
+          person_type?: string
+          reason?: string
+          required_action?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          review_status?: string
+          risk_status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fg_loyalty_points: {
+        Row: {
+          created_at: string | null
+          id: string
+          points: number
+          reason: string
+          reference_id: string | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          points: number
+          reason: string
+          reference_id?: string | null
+          source: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          points?: number
+          reason?: string
+          reference_id?: string | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      fg_get_room_buffer: {
+        Args: { _room_id: string }
+        Returns: number
+      }
+      fg_check_room_availability: {
+        Args: {
+          _room_id: string
+          _start_time: string
+          _end_time: string
+          _exclude_booking_id?: string
+        }
+        Returns: boolean
+      }
+      fg_get_studio_role: {
+        Args: { _user_id: string }
+        Returns: string
+      }
+      fg_is_assigned_to_booking: {
+        Args: { _booking_id: string }
+        Returns: boolean
+      }
+      fg_is_cleaner: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      fg_is_manager_or_above: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      fg_is_producer: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      fg_is_staff: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      fg_is_super_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      fg_todays_room_status: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          room_id: string
+          room_name: string
+          room_slug: string
+          room_color: string
+          current_booking_id: string | null
+          current_booking_status: string | null
+          current_client_user_id: string | null
+          current_session_type: string | null
+          current_start_time: string | null
+          current_end_time: string | null
+          next_booking_id: string | null
+          next_start_time: string | null
+          assigned_producer_id: string | null
+          cleaning_task_id: string | null
+          cleaning_task_status: string | null
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -974,7 +1651,15 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "family" | "customer" | "creator_admin"
+      app_role:
+        | "family"
+        | "customer"
+        | "creator_admin"
+        | "super_admin"
+        | "studio_manager"
+        | "session_producer"
+        | "cleaner"
+        | "client_artist"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1102,7 +1787,36 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["family", "customer", "creator_admin"],
+      app_role: [
+        "family",
+        "customer",
+        "creator_admin",
+        "super_admin",
+        "studio_manager",
+        "session_producer",
+        "cleaner",
+        "client_artist",
+      ],
     },
   },
 } as const
+
+// Convenience studio-role types derived from the generated schema
+export type StudioRoleValue =
+  | "super_admin"
+  | "studio_manager"
+  | "session_producer"
+  | "cleaner"
+  | "client_artist"
+
+export type BookingRow = import("./types").Tables<"bookings">
+export type BookingInsert = import("./types").TablesInsert<"bookings">
+export type CleaningTaskRow = import("./types").Tables<"fg_cleaning_tasks">
+export type IncidentRow = import("./types").Tables<"fg_incidents">
+export type AssignmentRow = import("./types").Tables<"fg_booking_assignments">
+export type LifecycleEventRow = import("./types").Tables<"fg_booking_lifecycle_events">
+export type VerificationRow = import("./types").Tables<"fg_client_verifications">
+export type EmailQueueRow = import("./types").Tables<"fg_email_queue">
+export type SessionNoteRow = import("./types").Tables<"fg_session_notes">
+export type StudioSettingRow = import("./types").Tables<"fg_studio_settings">
+export type RoomBufferRow = import("./types").Tables<"fg_room_buffers">

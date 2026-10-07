@@ -1,5 +1,9 @@
 import { useEffect } from "react";
 
+const SITE_NAME = "Fully Governed";
+const SITE_URL = "https://www.fullygoverned.co.uk";
+const DEFAULT_IMAGE = `${SITE_URL}/social-preview.png`;
+
 interface SEOProps {
     title: string;
     description?: string;
@@ -9,8 +13,12 @@ interface SEOProps {
 
 export function useSEO({ title, description, image, url }: SEOProps) {
     useEffect(() => {
+        const pageTitle = title === "Fully Governed Studios" ? title : `${title} | ${SITE_NAME}`;
+        const pageUrl = url || SITE_URL;
+        const pageImage = image || DEFAULT_IMAGE;
+
         // Basic meta tags
-        document.title = `${title} | Ewisham Creative Suite`;
+        document.title = pageTitle;
 
         if (description) {
             let metaDescription = document.querySelector('meta[name="description"]');
@@ -33,10 +41,27 @@ export function useSEO({ title, description, image, url }: SEOProps) {
             ogTag.setAttribute("content", content);
         };
 
-        setOpenGraph("og:title", `${title} | Ewisham Creative Suite`);
+        const setTwitter = (name: string, content: string) => {
+            let twitterTag = document.querySelector(`meta[name="${name}"]`);
+            if (!twitterTag) {
+                twitterTag = document.createElement("meta");
+                twitterTag.setAttribute("name", name);
+                document.head.appendChild(twitterTag);
+            }
+            twitterTag.setAttribute("content", content);
+        };
+
+        setOpenGraph("og:site_name", SITE_NAME);
+        setOpenGraph("og:title", pageTitle);
         if (description) setOpenGraph("og:description", description);
-        if (image) setOpenGraph("og:image", image);
-        if (url) setOpenGraph("og:url", url);
+        setOpenGraph("og:image", pageImage);
+        setOpenGraph("og:url", pageUrl);
+
+        setTwitter("twitter:card", "summary_large_image");
+        setTwitter("twitter:title", pageTitle);
+        if (description) setTwitter("twitter:description", description);
+        setTwitter("twitter:image", pageImage);
+        setTwitter("twitter:url", pageUrl);
 
     }, [title, description, image, url]);
 }

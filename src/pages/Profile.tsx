@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Crown, User, Save, ArrowLeft, Upload, Radio } from "lucide-react";
+import { Crown, User, Save, Upload, Radio } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import BackLink from "@/components/BackLink";
 
 const Profile = () => {
   const { user, profile, role, loading, refreshProfile } = useAuth();
@@ -120,10 +121,7 @@ const Profile = () => {
       <div className="grain-overlay" />
       <header className="border-b border-border bg-card/50 backdrop-blur-xl">
         <div className="container flex items-center justify-between h-16">
-          <Link to="/dashboard" className="flex items-center gap-2 text-muted-foreground hover:text-interactive transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-barlow text-sm">Back to Dashboard</span>
-          </Link>
+          <BackLink to="/dashboard" label="Back to Dashboard" />
         </div>
       </header>
 
@@ -202,7 +200,7 @@ const Profile = () => {
           <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer group">
             <input type="checkbox" checked={inBuilding} onChange={(e) => setInBuilding(e.target.checked)} className="accent-interactive" />
             <Radio className="w-4 h-4 text-emerald-500" />
-            <span className="group-hover:text-interactive transition-colors">I'm in the building right now</span>
+            <span className="group-hover:text-interactive transition-colors">Mark me as currently on site at Fully Governed</span>
           </label>
 
           <h3 className="text-xl text-foreground pt-2">SOCIALS</h3>

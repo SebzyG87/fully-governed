@@ -24,6 +24,11 @@ const Earnings = lazy(() => import("./pages/dashboard/Earnings"));
 const QRGenerator = lazy(() => import("./pages/dashboard/QRGenerator"));
 const BuildPoints = lazy(() => import("./pages/dashboard/BuildPoints"));
 const Credits = lazy(() => import("./pages/dashboard/Credits"));
+const AdminOps = lazy(() => import("./pages/dashboard/AdminOps"));
+const StudioManager = lazy(() => import("./pages/dashboard/StudioManager"));
+const Producer = lazy(() => import("./pages/dashboard/Producer"));
+const Cleaner = lazy(() => import("./pages/dashboard/Cleaner"));
+const Client = lazy(() => import("./pages/dashboard/Client"));
 const Book = lazy(() => import("./pages/Book"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Pricing = lazy(() => import("./pages/Pricing"));
@@ -42,7 +47,9 @@ const SessionLog = lazy(() => import("./pages/SessionLog"));
 const Community = lazy(() => import("./pages/Community"));
 const Story = lazy(() => import("./pages/Story"));
 const Tour = lazy(() => import("./pages/Tour"));
+const Tour360 = lazy(() => import("./pages/Tour360"));
 const FoodMenu = lazy(() => import("./pages/FoodMenu"));
+const CampaignBriefs = lazy(() => import("./pages/CampaignBriefs"));
 const Academy = lazy(() => import("./pages/Academy"));
 const Help = lazy(() => import("./pages/Help"));
 const HelpArticle = lazy(() => import("./pages/HelpArticle"));
@@ -55,6 +62,9 @@ const Contact = lazy(() => import("./pages/Contact"));
 const OfflinePage = lazy(() => import("./pages/OfflinePage"));
 const SocialFeed = lazy(() => import("./pages/SocialFeed"));
 const ArtistSocialHub = lazy(() => import("./pages/ArtistSocialHub"));
+const Team = lazy(() => import("./pages/Team"));
+const TeamMemberProfile = lazy(() => import("./pages/TeamMemberProfile"));
+
 
 // Creation Center
 const CreationCenter = lazy(() => import("./pages/CreationCenter"));
@@ -148,6 +158,13 @@ const AdminRedemptionCodes = lazy(() => import("./pages/admin/AdminRedemptionCod
 const AdminLoyaltyPoints = lazy(() => import("./pages/admin/AdminLoyaltyPoints"));
 const AdminVinylVault = lazy(() => import("./pages/admin/AdminVinylVault"));
 const AdminArtists = lazy(() => import("./pages/admin/AdminArtists"));
+const AdminStaffRoles = lazy(() => import("./pages/admin/AdminStaffRoles"));
+const AdminPersonProfile = lazy(() => import("./pages/admin/AdminPersonProfile"));
+const AdminProducers = lazy(() => import("./pages/admin/AdminProducers"));
+const AdminCampaignBriefs = lazy(() => import("./pages/admin/AdminCampaignBriefs"));
+const AdminTasks = lazy(() => import("./pages/admin/AdminTasks"));
+const AdminTimesheets = lazy(() => import("./pages/admin/AdminTimesheets"));
+const AdminBans = lazy(() => import("./pages/admin/AdminBans"));
 
 // Social & Advanced
 const ArtistProfile = lazy(() => import("./pages/ArtistProfile"));
@@ -190,6 +207,11 @@ const App = () => (
                   <Route path="/dashboard/qr-generator" element={<ProtectedRoute><QRGenerator /></ProtectedRoute>} />
                   <Route path="/dashboard/build-points" element={<ProtectedRoute><BuildPoints /></ProtectedRoute>} />
                   <Route path="/dashboard/credits" element={<ProtectedRoute><Credits /></ProtectedRoute>} />
+                  <Route path="/dashboard/admin" element={<ProtectedRoute permission="manage_settings"><AdminOps /></ProtectedRoute>} />
+                  <Route path="/dashboard/studio-manager" element={<ProtectedRoute permission="manage_bookings"><StudioManager /></ProtectedRoute>} />
+                  <Route path="/dashboard/producer" element={<ProtectedRoute permission="view_assigned_sessions"><Producer /></ProtectedRoute>} />
+                  <Route path="/dashboard/cleaner" element={<ProtectedRoute permission="view_cleaning_tasks"><Cleaner /></ProtectedRoute>} />
+                  <Route path="/dashboard/client" element={<ProtectedRoute><Client /></ProtectedRoute>} />
                   <Route path="/book" element={<Book />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/pricing" element={<Pricing />} />
@@ -201,7 +223,9 @@ const App = () => (
                   <Route path="/community" element={<Community />} />
                   <Route path="/story" element={<Story />} />
                   <Route path="/tour" element={<Tour />} />
+                  <Route path="/360-tour" element={<Tour360 />} />
                   <Route path="/food" element={<FoodMenu />} />
+                  <Route path="/campaign-briefs" element={<CampaignBriefs />} />
                   <Route path="/academy" element={<Academy />} />
                   <Route path="/help" element={<Help />} />
                   <Route path="/help/:slug" element={<HelpArticle />} />
@@ -210,7 +234,10 @@ const App = () => (
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/team" element={<Team />} />
+                  <Route path="/team/:memberSlug" element={<TeamMemberProfile />} />
                   <Route path="/offline" element={<OfflinePage />} />
+
                   <Route path="/social-feed" element={<SocialFeed />} />
                   <Route path="/artist-social-hub" element={<ArtistSocialHub />} />
 
@@ -320,6 +347,13 @@ const App = () => (
                     <Route path="loyalty-points" element={<AdminLoyaltyPoints />} />
                     <Route path="vinyl-vault" element={<AdminVinylVault />} />
                     <Route path="artists" element={<AdminArtists />} />
+                    <Route path="producers" element={<AdminProducers />} />
+                    <Route path="campaign-briefs" element={<AdminCampaignBriefs />} />
+                    <Route path="tasks" element={<AdminTasks />} />
+                    <Route path="timesheets" element={<AdminTimesheets />} />
+                    <Route path="bans" element={<AdminBans />} />
+                    <Route path="people/:personId" element={<AdminPersonProfile />} />
+                    <Route path="staff-roles" element={<AdminStaffRoles />} />
                     <Route path="settings" element={<AdminSettings />} />
                   </Route>
 

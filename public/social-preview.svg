@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Fully Governed Studios</title>
+  <desc id="desc">Premium creator, podcast, music and content studio in Lewisham, South East London.</desc>
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  <rect x="42" y="42" width="1116" height="546" fill="none" stroke="#d4af37" stroke-width="3"/>
+  <circle cx="996" cy="130" r="56" fill="none" stroke="#d4af37" stroke-width="2" opacity="0.7"/>
+  <circle cx="996" cy="130" r="18" fill="#d4af37"/>
+  <path d="M126 455h948" stroke="#d4af37" stroke-width="2" opacity="0.55"/>
+  <text x="126" y="210" fill="#f8f5ea" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700" letter-spacing="0">Fully Governed Studios</text>
+  <text x="126" y="302" fill="#d4af37" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" letter-spacing="0">Creator, podcast, music and content studio</text>
+  <text x="126" y="370" fill="#f8f5ea" font-family="Arial, Helvetica, sans-serif" font-size="30" letter-spacing="0">Lewisham, South East London</text>
+  <text x="126" y="510" fill="#f8f5ea" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="0">www.fullygoverned.co.uk</text>
+</svg>

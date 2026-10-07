@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import type { ElementType } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Crown, Calendar, User, LogOut, Star, Shield, FileText, ShoppingBag, Users, Clock, Pencil, X as XIcon, PoundSterling, Upload, Shirt, Music } from "lucide-react";
+import { Crown, Calendar, User, LogOut, Star, Shield, FileText, ShoppingBag, Users, Clock, Pencil, X as XIcon, PoundSterling, Upload, Shirt, Music, Headphones, ClipboardCheck, BriefcaseBusiness } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSEO } from "@/hooks/useSEO";
 import WalletHistoryModal from "@/components/WalletHistoryModal";
+import { getStudioRoleLabel } from "@/lib/studioRoles";
+import { getVisibleDashboardEntries, type RoleDashboardEntry } from "@/lib/roleAccessConfig";
 
 const TIERS = [
   { name: "BRONZE", min: 0, max: 99, color: "hsl(30 60% 50%)" },
@@ -24,6 +27,14 @@ const TIERS = [
 ];
 
 const getTier = (pts: number) => TIERS.find(t => pts >= t.min && pts <= t.max) || TIERS[0];
+
+const roleDashboardIcons: Record<RoleDashboardEntry["key"], ElementType> = {
+  admin: Shield,
+  studio_manager: BriefcaseBusiness,
+  session_producer: Headphones,
+  cleaner: ClipboardCheck,
+  client_artist: Calendar,
+};
 
 interface UpcomingBooking {
   id: string;
@@ -53,7 +64,7 @@ const ROOM_NAME_MAPPING: Record<string, string> = {
 };
 
 const Dashboard = () => {
-  const { user, profile, role, loading, signOut } = useAuth();
+  const { user, profile, studioRole, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [upcoming, setUpcoming] = useState<UpcomingBooking[]>([]);
@@ -187,12 +198,13 @@ const Dashboard = () => {
 
   if (!user || !profile) return null;
 
-  const tierEmoji = role === "creator_admin" ? "🛡️" : "🎤";
-  const tierLabel = role === "creator_admin" ? "CREATOR ADMIN" : "CUSTOMER";
+  const tierEmoji = studioRole === "super_admin" ? "🛡️" : studioRole === "studio_manager" ? "🎛️" : "🎤";
+  const tierLabel = getStudioRoleLabel(studioRole).toUpperCase();
   const pts = Math.max(0, profile.loyalty_points);
   const tier = getTier(pts);
   const nextTier = TIERS[TIERS.indexOf(tier) + 1];
   const tierProgress = nextTier ? ((pts - tier.min) / (nextTier.min - tier.min)) * 100 : 100;
+  const visibleDashboardEntries = getVisibleDashboardEntries(studioRole);
 
   const roomColorClass = (color: string | undefined) => {
     if (color === "#D4AF37") return "border-l-room-studio";
@@ -282,6 +294,36 @@ const Dashboard = () => {
           </motion.div>
         )}
 
+        {/* Role Dashboard Menu */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}>
+          <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-primary">Studio operations</p>
+              <h2 className="text-2xl text-foreground">ROLE DASHBOARDS</h2>
+            </div>
+            <p className="max-w-md text-sm text-muted-foreground">
+              Access is based on your current role: {getStudioRoleLabel(studioRole)}.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            {visibleDashboardEntries.map((entry) => {
+              const Icon = roleDashboardIcons[entry.key];
+              return (
+                <Link key={entry.key} to={entry.route} className="group">
+                  <div className="flex h-full min-h-[160px] flex-col justify-between rounded-lg border border-border bg-card p-5 transition-all hover:border-interactive hover:shadow-[0_0_12px_hsl(var(--interactive))]">
+                    <div>
+                      <Icon className="mb-3 h-8 w-8 text-primary transition-colors group-hover:text-interactive" />
+                      <h3 className="font-bebas text-2xl tracking-wide text-foreground">{entry.label}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{entry.description}</p>
+                    </div>
+                    <span className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary">Open workspace</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </motion.div>
+
         {/* Quick Actions */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Link to="/book" className="group">
@@ -311,7 +353,7 @@ const Dashboard = () => {
                 <Star className="w-12 h-12 text-primary" />
               </div>
               <div className="relative z-10">
-                <Star className="w-8 h-8 text-primary mb-3 group-hover:scale-110 transition-transform" />
+                <Star className="w-8 h-8 text-primary mb-3 transition-colors group-hover:text-interactive" />
                 <h2 className="text-2xl text-foreground font-bebas tracking-wide">BUILD POINTS</h2>
                 <div className="flex items-center gap-2 mt-2">
                   <p className="text-3xl font-mono text-primary">{pts}</p>
@@ -341,7 +383,7 @@ const Dashboard = () => {
                 <Clock className="w-12 h-12 text-emerald-500" />
               </div>
               <div className="relative z-10">
-                <Clock className="w-8 h-8 text-emerald-500 mb-3 group-hover:scale-110 transition-transform" />
+                <Clock className="w-8 h-8 text-emerald-500 mb-3 transition-colors group-hover:text-interactive" />
                 <h2 className="text-2xl text-foreground font-bebas tracking-wide">STUDIO CREDITS</h2>
                 <p className="text-3xl font-mono text-emerald-500">
                   {Number((profile as any)?.credits_balance || 0).toFixed(1)} HRS
@@ -410,7 +452,7 @@ const Dashboard = () => {
                 <PoundSterling className="w-12 h-12 text-emerald-500" />
               </div>
               <div className="relative z-10">
-                <PoundSterling className="w-8 h-8 text-emerald-500 mb-3 group-hover:scale-110 transition-transform" />
+                <PoundSterling className="w-8 h-8 text-emerald-500 mb-3 transition-colors group-hover:text-interactive" />
                 <h2 className="text-2xl text-foreground font-bebas tracking-wide">ROYALTIES & EARNINGS</h2>
                 <p className="text-sm text-muted-foreground mt-1">Track sales & payouts</p>
               </div>
@@ -423,24 +465,13 @@ const Dashboard = () => {
                 <Music className="w-12 h-12 text-blue-500" />
               </div>
               <div className="relative z-10">
-                <Music className="w-8 h-8 text-blue-500 mb-3 group-hover:scale-110 transition-transform" />
+                <Music className="w-8 h-8 text-blue-500 mb-3 transition-colors group-hover:text-interactive" />
                 <h2 className="text-2xl text-foreground font-bebas tracking-wide">MY VAULT</h2>
                 <p className="text-sm text-muted-foreground mt-1">Your purchased items</p>
               </div>
             </div>
           </Link>
 
-          {role === "creator_admin" && (
-            <Link to="/admin" className="group">
-              <div className="bg-card border border-border rounded-lg p-6 flex flex-col justify-between min-h-[160px] hover:border-interactive hover:shadow-[0_0_12px_hsl(var(--interactive))] transition-all cursor-pointer h-full">
-                <div>
-                  <Shield className="w-8 h-8 text-primary mb-3 group-hover:text-interactive transition-colors" />
-                  <h2 className="text-2xl text-foreground font-bebas tracking-wide">CREATOR ADMIN</h2>
-                  <p className="text-sm text-muted-foreground mt-1">Manage the platform</p>
-                </div>
-              </div>
-            </Link>
-          )}
         </div>
 
         {/* Recent Activity */}

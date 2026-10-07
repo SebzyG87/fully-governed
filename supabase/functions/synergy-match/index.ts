@@ -16,7 +16,8 @@ Deno.serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY")!;
+    const aiApiKey = Deno.env.get("AI_GATEWAY_API_KEY")!;
+    const aiGatewayUrl = Deno.env.get("AI_GATEWAY_URL") ?? "https://openrouter.ai/api/v1/chat/completions";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Get the target artist profile
@@ -54,10 +55,10 @@ Suggest up to 3 potential collaborators with a brief reason why they'd work well
 
 If no good matches exist, say so honestly.`;
 
-    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const aiResponse = await fetch(aiGatewayUrl, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${lovableApiKey}`,
+        "Authorization": `Bearer ${aiApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

@@ -16,8 +16,7 @@ const popularSlugs = [
 const HelpWidget = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
-
-  if (pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock")) return null;
+  const hidden = pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock");
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"articles" | "chat">("articles");
   const [chatInput, setChatInput] = useState("");
@@ -76,6 +75,8 @@ const HelpWidget = () => {
     }
   }, [messages]);
 
+  if (hidden) return null;
+
   return (
     <>
       {/* Floating button — bottom-left to avoid BookingFAB on right */}
@@ -93,7 +94,7 @@ const HelpWidget = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-[5.5rem] left-6 z-50 w-[350px] max-h-[65vh] h-[500px] bg-card border border-border rounded-lg shadow-xl overflow-hidden flex flex-col lg:bottom-20"
+            className="fixed bottom-[5.5rem] left-4 right-4 z-50 w-auto max-w-[350px] sm:left-6 sm:right-auto max-h-[65vh] h-[500px] bg-card border border-border rounded-lg shadow-xl overflow-hidden flex flex-col lg:bottom-20"
           >
             {/* Header / Tabs */}
             <div className="flex border-b border-border bg-muted/30">

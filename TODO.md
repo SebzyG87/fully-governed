@@ -263,7 +263,7 @@ These require external services or are planned for later phases:
 
 ### 🗂️ SEPARATE PROJECTS (NOT THIS APP)
 
-The client discussed 2 additional projects in the chats. **These are NOT part of the Ewisham Creative Suite** and are confirmed by the client as separate paid work:
+The client discussed 2 additional projects in the chats. **These are NOT part of Fully Governed Studios** and are confirmed by the client as separate paid work:
 
 | # | Project Name | What It Is | Budget |
 |---|---|---|---|
@@ -334,4 +334,3 @@ The client provided a full equipment budget (£6k–£12k) with exact specs for:
 | **TOTAL** | **78** | **31** | **7** | **40** |
 
 > **Next Step:** Create the full implementation plan once all documents are reviewed.
-

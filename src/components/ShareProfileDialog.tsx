@@ -36,7 +36,7 @@ const ShareProfileDialog = ({ url, title, triggerContext }: ShareProfileDialogPr
     };
 
     const shareLinks = {
-        twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(`Check out ${title} on Ewisham Creative Suite:`)}`,
+        twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(`Check out ${title} on Fully Governed:`)}`,
         facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`,
         whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out ${title}: ${fullUrl}`)}`,
     };

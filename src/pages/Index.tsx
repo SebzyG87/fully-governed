@@ -10,12 +10,12 @@ import { useSEO } from "@/hooks/useSEO";
 
 const Index = () => {
   useSEO({
-    title: "Home",
-    description: "Fully Governed Studio in Lewisham. A 24/7 creative sanctuary for artists, producers, and creators.",
+    title: "Fully Governed Studios",
+    description: "Premium creator, podcast, music and content studio in Lewisham, South East London.",
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <div className="grain-overlay" />
       <Navbar />
       <HeroSection />

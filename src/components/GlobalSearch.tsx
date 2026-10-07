@@ -25,10 +25,10 @@ const GlobalSearch = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  if (pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock")) return null;
+  const hidden = pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock");
 
   useEffect(() => {
+    if (hidden) return;
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -37,12 +37,14 @@ const GlobalSearch = () => {
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, []);
+  }, [hidden]);
 
   const go = (path: string) => {
     navigate(path);
     setOpen(false);
   };
+
+  if (hidden) return null;
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>

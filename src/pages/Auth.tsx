@@ -51,7 +51,8 @@ const Auth = () => {
   // Check query params for recovery flow
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("type") === "recovery" || window.location.hash.includes("recovery_token")) {
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    if (params.get("type") === "recovery" || hashParams.get("type") === "recovery" || window.location.hash.includes("recovery_token")) {
       setIsRecovery(true);
       setIsLogin(false);
       setIsForgotPassword(false);
@@ -80,7 +81,7 @@ const Auth = () => {
         navigate(redirectTo, { replace: true });
       }
     }
-  }, [loading, user, profile, navigate, isRecovery, showVerification]);
+  }, [loading, user, profile, navigate, isRecovery, showVerification, redirectTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

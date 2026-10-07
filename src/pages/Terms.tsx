@@ -17,12 +17,13 @@ const Terms = () => (
           </section>
           <section>
             <h2 className="font-bebas text-2xl text-foreground tracking-wider">2. Booking & Cancellation Policy</h2>
-            <p>Bookings are confirmed on payment. Cancellations made more than 24 hours before the session start time are eligible for a full refund. Cancellations within 24 hours of the session are non-refundable. Amendments are subject to tier rules — Customer tier members may make a maximum of 2 amendments per booking. Creator Admin members have unlimited amendments.</p>
+            <p>Bookings are locked upon receipt of a deposit. The full balance must be paid at least 48 hours before the scheduled session start time. If the balance remains unpaid after this deadline, the studio slot will be released and made available for other bookings. If another client books the released slot, the original client loses the slot. Bookings made within 48 hours of the session require immediate full payment. No refunds are issued for client cancellations under any circumstances. In the event of a studio-initiated cancellation, a full refund will be provided.</p>
           </section>
           <section>
-            <h2 className="font-bebas text-2xl text-foreground tracking-wider">3. Payment Terms</h2>
-            <p>All prices are in GBP. Payments are processed securely by Stripe. Sessions are non-refundable once they have started. Disputed charges must be raised within 7 days of the session date.</p>
+            <h2 className="font-bebas text-2xl text-foreground tracking-wider">3. Rescheduling & Liability Rules</h2>
+            <p>Clients are allowed one reschedule request up to 24 hours prior to the session start time (subject to the slot being re-booked). A second reschedule request is not guaranteed and payment is lost if the slot is taken by another client. Reschedule requests made with less than 24 hours notice will not be accommodated, and all payments will be forfeited. Producers and creative service providers bringing their own clients are fully responsible for their team and staff, and are financially liable for any physical damage caused to the studio rooms, setups, or equipment by participants they introduce.</p>
           </section>
+
           <section>
             <h2 className="font-bebas text-2xl text-foreground tracking-wider">4. Content Ownership</h2>
             <p>Artists retain full ownership of all music and content created at Fully Governed. By uploading content to the platform you grant Fully Governed a non-exclusive, royalty-free licence to display and distribute your content within the platform only.</p>

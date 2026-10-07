@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Crown, ChevronLeft, ChevronRight, Clock, Calendar, MessageSquare, Zap, CreditCard, Loader2 } from "lucide-react";
+import { Crown, ChevronLeft, ChevronRight, Clock, Calendar, MessageSquare, Zap, CreditCard, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, isToday, isBefore, startOfDay, addDays } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
+
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,66 +13,12 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import type { Tables } from "@/integrations/supabase/types";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
-
-// STRIPE_KEY_NEEDED — replace with real publishable key when ready
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "pk_test_placeholder");
-
-interface PaymentFormProps {
-  amount: number;
-  onSuccess: (paymentIntentId: string) => void;
-  onCancel: () => void;
-}
-
-const PaymentForm = ({ amount, onSuccess, onCancel }: PaymentFormProps) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState("");
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-    setProcessing(true);
-    setError("");
-    const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      redirect: "if_required",
-    });
-    if (confirmError) {
-      setError(confirmError.message || "Payment failed");
-      setProcessing(false);
-    } else if (paymentIntent?.status === "succeeded") {
-      toast({ title: "Payment confirmed!" });
-      onSuccess(paymentIntent.id);
-    } else {
-      setError("Payment did not complete — please try again.");
-      setProcessing(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-center">
-        <p className="text-xs text-muted-foreground font-mono">TOTAL TO PAY</p>
-        <p className="font-mono text-3xl text-primary font-bold">£{amount}</p>
-      </div>
-      <PaymentElement />
-      {error && <p className="text-destructive text-xs">{error}</p>}
-      <div className="flex gap-3">
-        <Button type="button" variant="outline" onClick={onCancel} className="flex-1 font-bebas tracking-wider" disabled={processing}>
-          CANCEL
-        </Button>
-        <Button type="submit" className="flex-1 font-bebas text-lg tracking-wider" disabled={processing || !stripe}>
-          {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : `PAY £${amount}`}
-        </Button>
-      </div>
-      <p className="text-xs text-center text-muted-foreground font-barlow">Payments processed securely by Stripe.</p>
-    </form>
-  );
-};
+import { DEFAULT_BUFFER_MINUTES, getBufferedEndTime, getPlannedRoomBufferMinutes } from "@/lib/bookingBuffers";
+import { BLOCKING_BOOKING_STATUSES } from "@/lib/bookingLifecycle";
+import { getBookingPaymentRequirement } from "@/lib/bookingPolicy";
+import { BookingPaymentPlaceholder } from "@/components/payments/BookingPaymentPlaceholder";
+import { getPackagePricing, STUDIO_PACKAGE_PRICING } from "@/lib/mockPackages";
+import { getRoomSupportRequirement } from "@/lib/studioOpsConfig";
 
 type Room = Tables<"rooms">;
 type Booking = Tables<"bookings">;
@@ -149,10 +96,25 @@ const calculateSessionPrice = (roomName: string, duration: number, engineer?: st
 const Book = () => {
   const { user, role, loading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  
+  // Booking customisations
+  const [bookingOption, setBookingOption] = useState<string>("room_only");
+  const [selectedProducer, setSelectedProducer] = useState<string>("");
+  const [selectedSetup, setSelectedSetup] = useState<string>("Freestyle Layout");
+
+  useEffect(() => {
+    const prodParam = searchParams.get("producer");
+    if (prodParam) {
+      setBookingOption("room_producer");
+      setSelectedProducer(prodParam);
+    }
+  }, [searchParams]);
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -174,8 +136,9 @@ const Book = () => {
   const [monthBookings, setMonthBookings] = useState<Booking[]>([]);
   const [showDraftBanner, setShowDraftBanner] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
   const [pendingBookingPrice, setPendingBookingPrice] = useState<number | null>(null);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [roomBuffer, setRoomBuffer] = useState<number>(DEFAULT_BUFFER_MINUTES);
 
   const isAdmin = role === "creator_admin";
   const isFamily = role === "family";
@@ -205,7 +168,7 @@ const Book = () => {
     if (selectedRoom && (sessionType || notes || numGuests > 0)) {
       saveDraft();
     }
-  }, [sessionType, notes, numGuests, selectedEngineer, selectedDate, selectedDuration, saveDraft]);
+  }, [selectedRoom, sessionType, notes, numGuests, selectedEngineer, selectedDate, selectedDuration, saveDraft]);
 
   // Check for draft on mount
   useEffect(() => {
@@ -217,7 +180,9 @@ const Book = () => {
         if (Date.now() - draft.savedAt < 86400000 && (draft.sessionType || draft.notes)) {
           setShowDraftBanner(true);
         }
-      } catch { }
+      } catch {
+        localStorage.removeItem(DRAFT_KEY);
+      }
     }
   }, []);
 
@@ -234,7 +199,9 @@ const Book = () => {
       if (draft.numGuests) setNumGuests(draft.numGuests);
       if (draft.notes) setNotes(draft.notes);
       if (draft.selectedEngineer) setSelectedEngineer(draft.selectedEngineer);
-    } catch { }
+    } catch {
+      localStorage.removeItem(DRAFT_KEY);
+    }
     setShowDraftBanner(false);
   };
 
@@ -253,16 +220,32 @@ const Book = () => {
     if (!loading && !user) navigate("/auth", { state: { from: "/book" } });
   }, [loading, user, navigate]);
 
+  // Fetch the per-room buffer from fg_room_buffers via the public RPC helper.
+  useEffect(() => {
+    if (!selectedRoom) return;
+    const plannedFallback = getPlannedRoomBufferMinutes(roomNameMapping[selectedRoom.name] || selectedRoom.name);
+    setRoomBuffer(plannedFallback);
+    supabase
+      .rpc("fg_get_room_buffer", { _room_id: selectedRoom.id })
+      .then(
+        ({ data }) => { if (typeof data === "number") setRoomBuffer(data); },
+        () => setRoomBuffer(plannedFallback),
+      );
+  }, [selectedRoom]);
+
   useEffect(() => {
     supabase.from("rooms").select("*").then(({ data }) => {
       if (data) {
         setRooms(data);
         setSelectedRoom(data[0] ?? null);
       }
-    }).catch(() => { /* rooms unavailable — empty state will show */ });
+    }, () => {
+      setRooms([]);
+      setSelectedRoom(null);
+    });
     supabase.from("engineers").select("id, name, speciality").eq("availability", "available").then(({ data }) => {
       setEngineers((data as Engineer[]) || []);
-    }).catch(() => { /* engineers unavailable */ });
+    }, () => setEngineers([]));
   }, []);
 
   const fetchBookings = useCallback(async () => {
@@ -273,7 +256,7 @@ const Book = () => {
       .from("bookings")
       .select("*")
       .eq("room_id", selectedRoom.id)
-      .eq("status", "confirmed")
+      .in("status", BLOCKING_BOOKING_STATUSES)
       .gte("start_time", dayStart)
       .lt("end_time", dayEnd);
     setBookings(data ?? []);
@@ -288,9 +271,9 @@ const Book = () => {
     const monthEnd = new Date(endOfMonth(currentMonth).getTime() + 86400000).toISOString();
     const { data } = await supabase
       .from("bookings")
-      .select("start_time, end_time")
+      .select("start_time, end_time, status")
       .eq("room_id", selectedRoom.id)
-      .eq("status", "confirmed")
+      .in("status", BLOCKING_BOOKING_STATUSES)
       .gte("start_time", monthStart)
       .lt("end_time", monthEnd);
     setMonthBookings((data as Booking[]) ?? []);
@@ -313,7 +296,7 @@ const Book = () => {
     const bookedSet = new Set<number>();
     monthBookings.forEach((b) => {
       const bStart = new Date(b.start_time);
-      const bEnd = new Date(b.end_time);
+      const bEnd = getBufferedEndTime(b.end_time, roomBuffer);
       if (bStart < new Date(dayStart.getTime() + 86400000) && bEnd > dayStart) {
         const s = Math.max(bStart.getHours(), 8);
         const e = Math.min(bEnd.getHours() || 24, 24);
@@ -323,7 +306,7 @@ const Book = () => {
     if (bookedSet.size === 0) return "open";
     if (bookedSet.size >= 16) return "full";
     return "partial";
-  }, [monthBookings]);
+  }, [monthBookings, roomBuffer]);
 
   // Next Available Slot finder
   const findNextAvailableSlot = useCallback(async () => {
@@ -338,13 +321,13 @@ const Book = () => {
         .from("bookings")
         .select("start_time, end_time")
         .eq("room_id", selectedRoom.id)
-        .eq("status", "confirmed")
+        .in("status", BLOCKING_BOOKING_STATUSES)
         .gte("start_time", dayStart)
         .lt("end_time", dayEnd);
       const dayBooked = new Set<number>();
-      (data ?? []).forEach((b: any) => {
+      (data ?? []).forEach((b) => {
         const s = new Date(b.start_time).getHours();
-        const e = new Date(b.end_time).getHours();
+        const e = getBufferedEndTime(b.end_time, roomBuffer).getHours();
         for (let h = s; h < e; h++) dayBooked.add(h);
       });
       for (const h of HOURS) {
@@ -364,7 +347,7 @@ const Book = () => {
       }
     }
     toast({ title: "No availability", description: "No open slots found in the next 30 days.", variant: "destructive" });
-  }, [selectedRoom, selectedDuration, hasFlexibleBooking, toast]);
+  }, [selectedRoom, selectedDuration, hasFlexibleBooking, roomBuffer, toast]);
 
   const days = useMemo(() => {
     const start = startOfMonth(currentMonth);
@@ -376,11 +359,11 @@ const Book = () => {
     const set = new Set<number>();
     bookings.forEach((b) => {
       const s = new Date(b.start_time).getHours();
-      const e = new Date(b.end_time).getHours();
+      const e = getBufferedEndTime(b.end_time, roomBuffer).getHours();
       for (let h = s; h < e; h++) set.add(h);
     });
     return set;
-  }, [bookings]);
+  }, [bookings, roomBuffer]);
 
   const duration = selectedDuration ?? (hasFlexibleBooking ? 1 : 4);
 
@@ -395,31 +378,122 @@ const Book = () => {
 
   const allBooked = HOURS.every((h) => getSlotStatus(h) !== "available");
 
-  const saveBooking = async (stripePaymentId?: string) => {
-    if (!selectedRoom || !selectedDate || selectedHour === null || !sessionType || !user) return;
+  const getSelectedSlot = () => {
+    if (!selectedDate || selectedHour === null) return null;
     const start = new Date(selectedDate);
     start.setHours(selectedHour, 0, 0, 0);
     const end = new Date(start);
     end.setHours(start.getHours() + duration);
+    return { start, end };
+  };
 
-    const { error } = await supabase.from("bookings").insert({
+  const getPaymentPlan = (total: number, start: Date) => {
+    const paymentType = getBookingPaymentRequirement(start.toISOString());
+    const deposit = Math.min(total, selectedPackagePricing.depositAmount || Math.ceil(total * 0.5));
+    const dueNow = paymentType === "full" ? total : deposit;
+    return {
+      paymentType,
+      deposit,
+      balance: Math.max(total - dueNow, 0),
+      dueNow,
+    };
+  };
+
+  const checkBookingRiskBlock = async () => {
+    if (!user) return false;
+
+    const { data, error } = await supabase
+      .from("fg_ban_registry" as any)
+      .select("risk_status, review_status, reason")
+      .eq("linked_user_id", user.id)
+      .eq("risk_status", "red")
+      .limit(1);
+
+    if (error) return false;
+
+    const activeBlock = (data as any[] | null)?.find((row) => row.review_status !== "cleared");
+    if (!activeBlock) return false;
+
+    toast({
+      title: "Booking requires management review",
+      description: activeBlock.reason || "This account is currently blocked from self-service bookings.",
+      variant: "destructive",
+    });
+    return true;
+  };
+
+  const createBooking = async ({
+    status = "confirmed",
+    paymentStatus = "unpaid",
+    total,
+    deposit,
+    balance,
+    stripePaymentId,
+  }: {
+    status?: string;
+    paymentStatus?: string;
+    total?: number | null;
+    deposit?: number | null;
+    balance?: number | null;
+    stripePaymentId?: string;
+  }) => {
+    if (!selectedRoom || !sessionType || !user) return null;
+    const slot = getSelectedSlot();
+    if (!slot) return null;
+
+    const { data, error } = await supabase.from("bookings").insert({
       room_id: selectedRoom.id,
       user_id: user.id,
-      start_time: start.toISOString(),
-      end_time: end.toISOString(),
+      start_time: slot.start.toISOString(),
+      end_time: slot.end.toISOString(),
       session_type: sessionType,
       num_guests: numGuests,
       beat_needed: beatNeeded,
       is_private: isPrivate,
       security_required: securityRequired,
-      notes: [notes, selectedEngineer ? `[Engineer: ${selectedEngineer}]` : ""].filter(Boolean).join(" "),
+      status,
+      payment_status: paymentStatus,
+      total_amount: total ?? null,
+      deposit_amount: deposit ?? null,
+      outstanding_balance: balance ?? null,
+      package_purchased: selectedPackagePricing.packageName,
+      notes: [
+        notes,
+        selectedEngineer ? `[Engineer: ${selectedEngineer}]` : "",
+        bookingOption !== "room_only" && selectedProducer ? `[Producer requested: ${selectedProducer}]` : "",
+        selectedSetup ? `[Room Setup: ${selectedSetup}]` : "",
+        supportRequirement ? `[Support room: ${supportRequirement.supportRoom}; ${supportRequirement.supportType}; status: ${supportRequirement.status}]` : "",
+      ].filter(Boolean).join(" "),
       stripe_payment_id: stripePaymentId ?? null,
-    });
+    }).select("id").single();
 
     if (error) {
       toast({ title: "Booking failed", description: error.message, variant: "destructive" });
+      return null;
     } else {
-      toast({ title: "Session booked! 🎤" });
+      return data?.id ?? null;
+    }
+  };
+
+  const resetBookingForm = () => {
+    setSelectedHour(null);
+    setSessionType("");
+    setNotes("");
+    setSelectedEngineer("");
+    setBookingOption("room_only");
+    setSelectedProducer("");
+    setSelectedSetup("Freestyle Layout");
+    setShowPaymentModal(false);
+    setPendingBookingPrice(null);
+    localStorage.removeItem(DRAFT_KEY);
+    setShowDraftBanner(false);
+    fetchBookings();
+  };
+
+  const saveFreeBooking = async () => {
+    const bookingId = await createBooking({ status: "confirmed", paymentStatus: "paid", total: 0, deposit: 0, balance: 0 });
+    if (bookingId) {
+      toast({ title: "Session booked!" });
       // Award loyalty points: 10 pts per booked hour
       const loyaltyPts = duration * 10;
       await supabase.from("fg_loyalty_points" as any).insert({
@@ -432,26 +506,90 @@ const Book = () => {
       // Increment profile loyalty_points total
       const { data: currentProfile } = await supabase.from("profiles").select("loyalty_points").eq("user_id", user.id).single();
       await supabase.from("profiles").update({ loyalty_points: (currentProfile?.loyalty_points || 0) + loyaltyPts }).eq("user_id", user.id);
-      setSelectedHour(null);
-      setSessionType("");
-      setNotes("");
-      setSelectedEngineer("");
-      setShowPaymentModal(false);
-      setPaymentClientSecret(null);
-      localStorage.removeItem(DRAFT_KEY);
-      setShowDraftBanner(false);
-      fetchBookings();
+      resetBookingForm();
     }
+  };
+
+  const startStripeCheckout = async () => {
+    if (!selectedRoom || !user || !pendingBookingPrice) return;
+    const slot = getSelectedSlot();
+    if (!slot) return;
+    const plan = getPaymentPlan(pendingBookingPrice, slot.start);
+
+    setCheckoutLoading(true);
+    const bookingId = await createBooking({
+      status: "pending_payment",
+      paymentStatus: "unpaid",
+      total: pendingBookingPrice,
+      deposit: plan.deposit,
+      balance: plan.balance,
+    });
+
+    if (!bookingId) {
+      setCheckoutLoading(false);
+      return;
+    }
+
+    const { data, error } = await supabase.functions.invoke("booking-checkout", {
+      body: {
+        booking_id: bookingId,
+        payment_type: plan.paymentType,
+        amount_pence: Math.round(plan.dueNow * 100),
+        line_item_name: `${roomNameMapping[selectedRoom.name] || selectedRoom.name} - ${duration} hour booking`,
+        customer_email: user.email,
+      },
+    });
+
+    if (error || !data?.checkout_url) {
+      const { error: releaseError } = await supabase
+        .from("bookings")
+        .update({ status: "cancelled", payment_status: "failed" })
+        .eq("id", bookingId);
+
+      toast({
+        title: "Stripe checkout unavailable",
+        description: releaseError
+          ? "Checkout failed and the slot could not be released. Please contact the studio."
+          : error?.message || data?.error || "Payment provider is not configured yet.",
+        variant: "destructive",
+      });
+      setCheckoutLoading(false);
+      return;
+    }
+
+    window.location.href = data.checkout_url;
   };
 
   const handleBook = async () => {
     if (!selectedRoom || !selectedDate || selectedHour === null || !sessionType || !user) return;
+
+    if (await checkBookingRiskBlock()) return;
 
     for (let h = selectedHour; h < selectedHour + duration; h++) {
       if (bookedHours.has(h)) {
         toast({ title: "Time conflict", description: "Some hours in this block are already booked.", variant: "destructive" });
         return;
       }
+    }
+
+    // Server-side buffer-aware availability check before INSERT
+    const start = new Date(selectedDate);
+    start.setHours(selectedHour, 0, 0, 0);
+    const end = new Date(start);
+    end.setHours(start.getHours() + duration);
+
+    const { data: slotAvailable, error: availError } = await supabase.rpc(
+      "fg_check_room_availability",
+      { _room_id: selectedRoom.id, _start_time: start.toISOString(), _end_time: end.toISOString() }
+    );
+    if (availError || !slotAvailable) {
+      toast({
+        title: "Room unavailable",
+        description: `This slot is within the ${roomBuffer}-minute buffer of another booking. Please choose a different time.`,
+        variant: "destructive",
+      });
+      await fetchBookings();
+      return;
     }
 
     if (!hasFlexibleBooking && selectedHour + duration > 24) {
@@ -462,35 +600,37 @@ const Book = () => {
     const price = calculateSessionPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, duration, selectedEngineer);
 
     if (!price || price === 0) {
-      await saveBooking();
+      await saveFreeBooking();
       return;
     }
 
-    // Initiate Stripe payment
-    setSubmitting(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: {
-          amount: price,
-          type: "booking",
-          roomName: roomNameMapping[selectedRoom.name] || selectedRoom.name,
-          bookingDate: selectedDate.toISOString(),
-        },
-      });
-
-      if (error || data?.error) {
-        throw new Error(data?.error || "Could not create payment session");
-      }
-
-      setPendingBookingPrice(price);
-      setPaymentClientSecret(data.clientSecret);
-      setShowPaymentModal(true);
-    } catch (err: any) {
-      toast({ title: "Payment setup failed", description: err.message, variant: "destructive" });
-    } finally {
-      setSubmitting(false);
-    }
+    setPendingBookingPrice(price);
+    setShowPaymentModal(true);
   };
+
+  const selectedPackagePricing = useMemo(() => {
+    const roomName = selectedRoom ? roomNameMapping[selectedRoom.name] || selectedRoom.name : "";
+    const lowerSession = sessionType.toLowerCase();
+    if (lowerSession.includes("podcast")) return getPackagePricing("podcast-session");
+    if (lowerSession.includes("content") || roomName.includes("Content")) return getPackagePricing("content-room");
+    if (selectedEngineer) return getPackagePricing("recording-producer");
+    if (roomName.includes("Recording")) return getPackagePricing("studio-dry-hire");
+    return STUDIO_PACKAGE_PRICING[0];
+  }, [selectedRoom, selectedEngineer, sessionType]);
+
+  const currentSessionPrice = selectedRoom
+    ? calculateSessionPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, duration, selectedEngineer)
+    : null;
+  const selectedSlot = getSelectedSlot();
+  const currentPaymentPlan = currentSessionPrice && selectedSlot
+    ? getPaymentPlan(currentSessionPrice, selectedSlot.start)
+    : null;
+
+  const selectedRoomDisplayName = selectedRoom ? roomNameMapping[selectedRoom.name] || selectedRoom.name : "";
+  const supportRequirement = useMemo(
+    () => getRoomSupportRequirement(selectedRoomDisplayName, sessionType),
+    [selectedRoomDisplayName, sessionType]
+  );
 
   if (loading) {
     return (
@@ -665,8 +805,120 @@ const Book = () => {
                           {String(selectedHour).padStart(2, "0")}:00 — {String(selectedHour + duration).padStart(2, "0")}:00 ({duration}hr{duration > 1 ? "s" : ""})
                         </span>
                       </div>
+                      <div className="rounded-md border border-border bg-background/50 p-3 text-xs text-muted-foreground">
+                        Room buffer: <span className="text-primary">{roomBuffer} minutes</span>
+                        {supportRequirement && (
+                          <span className="mt-2 block text-amber-100">
+                            Linked support required: {supportRequirement.supportRoom} · {supportRequirement.supportType} · {supportRequirement.status}
+                          </span>
+                        )}
+                      </div>
+
+
+                      {/* Booking Mode Options */}
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground text-xs font-mono uppercase tracking-wider">Booking Type</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: "room_only", label: "Book Room Only", sub: "Self-service space hire" },
+                            { value: "room_producer", label: "Book Room + Producer", sub: "Session support engineer" },
+                            { value: "producer_only", label: "Book Producer Only", sub: "Creative services (no room)" },
+                            { value: "service_only", label: "Book Service Only", sub: "Digital content planning" }
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              type="button"
+                              onClick={() => {
+                                setBookingOption(opt.value);
+                                if (opt.value === "room_only") setSelectedProducer("");
+                              }}
+                              className={`p-2.5 rounded-lg border text-xs font-mono transition-all text-left flex flex-col justify-between h-[4.5rem] ${bookingOption === opt.value ? "border-primary bg-primary/10 text-foreground" : "border-border bg-background/30 text-muted-foreground hover:border-muted-foreground"}`}
+                            >
+                              <span className="font-bold text-foreground">{opt.label}</span>
+                              <span className="text-[10px] text-muted-foreground leading-tight">{opt.sub}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Producer Selector */}
+                      {bookingOption !== "room_only" && (
+                        <div className="space-y-2 border-l-2 border-primary/40 pl-4 py-1">
+                          <Label className="text-muted-foreground text-xs font-mono uppercase tracking-wider">Select Specialist</Label>
+                          <div className="grid gap-2">
+                            {[
+                              { slug: "mono-luke", name: "Mono Luke", role: "Producer & Creative", rate: "£45/hr", availability: "Mon-Fri 10am-6pm", services: "Vocal Recording, Mixing, Mastering, 3D, Design" },
+                              { slug: "seb-green", name: "Seb Green", role: "Systems & Content", rate: "POA", availability: "By Appointment Only", services: "Digital Systems, Operations, Content Strategy" }
+                            ].map((prod) => (
+                              <button
+                                key={prod.slug}
+                                type="button"
+                                onClick={() => setSelectedProducer(prod.slug)}
+                                className={`p-3 rounded-lg border text-xs transition-all text-left flex flex-col gap-1 w-full ${selectedProducer === prod.slug ? "border-primary bg-primary/10 text-foreground" : "border-border bg-background/30 text-muted-foreground hover:border-muted-foreground"}`}
+                              >
+                                <div className="flex justify-between items-center w-full">
+                                  <span className="font-bold text-foreground">{prod.name}</span>
+                                  <span className="font-mono text-primary text-[10px] uppercase tracking-wider">{prod.role}</span>
+                                </div>
+                                <p className="text-[10px] text-muted-foreground">Services: {prod.services}</p>
+                                <div className="flex justify-between items-center text-[10px] opacity-80 mt-1 font-mono">
+                                  <span>Rate: {prod.rate}</span>
+                                  <span>Avail: {prod.availability}</span>
+                                </div>
+                                <div className="w-full text-right mt-1">
+                                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${selectedProducer === prod.slug ? "bg-primary text-black" : "bg-card border border-border text-muted-foreground"}`}>
+                                    {selectedProducer === prod.slug ? "Requested ✓" : "Request this Producer"}
+                                  </span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Room Setup Selector */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <Label className="text-muted-foreground text-xs font-mono uppercase tracking-wider">Room Setup Layout</Label>
+                          <span className="text-[10px] font-mono text-emerald-400">30m Setup + 30m Breakdown Free</span>
+                        </div>
+                        <select
+                          value={selectedSetup}
+                          onChange={(e) => setSelectedSetup(e.target.value)}
+                          className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-sm focus:border-interactive focus:ring-1 focus:ring-interactive focus:outline-none transition-colors"
+                        >
+                          <option value="Freestyle Layout">Freestyle Layout</option>
+                          <option value="Gaming Layout">Gaming Layout</option>
+                          <option value="Interview Layout">Interview Layout</option>
+                          <option value="Podcast Layout">Podcast Layout</option>
+                          <option value="Boiler Room Layout">Boiler Room Layout</option>
+                          <option value="Events Layout">Events Layout</option>
+                          <option value="Photoshoot Layout">Photoshoot Layout</option>
+                          <option value="Green Screen Layout">Green Screen Layout</option>
+                          <option value="Content Creation White Screen Layout">Content Creation White Screen Layout</option>
+                          <option value="Social Setting / Bar Interview">Social Setting / Bar Interview</option>
+                          <option value="Pool Table / Games Night">Pool Table / Games Night</option>
+                        </select>
+                        <p className="text-[10px] text-muted-foreground leading-normal">
+                          Setup blocks the room for 30 minutes before and after the session. This blocks general availability, but is not charged to your slot.
+                        </p>
+                      </div>
+
+                      {/* Updated policies summary */}
+                      <div className="rounded-xl border border-border bg-card/40 p-4 space-y-2 text-xs">
+                        <h4 className="font-bebas text-sm tracking-wide text-foreground flex items-center gap-1.5 uppercase">
+                          <AlertTriangle className="w-3.5 h-3.5 text-primary" /> Booking & Cancellation Policy
+                        </h4>
+                        <ul className="space-y-1.5 text-muted-foreground font-barlow leading-relaxed">
+                          <li>• <strong className="text-foreground">Balance Deadline:</strong> Deposit locks the booking. Balance must be paid 48 hours before start, or the room is released and payment lost.</li>
+                          <li>• <strong className="text-foreground">Late Bookings:</strong> Bookings made within 48 hours require immediate full payment.</li>
+                          <li>• <strong className="text-foreground">Reschedule rules:</strong> First reschedule allowed up to 24h before booking. Second not guaranteed. Less than 24h notice forfeits all payments.</li>
+                          <li>• <strong className="text-foreground">Liability:</strong> Producers are financially liable for any damage caused by staff or clients they bring.</li>
+                        </ul>
+                      </div>
 
                       <div>
+
                         <Label className="text-muted-foreground">Session Type</Label>
                         <select
                           value={sessionType}
@@ -726,13 +978,24 @@ const Book = () => {
                         <div className="flex justify-between items-center bg-secondary/30 p-3 rounded-md border border-primary/20">
                           <span className="font-bebas text-lg tracking-wider text-muted-foreground">TOTAL PRICE</span>
                           <span className="font-mono text-2xl text-primary font-bold">
-                            £{calculateSessionPrice(roomNameMapping[selectedRoom.name] || selectedRoom.name, duration, selectedEngineer) || "—"}
+                            £{currentSessionPrice || "—"}
                           </span>
                         </div>
                       </div>
 
+                      {currentSessionPrice && currentPaymentPlan ? (
+                        <BookingPaymentPlaceholder
+                          packageInfo={selectedPackagePricing}
+                          total={currentSessionPrice}
+                          deposit={currentPaymentPlan.deposit}
+                          balance={currentPaymentPlan.balance}
+                          dueNow={currentPaymentPlan.dueNow}
+                          paymentType={currentPaymentPlan.paymentType}
+                        />
+                      ) : null}
+
                       <Button onClick={handleBook} disabled={submitting || !sessionType} className="w-full font-bebas text-lg tracking-wider h-12">
-                        {submitting ? "BOOKING..." : "CONFIRM BOOKING"}
+                        {submitting ? "BOOKING..." : "CONTINUE TO PAYMENT SETUP"}
                       </Button>
                     </motion.div>
                   )}
@@ -800,32 +1063,32 @@ const Book = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Stripe Payment Modal */}
-      <Dialog open={showPaymentModal} onOpenChange={(open) => { if (!open) { setShowPaymentModal(false); setPaymentClientSecret(null); } }}>
+      {/* Payment Modal */}
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
         <DialogContent className="bg-card border-border">
           <DialogHeader>
             <DialogTitle className="font-bebas text-2xl text-foreground tracking-wider flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-primary" /> SECURE PAYMENT
+              <CreditCard className="w-5 h-5 text-primary" /> SECURE YOUR BOOKING
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Complete your booking for {selectedRoom && (roomNameMapping[selectedRoom.name] || selectedRoom.name)}.
+              Your booking slot will be created as pending payment, then Stripe will open to collect the amount due now.
             </DialogDescription>
           </DialogHeader>
-          {paymentClientSecret && (
-            <Elements
-              stripe={stripePromise}
-              options={{
-                clientSecret: paymentClientSecret,
-                appearance: { theme: "night", variables: { colorPrimary: "#D4AF37" } },
-              }}
-            >
-              <PaymentForm
-                amount={pendingBookingPrice ?? 0}
-                onSuccess={(paymentIntentId) => saveBooking(paymentIntentId)}
-                onCancel={() => { setShowPaymentModal(false); setPaymentClientSecret(null); }}
-              />
-            </Elements>
-          )}
+          {pendingBookingPrice && selectedSlot ? (
+            <BookingPaymentPlaceholder
+              packageInfo={selectedPackagePricing}
+              total={pendingBookingPrice}
+              deposit={getPaymentPlan(pendingBookingPrice, selectedSlot.start).deposit}
+              balance={getPaymentPlan(pendingBookingPrice, selectedSlot.start).balance}
+              dueNow={getPaymentPlan(pendingBookingPrice, selectedSlot.start).dueNow}
+              paymentType={getPaymentPlan(pendingBookingPrice, selectedSlot.start).paymentType}
+              loading={checkoutLoading}
+              onCheckout={startStripeCheckout}
+            />
+          ) : null}
+          <p className="text-center text-xs text-muted-foreground">
+            Card details are handled by Stripe. Fully Governed never stores card numbers.
+          </p>
         </DialogContent>
       </Dialog>
     </div>

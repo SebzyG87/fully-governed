@@ -174,7 +174,7 @@ const Designer = () => {
           <h2 className="font-bebas text-2xl text-foreground tracking-wider">STEP 4 — BASE COLOUR</h2>
           <div className="flex flex-wrap gap-3">
             {colours.map((c) => (
-              <button key={c.name} onClick={() => setBaseColour(c.name)} className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all ${baseColour === c.name ? "border-primary scale-110" : "border-border"}`} style={{ backgroundColor: c.hex }} title={c.name}>
+              <button key={c.name} onClick={() => setBaseColour(c.name)} className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-colors ${baseColour === c.name ? "border-primary ring-2 ring-primary/30" : "border-border"}`} style={{ backgroundColor: c.hex }} title={c.name}>
                 {baseColour === c.name && <Check className="w-5 h-5 text-primary" />}
               </button>
             ))}

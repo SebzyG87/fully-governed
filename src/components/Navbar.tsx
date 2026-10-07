@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Crown, User, Shield, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { canManageSettings } from "@/lib/studioRoles";
 
 const groupedNav = [
   {
@@ -12,6 +13,7 @@ const groupedNav = [
       { label: "Editing Suite", href: "/editing-suite" },
       { label: "Recording & Radio", href: "/recording-radio" },
       { label: "Studio Equipment", href: "/equipment" },
+      { label: "360 Tour", href: "/360-tour" },
       { label: "Food Menu", href: "/food" },
     ]
   },
@@ -40,8 +42,11 @@ const groupedNav = [
       { label: "Events", href: "/events" },
       { label: "Academy", href: "/academy" },
       { label: "Our Story", href: "/story" },
+      { label: "Meet the Team", href: "/team" },
+      { label: "Campaign Briefs", href: "/campaign-briefs" },
       { label: "Contact Us", href: "/contact" },
       { label: "Help Centre", href: "/help" },
+
     ]
   }
 ];
@@ -50,20 +55,17 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { user, role } = useAuth();
   const location = useLocation();
-  const isAdmin = role === "creator_admin";
+  const isAdmin = canManageSettings(role);
 
   // Close menu on route change
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
 
-  // Prevent scroll when menu is open
+  // Prevent background scroll while preserving the user's previous body styles.
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.classList.toggle("fg-menu-open", open);
+    return () => document.body.classList.remove("fg-menu-open");
   }, [open]);
 
   return (

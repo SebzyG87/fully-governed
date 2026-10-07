@@ -75,7 +75,7 @@ const DigitalVinyl = () => {
                 >
                   <div className="aspect-square bg-muted rounded-md mb-4 flex items-center justify-center overflow-hidden relative">
                     {track.cover_url ? (
-                      <img src={track.cover_url} alt={track.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src={track.cover_url} alt={track.title} className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90" />
                     ) : (
                       <Disc3 className="w-16 h-16 text-muted-foreground/50" />
                     )}

@@ -80,18 +80,18 @@ const AudioPlayerBar = () => {
                                     </div>
 
                                     <div className="flex items-center justify-center lg:justify-start gap-12 pt-4">
-                                        <button className="text-muted-foreground hover:text-foreground transition-colors transform hover:scale-110 active:scale-95">
+                                        <button className="text-muted-foreground hover:text-foreground transition-colors active:text-primary">
                                             <SkipBack className="w-10 h-10 fill-current" />
                                         </button>
 
                                         <button
                                             onClick={togglePlayPause}
-                                            className="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:scale-105 active:scale-95 transition-all"
+                                            className="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-colors hover:bg-interactive active:bg-primary/90"
                                         >
                                             {isPlaying ? <Pause className="w-12 h-12 fill-current" /> : <Play className="w-12 h-12 fill-current ml-2" />}
                                         </button>
 
-                                        <button className="text-muted-foreground hover:text-foreground transition-colors transform hover:scale-110 active:scale-95">
+                                        <button className="text-muted-foreground hover:text-foreground transition-colors active:text-primary">
                                             <SkipForward className="w-10 h-10 fill-current" />
                                         </button>
                                     </div>
@@ -119,7 +119,7 @@ const AudioPlayerBar = () => {
                         onClick={() => setIsExpanded(true)}
                     >
                         {currentTrack.coverUrl ? (
-                            <img src={currentTrack.coverUrl} alt={currentTrack.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                            <img src={currentTrack.coverUrl} alt={currentTrack.title} className="w-full h-full object-cover transition-opacity group-hover:opacity-90" />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary">
                                 <span className="font-bebas text-lg">FG</span>
@@ -141,7 +141,7 @@ const AudioPlayerBar = () => {
 
                         <button
                             onClick={togglePlayPause}
-                            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:scale-105 transition-transform"
+                            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground transition-colors hover:bg-interactive"
                         >
                             {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
                         </button>

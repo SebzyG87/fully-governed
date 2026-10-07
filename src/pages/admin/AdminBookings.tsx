@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarDays, Search, X, Download, Pencil } from "lucide-react";
+import { CalendarDays, Search, X, Download, Pencil, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import EditBookingModal from "@/components/EditBookingModal";
+import BookingStatusBadge from "@/components/BookingStatusBadge";
+import { BOOKING_POLICY, getBalanceDueAt, getBookingPaymentRequirement, getRescheduleGuidance } from "@/lib/bookingPolicy";
 
 interface BookingWithProfile {
   id: string;
@@ -98,6 +100,32 @@ const AdminBookings = () => {
         {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-interactive"><X className="w-4 h-4" /></button>}
       </div>
 
+      <section className="grid gap-3 lg:grid-cols-4">
+        <div className="rounded-lg border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-primary">
+            <ShieldCheck className="h-4 w-4" />
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em]">Payment rule</p>
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Deposit secures bookings. Full payment is required {BOOKING_POLICY.balanceDueHours} hours before session start, or immediately when booked inside {BOOKING_POLICY.immediateFullPaymentHours} hours.
+          </p>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">Reschedules</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            First reschedule needs {BOOKING_POLICY.firstRescheduleNoticeHours} hours notice. Second reschedule depends on the original slot being rebooked or management approval.
+          </p>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">Refunds</p>
+          <p className="mt-2 text-sm text-muted-foreground">{BOOKING_POLICY.refundRule}</p>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">Overtime</p>
+          <p className="mt-2 text-sm text-muted-foreground">{BOOKING_POLICY.overtimeRule}</p>
+        </div>
+      </section>
+
       {loading ? (
         <div className="flex justify-center py-12"><CalendarDays className="w-6 h-6 text-primary animate-pulse" /></div>
       ) : (
@@ -119,15 +147,21 @@ const AdminBookings = () => {
               {filtered.map((b) => (
                 <tr key={b.id} className="border-b border-border/50 hover:bg-accent/30 transition-colors">
                   <td className="py-3 px-2 font-mono text-foreground">{format(new Date(b.start_time), "d MMM yy")}</td>
-                  <td className="py-3 px-2 font-mono text-muted-foreground">{format(new Date(b.start_time), "HH:mm")}–{format(new Date(b.end_time), "HH:mm")}</td>
+                  <td className="py-3 px-2">
+                    <p className="font-mono text-muted-foreground">{format(new Date(b.start_time), "HH:mm")}–{format(new Date(b.end_time), "HH:mm")}</p>
+                    <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+                      {getBookingPaymentRequirement(b.start_time) === "full" ? "Full payment now" : `Balance due ${format(getBalanceDueAt(b.start_time), "d MMM HH:mm")}`}
+                    </p>
+                  </td>
                   <td className={`py-3 px-2 font-bebas tracking-wider ${roomColor(b.rooms?.color || "")}`}>{b.rooms?.name || "—"}</td>
                   <td className="py-3 px-2 text-foreground">{b.profiles?.full_name || "—"}</td>
                   <td className="py-3 px-2 text-muted-foreground">{b.session_type}</td>
                   <td className="py-3 px-2 text-muted-foreground font-mono">{b.num_guests || 0}</td>
                   <td className="py-3 px-2">
-                    <span className={`text-xs font-mono px-2 py-0.5 rounded ${b.status === "confirmed" ? "bg-green-500/20 text-green-400" : b.status === "cancelled" ? "bg-destructive/20 text-destructive" : "bg-secondary text-secondary-foreground"}`}>
-                      {b.status}
-                    </span>
+                    <BookingStatusBadge status={b.status} />
+                    <p className="mt-1 max-w-[180px] text-[10px] leading-snug text-muted-foreground">
+                      {getRescheduleGuidance(b.start_time, b.amendment_count || 0)}
+                    </p>
                   </td>
                   <td className="py-3 px-2">
                     <div className="flex gap-2">

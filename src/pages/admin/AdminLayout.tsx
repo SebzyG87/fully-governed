@@ -1,13 +1,19 @@
 import { useEffect } from "react";
 import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
-import { Crown, LayoutDashboard, CalendarDays, Users, PoundSterling, Wrench, Megaphone, Radio, ShoppingBag, FileText, Settings, LogOut, ChevronLeft, Car, MessageSquare, UserCheck, Shirt, BookOpen, ClipboardList, Mail, Inbox, Trophy, Disc3 } from "lucide-react";
+import { Crown, LayoutDashboard, CalendarDays, Users, PoundSterling, Wrench, Megaphone, Radio, ShoppingBag, FileText, Settings, LogOut, ChevronLeft, Car, MessageSquare, UserCheck, Shirt, BookOpen, ClipboardList, Mail, Inbox, Trophy, Disc3, ShieldCheck, Clock, ShieldAlert } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { canManageSettings } from "@/lib/studioRoles";
 
 const navItems = [
   { label: "Overview", icon: LayoutDashboard, path: "/admin" },
   { label: "Bookings", icon: CalendarDays, path: "/admin/bookings" },
   { label: "Members", icon: Users, path: "/admin/members" },
   { label: "Artists", icon: Users, path: "/admin/artists" },
+  { label: "Producers", icon: UserCheck, path: "/admin/producers" },
+  { label: "Campaign Briefs", icon: ClipboardList, path: "/admin/campaign-briefs" },
+  { label: "Task Board", icon: ClipboardList, path: "/admin/tasks" },
+  { label: "Timesheets", icon: Clock, path: "/admin/timesheets" },
+  { label: "Bans & Risk", icon: ShieldAlert, path: "/admin/bans" },
   { label: "Revenue", icon: PoundSterling, path: "/admin/revenue" },
   { label: "Loyalty Points", icon: Trophy, path: "/admin/loyalty-points" },
   { label: "Vinyl Vault", icon: Disc3, path: "/admin/vinyl-vault" },
@@ -25,19 +31,20 @@ const navItems = [
   { label: "Email Log", icon: Mail, path: "/admin/email-log" },
   { label: "Contact Messages", icon: Inbox, path: "/admin/contact-messages" },
   { label: "Vehicles", icon: Car, path: "/admin/vehicles" },
+  { label: "Staff Roles", icon: ShieldCheck, path: "/admin/staff-roles" },
   { label: "Settings", icon: Settings, path: "/admin/settings" },
 ];
 
 const AdminLayout = () => {
-  const { user, role, loading, signOut } = useAuth();
+  const { user, studioRole, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!loading && (!user || role !== "creator_admin")) {
+    if (!loading && (!user || !canManageSettings(studioRole))) {
       navigate("/");
     }
-  }, [loading, user, role, navigate]);
+  }, [loading, user, studioRole, navigate]);
 
   if (loading) {
     return (
@@ -47,12 +54,12 @@ const AdminLayout = () => {
     );
   }
 
-  if (!user || role !== "creator_admin") return null;
+  if (!user || !canManageSettings(studioRole)) return null;
 
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-card border-r border-border flex flex-col fixed inset-y-0 left-0 z-30">
+      <aside className="hidden lg:flex w-64 bg-card border-r border-border flex-col fixed inset-y-0 left-0 z-30">
         <div className="p-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
             <Crown className="w-6 h-6 text-primary" />
@@ -87,8 +94,25 @@ const AdminLayout = () => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 ml-64 min-h-screen">
+      <main className="flex-1 min-h-screen lg:ml-64">
         <div className="grain-overlay" />
+        <div className="sticky top-0 z-20 border-b border-border bg-card/95 backdrop-blur-xl lg:hidden">
+          <div className="flex items-center gap-3 overflow-x-auto px-4 py-3">
+            {navItems.map((item) => {
+              const active = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`inline-flex min-h-[40px] shrink-0 items-center gap-2 rounded-full border px-3 text-xs font-barlow transition-colors ${active ? "border-interactive bg-interactive/10 text-interactive" : "border-border text-muted-foreground"}`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
         <Outlet />
       </main>
     </div>

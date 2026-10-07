@@ -14,7 +14,8 @@ Deno.serve(async (req) => {
   try {
     const { artistName, genre, currentFollowing, activePlatforms, biggestGoal, upcomingReleases, targetAudience, budget } = await req.json();
 
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY")!;
+    const aiApiKey = Deno.env.get("AI_GATEWAY_API_KEY")!;
+    const aiGatewayUrl = Deno.env.get("AI_GATEWAY_URL") ?? "https://openrouter.ai/api/v1/chat/completions";
 
     const prompt = `You are a music marketing strategist working for Fully Governed, a creative studio in Lewisham, London.
 
@@ -37,10 +38,10 @@ Structure the plan as:
 
 Each week should have 5-7 specific, actionable tasks. Include platform-specific tactics for their genre. Mention Fully Governed resources where relevant (studio sessions, street team, social hub, events). End with a summary of KPIs to track.`;
 
-    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const aiResponse = await fetch(aiGatewayUrl, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${lovableApiKey}`,
+        "Authorization": `Bearer ${aiApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

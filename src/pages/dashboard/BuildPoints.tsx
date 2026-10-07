@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Crown, ArrowLeft, Zap, Gift, Target, Trophy, ChevronRight, History, CheckCircle, Loader2 } from "lucide-react";
+import { Crown, Zap, Gift, Target, Trophy, ChevronRight, History, CheckCircle, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import BackLink from "@/components/BackLink";
 
 const tiers = [
   { name: "MIC 1", min: 0, max: 100, color: "#808080", benefits: ["Free Coffee", "Access to community events"] },
@@ -97,10 +98,7 @@ const BuildPoints = () => {
       <div className="grain-overlay" />
       <header className="border-b border-border bg-card/50 backdrop-blur-xl sticky top-0 z-50">
         <div className="container flex items-center justify-between h-16">
-          <Link to="/dashboard" className="flex items-center gap-2 text-muted-foreground hover:text-interactive transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-barlow text-sm">Dashboard</span>
-          </Link>
+          <BackLink to="/dashboard" label="Dashboard" className="px-0" />
           <span className="font-bebas text-2xl tracking-widest text-foreground">BUILD POINTS</span>
         </div>
       </header>

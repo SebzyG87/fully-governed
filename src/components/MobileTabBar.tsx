@@ -37,8 +37,8 @@ const MobileTabBar = () => {
             <Link
               key={tab.path}
               to={tab.path}
-              className={`relative flex flex-col items-center justify-center min-h-[44px] min-w-[44px] px-2 gap-0.5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md ${
-                active ? "text-primary scale-110" : "text-muted-foreground hover:text-foreground"
+              className={`relative flex flex-1 flex-col items-center justify-center min-h-[52px] min-w-[44px] px-2 gap-0.5 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md ${
+                active ? "text-primary" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {active && (

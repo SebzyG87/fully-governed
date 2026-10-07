@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Crown, FileText, ArrowLeft, Pencil } from "lucide-react";
+import { Crown, FileText, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import EditBookingModal from "@/components/EditBookingModal";
 import Navbar from "@/components/Navbar";
+import BackLink from "@/components/BackLink";
 import Footer from "@/components/Footer";
 
 interface LogEntry {
@@ -92,9 +93,7 @@ const SessionLog = () => {
 
       <div className="container pt-24 pb-8 space-y-6">
         <div className="mb-4">
-          <Button variant="ghost" onClick={() => navigate(-1)} className="font-barlow text-muted-foreground hover:text-foreground p-0">
-            <ArrowLeft className="w-5 h-5 mr-2" /> Back
-          </Button>
+          <BackLink to="/dashboard" label="Back to Dashboard" className="px-0" />
         </div>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-4xl text-foreground">SESSION LOG</h1>
