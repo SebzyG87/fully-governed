@@ -127,7 +127,7 @@ const AdminOverview = () => {
     { label: "Today", value: stats.bookingsToday, icon: CalendarDays },
     { label: "This Week", value: stats.bookingsWeek, icon: CalendarDays },
     { label: "This Month", value: stats.bookingsMonth, icon: CalendarDays },
-    { label: "Total Members", value: stats.totalMembers, sub: `🛡️ ${stats.adminCount} · 👑 ${stats.familyCount} · 🎤 ${stats.customerCount}`, icon: Users },
+    { label: "Total Members", value: stats.totalMembers, sub: `Admins ${stats.adminCount} - Family ${stats.familyCount} - Customers ${stats.customerCount}`, icon: Users },
     { label: "Next 24h", value: stats.upcoming24h, icon: Clock },
   ];
 

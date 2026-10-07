@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Share2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const ArtistSocialHub = () => {
@@ -17,14 +17,18 @@ const ArtistSocialHub = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Your Presence</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">ARTIST SOCIAL HUB</h1>
-          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">Connect your accounts, view stats, and manage your social presence from one dashboard.</p>
+          <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">
+            Connect your accounts, view stats, and manage your social presence from one dashboard.
+          </p>
         </motion.div>
 
         {!user ? (
           <div className="text-center py-16">
             <Share2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground font-barlow mb-4">Sign in to access your social hub.</p>
-            <Link to="/auth"><Button className="font-bebas text-lg tracking-wider px-8 h-12">SIGN IN</Button></Link>
+            <Link to="/auth">
+              <Button className="font-bebas text-lg tracking-wider px-8 h-12">SIGN IN</Button>
+            </Link>
           </div>
         ) : (
           <div className="max-w-4xl mx-auto space-y-8">
@@ -38,7 +42,9 @@ const ArtistSocialHub = () => {
               </div>
             ))}
             <div className="bg-card border border-border rounded-lg p-6 text-center">
-              <p className="text-muted-foreground font-barlow">📅 Post scheduling — <span className="text-primary">Coming Soon</span></p>
+              <p className="text-muted-foreground font-barlow">
+                Use your connected accounts above to keep your artist profile links up to date.
+              </p>
             </div>
           </div>
         )}

@@ -39,6 +39,8 @@ const GlobalSearch = () => {
     return () => document.removeEventListener("keydown", down);
   }, [hidden]);
 
+  if (hidden) return null;
+
   const go = (path: string) => {
     navigate(path);
     setOpen(false);

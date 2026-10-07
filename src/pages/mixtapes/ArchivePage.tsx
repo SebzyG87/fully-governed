@@ -170,7 +170,7 @@ const ArchivePage = () => {
               <p className="text-muted-foreground font-barlow">
                 {search || yearFilter !== "all" || genreFilter !== "all"
                   ? "No mixtapes match your filters."
-                  : "Archive coming soon."}
+                  : "No archived mixtapes are published yet."}
               </p>
             </div>
           )}

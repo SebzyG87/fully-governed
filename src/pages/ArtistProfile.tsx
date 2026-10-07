@@ -146,7 +146,7 @@ const ArtistProfile = () => {
               <PointTipping targetUserId={artist.user_id} targetUserName={artist.full_name} />
 
               <ShareProfileDialog
-                url={`/artist/${artist.full_name.replace(/\s+/g, '-').toLowerCase()}`}
+                url={`/artists/${artist.full_name.replace(/\s+/g, '-').toLowerCase()}`}
                 title={artist.full_name}
                 triggerContext={
                   <Button variant="outline" size="icon" className="shrink-0"><Share2 className="w-5 h-5" /></Button>

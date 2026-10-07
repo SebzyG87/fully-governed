@@ -200,6 +200,7 @@ const App = () => (
                   {/* Core */}
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/login" element={<Auth />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/dashboard/upload-music" element={<ProtectedRoute><UploadMusic /></ProtectedRoute>} />
                   <Route path="/dashboard/my-vault" element={<ProtectedRoute><MyVault /></ProtectedRoute>} />

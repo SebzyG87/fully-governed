@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ElementType } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -96,7 +96,7 @@ const Dashboard = () => {
     }
   }, [loading, profile]);
 
-  const fetchBookings = () => {
+  const fetchBookings = useCallback(() => {
     if (!user) return;
     (supabase
       .from("bookings")
@@ -136,9 +136,9 @@ const Dashboard = () => {
           setRecentActivity([]);
         }
       });
-  };
+  }, [ratingBookingId, user]);
 
-  useEffect(() => { fetchBookings(); }, [user]);
+  useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
   const handleCancel = async () => {
     if (!cancelId) return;

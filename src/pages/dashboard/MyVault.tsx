@@ -78,7 +78,7 @@ const MyVault = () => {
             }
 
             // 3. Fetch exclusive vault tracks
-            const { data: exclusive } = await supabase
+            const { data: exclusive } = await (supabase as any)
                 .from('music_tracks')
                 .select(`id, title, cover_url, file_url, genre, profiles ( full_name )`)
                 .eq('status', 'published')

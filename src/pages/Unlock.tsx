@@ -35,16 +35,23 @@ const Unlock = () => {
   const [content, setContent] = useState<QRCode | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     if (!code) return;
     const fetchAndRecord = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("fg_qr_codes")
         .select("*")
         .eq("code_slug", code)
         .limit(1)
         .maybeSingle();
+
+      if (error) {
+        setLoadError(true);
+        setLoading(false);
+        return;
+      }
 
       if (!data) {
         setNotFound(true);
@@ -77,9 +84,13 @@ const Unlock = () => {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6 px-4 text-center">
         <Crown className="w-12 h-12 text-primary/30" />
-        <h1 className="font-bebas text-4xl tracking-wider text-foreground">CODE NOT FOUND</h1>
+        <h1 className="font-bebas text-4xl tracking-wider text-foreground">
+          {loadError ? "UNLOCKS ARE BEING SET UP" : "CODE NOT FOUND"}
+        </h1>
         <p className="text-muted-foreground font-barlow max-w-sm">
-          This QR code doesn't match any unlock in our system. Check that you scanned the code correctly, or contact the artist directly.
+          {loadError
+            ? "This feature is nearly ready. Please check back soon or contact the artist directly."
+            : "This QR code doesn't match any unlock in our system. Check that you scanned the code correctly, or contact the artist directly."}
         </p>
         <a href="/" className="font-bebas text-primary tracking-wider hover:underline">BACK TO FULLY GOVERNED</a>
       </div>
@@ -158,7 +169,7 @@ const Unlock = () => {
             {!content.file_url && (
               <div className="bg-primary/5 border border-primary/10 rounded-lg p-4">
                 <p className="font-barlow text-sm text-muted-foreground">
-                  Content coming soon — check back or follow the artist for updates.
+                  Content coming soon - check back or follow the artist for updates.
                 </p>
               </div>
             )}
@@ -169,7 +180,7 @@ const Unlock = () => {
 
         {/* Footer */}
         <p className="text-center font-mono text-xs text-muted-foreground mt-6 tracking-widest">
-          POWERED BY FULLY GOVERNED · LEWISHAM, SE
+          POWERED BY FULLY GOVERNED - LEWISHAM, SE
         </p>
       </motion.div>
     </div>
@@ -177,3 +188,4 @@ const Unlock = () => {
 };
 
 export default Unlock;
+

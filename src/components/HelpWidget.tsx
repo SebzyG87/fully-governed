@@ -16,7 +16,6 @@ const popularSlugs = [
 const HelpWidget = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
-  const hidden = pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock");
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"articles" | "chat">("articles");
   const [chatInput, setChatInput] = useState("");
@@ -30,6 +29,7 @@ const HelpWidget = () => {
     : helpArticles.filter(a => popularSlugs.includes(a.slug)).slice(0, 5);
 
   const [loading, setLoading] = useState(false);
+  const hidden = pathname.startsWith("/auth") || pathname.startsWith("/admin") || pathname.startsWith("/unlock");
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,10 +42,15 @@ const HelpWidget = () => {
     setLoading(true);
 
     try {
+      const assistantEndpoint = import.meta.env.VITE_AI_ASSISTANT_ENDPOINT;
+      if (!assistantEndpoint) {
+        throw new Error("AI assistant endpoint is not configured");
+      }
+
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000);
 
-      const response = await fetch('https://arranged-pas-transformation-launch.trycloudflare.com/api/generate', {
+      const response = await fetch(assistantEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: 'qwen2.5', prompt: userMessage, stream: false }),

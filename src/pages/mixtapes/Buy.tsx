@@ -6,13 +6,14 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const FORMAT_TABS = ["All", "Digital Download", "USB", "NFT Edition"] as const;
 type FormatTab = (typeof FORMAT_TABS)[number];
 
 interface Product {
   id: string;
+  trackId: string;
   title: string;
   artist: string;
   format: string;
@@ -44,6 +45,7 @@ const Buy = () => {
         data.forEach((t) => {
           mapped.push({
             id: t.id + "-digital",
+            trackId: t.id,
             title: t.title,
             artist: t.genre || "Unknown Artist",
             format: "Digital Download",
@@ -53,6 +55,7 @@ const Buy = () => {
           if (t.is_nft) {
             mapped.push({
               id: t.id + "-nft",
+              trackId: t.id,
               title: t.title,
               artist: t.genre || "Unknown Artist",
               format: "NFT Edition",
@@ -147,12 +150,10 @@ const Buy = () => {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-primary font-mono text-lg">£{p.price.toFixed(2)}</span>
-                      <Button
-                        size="sm"
-                        className="font-mono text-xs"
-                        onClick={() => toast.info("Cart feature coming soon")}
-                      >
-                        <ShoppingCart className="w-3 h-3 mr-1" /> Add to Cart
+                      <Button asChild size="sm" className="font-mono text-xs">
+                        <Link to={`/shop/checkout?trackId=${p.trackId}`}>
+                          <ShoppingCart className="w-3 h-3 mr-1" /> Buy
+                        </Link>
                       </Button>
                     </div>
                   </div>

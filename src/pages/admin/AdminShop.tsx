@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingBag, Plus, Save, X, Music, Check, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,12 +39,12 @@ const AdminShop = () => {
   const [category, setCategory] = useState("merchandise");
   const { toast } = useToast();
 
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     const { data } = await supabase.from("shop_items").select("*").order("created_at", { ascending: false });
     setItems((data as ShopItem[]) || []);
-  };
+  }, []);
 
-  const fetchPendingTracks = async () => {
+  const fetchPendingTracks = useCallback(async () => {
     const { data, error } = await supabase
       .from('music_tracks')
       .select('*, profiles(full_name)')
@@ -54,15 +54,15 @@ const AdminShop = () => {
     if (!error && data) {
       setPendingTracks(data as any);
     }
-  };
+  }, []);
 
-  const loadAll = async () => {
+  const loadAll = useCallback(async () => {
     setLoading(true);
     await Promise.all([fetchItems(), fetchPendingTracks()]);
     setLoading(false);
-  };
+  }, [fetchItems, fetchPendingTracks]);
 
-  useEffect(() => { loadAll(); }, []);
+  useEffect(() => { loadAll(); }, [loadAll]);
 
   const handleAdd = async () => {
     if (!name.trim()) return;

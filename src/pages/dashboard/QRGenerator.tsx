@@ -38,11 +38,19 @@ const QRGenerator = () => {
         queryKey: ['fg_qr_codes', user?.id],
         enabled: !!user,
         queryFn: async () => {
-            const { data } = await supabase
+            const { data, error } = await supabase
                 .from('fg_qr_codes')
                 .select('*')
                 .eq('user_id', user!.id)
                 .order('created_at', { ascending: false });
+            if (error) {
+                toast({
+                    title: 'Digital unlocks are being set up',
+                    description: 'QR code history will appear once the database is ready.',
+                    variant: 'destructive',
+                });
+                return [];
+            }
             return data ?? [];
         },
     });
@@ -83,7 +91,7 @@ const QRGenerator = () => {
             file_url: unlockFileUrl || null,
         });
         if (error) {
-            toast({ title: 'Something went wrong', description: 'Could not create unlock link. Try again.', variant: 'destructive' });
+            toast({ title: 'Digital unlocks are being set up', description: 'Could not create unlock link yet. Please try again after the database setup is finished.', variant: 'destructive' });
         } else {
             setCreatedSlug(slug);
             refetch();
@@ -149,7 +157,7 @@ const QRGenerator = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                             <div className="bg-card border border-border rounded-xl p-6 space-y-4">
                                 <h2 className="font-bebas text-xl tracking-wider text-foreground">CREATE UNLOCK LINK</h2>
-                                <p className="text-xs text-muted-foreground font-barlow">Print this QR on merch, postcards, or USB packaging. When scanned, fans land on a page showing your exclusive content — no app needed.</p>
+                                <p className="text-xs text-muted-foreground font-barlow">Print this QR on merch, postcards, or USB packaging. When scanned, fans land on a page showing your exclusive content - no app needed.</p>
                                 <div className="space-y-2">
                                     <Label className="font-barlow">Content type</Label>
                                     <select value={unlockType} onChange={e => setUnlockType(e.target.value as 'track' | 'video' | 'message' | 'exclusive')} className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm font-barlow">
@@ -161,7 +169,7 @@ const QRGenerator = () => {
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="font-barlow">Title *</Label>
-                                    <Input placeholder="e.g. Unreleased Track — Summer 2026" value={unlockTitle} onChange={e => setUnlockTitle(e.target.value)} />
+                                    <Input placeholder="e.g. Unreleased Track - Summer 2026" value={unlockTitle} onChange={e => setUnlockTitle(e.target.value)} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="font-barlow">Description (optional)</Label>
@@ -216,7 +224,7 @@ const QRGenerator = () => {
                                         <div key={code.id} className="px-4 py-3 flex items-center justify-between gap-4">
                                             <div className="flex-1 min-w-0">
                                                 <p className="font-barlow text-sm text-foreground truncate">{code.content_title}</p>
-                                                <p className="font-mono text-xs text-muted-foreground">{code.content_type} · {code.scan_count} scans</p>
+                                                <p className="font-mono text-xs text-muted-foreground">{code.content_type} - {code.scan_count} scans</p>
                                             </div>
                                             <div className="flex items-center gap-2 shrink-0">
                                                 <span className="font-mono text-xs text-primary">{code.code_slug}</span>
@@ -238,3 +246,4 @@ const QRGenerator = () => {
 };
 
 export default QRGenerator;
+
