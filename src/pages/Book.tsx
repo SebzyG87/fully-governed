@@ -116,6 +116,9 @@ const Book = () => {
   const [engineers, setEngineers] = useState<Engineer[]>([]);
   const [selectedEngineer, setSelectedEngineer] = useState("");
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [quoteName, setQuoteName] = useState("");
+  const [quoteEmail, setQuoteEmail] = useState("");
+  const [quoteDetails, setQuoteDetails] = useState("");
   const [monthBookings, setMonthBookings] = useState<Booking[]>([]);
   const [showDraftBanner, setShowDraftBanner] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
