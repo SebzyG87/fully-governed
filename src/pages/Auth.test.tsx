@@ -7,6 +7,7 @@ import Auth from "./Auth";
 const mocks = vi.hoisted(() => ({
   resetPassword: vi.fn(),
   updateUser: vi.fn(),
+  signInWithOtp: vi.fn(),
 }));
 
 vi.mock("@/hooks/useAuth", () => ({
@@ -26,7 +27,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     auth: {
       updateUser: mocks.updateUser,
-      signInWithOtp: vi.fn(),
+      signInWithOtp: mocks.signInWithOtp,
       verifyOtp: vi.fn(),
       signInWithOAuth: vi.fn(),
     },
@@ -58,6 +59,7 @@ describe("Auth", () => {
   beforeEach(() => {
     mocks.resetPassword.mockReset();
     mocks.updateUser.mockReset();
+    mocks.signInWithOtp.mockReset();
   });
 
   it("shows email, password, Google, and forgot-password login options", () => {
@@ -87,5 +89,23 @@ describe("Auth", () => {
     expect(screen.getByText(/set your new access credentials/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/new password/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /update password/i })).toBeInTheDocument();
+  });
+
+  it("sends signup metadata without including the password", async () => {
+    mocks.signInWithOtp.mockResolvedValue({ error: null });
+    renderAuth("/auth");
+
+    fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
+    fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: "Test" } });
+    fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: "Customer" } });
+    fireEvent.change(screen.getByLabelText(/^email$/i), { target: { value: "booking-test@example.com" } });
+    fireEvent.change(screen.getByLabelText(/^password$/i), { target: { value: "test-password-123" } });
+    fireEvent.change(screen.getByLabelText(/confirm password/i), { target: { value: "test-password-123" } });
+    fireEvent.click(screen.getByRole("button", { name: /create account/i }));
+
+    await waitFor(() => expect(mocks.signInWithOtp).toHaveBeenCalled());
+    const [options] = mocks.signInWithOtp.mock.calls[0];
+    expect(options.options.data).toEqual({ full_name: "Test Customer", phone: null });
+    expect(screen.getByText(/check your email/i)).toBeInTheDocument();
   });
 });

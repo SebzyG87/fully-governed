@@ -32,7 +32,7 @@ const Auth = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showProfileCompletion, setShowProfileCompletion] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
-  const [pendingProfile, setPendingProfile] = useState<{ fullName: string; phone: string | null; passwordHint: string } | null>(null);
+  const [pendingProfile, setPendingProfile] = useState<{ fullName: string; phone: string | null; password: string } | null>(null);
   const [code, setCode] = useState("");
   const [isRecovery, setIsRecovery] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -111,14 +111,13 @@ const Auth = () => {
             data: {
               full_name: fullName,
               phone: phone || null,
-              password_hint: password, // Store in metadata so we can set it after verification
             },
           },
         });
 
         if (error) throw error;
 
-        setPendingProfile({ fullName, phone: phone || null, passwordHint: password });
+        setPendingProfile({ fullName, phone: phone || null, password });
         setShowVerification(true);
         setResendTimer(60);
         toast({ title: "Verification code sent" });
@@ -146,7 +145,7 @@ const Auth = () => {
       if (error) throw error;
 
       if (data.user && pendingProfile) {
-        await supabase.auth.updateUser({ password: pendingProfile.passwordHint });
+        await supabase.auth.updateUser({ password: pendingProfile.password });
 
         const { data: existingProfile } = await supabase
           .from('profiles')
@@ -181,10 +180,9 @@ const Auth = () => {
         options: { 
           shouldCreateUser: true,
           data: pendingProfile ? {
-            full_name: pendingProfile.fullName,
-            phone: pendingProfile.phone,
-            password_hint: pendingProfile.passwordHint
-          } : {}
+          full_name: pendingProfile.fullName,
+          phone: pendingProfile.phone,
+        } : {}
         },
       });
       if (error) throw error;
