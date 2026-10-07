@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import {
@@ -195,7 +195,7 @@ const useBookings = (role: StudioRole) => {
 
       let query = supabase
         .from("bookings")
-        .select("id, user_id, start_time, end_time, session_type, status, notes, num_guests, rooms(name, color), profiles(full_name)")
+        .select("id, user_id, start_time, end_time, session_type, status, notes, num_guests, rooms(name, color)")
         .order("start_time", { ascending: true })
         .limit(25);
 
@@ -208,7 +208,16 @@ const useBookings = (role: StudioRole) => {
         setLoadError("Booking records could not be read for this role. Other operational panels may still use live Supabase data or labelled demo fallbacks.");
         setBookings([]);
       } else {
-        setBookings((data as unknown as BookingRow[]) || []);
+        const rows = (data as unknown as BookingRow[]) || [];
+        const userIds = [...new Set(rows.map((booking) => booking.user_id))];
+        const { data: profiles, error: profilesError } = userIds.length
+          ? await supabase.from("profiles").select("user_id, full_name").in("user_id", userIds)
+          : { data: [], error: null };
+        const names = new Map((profiles || []).map((profile) => [profile.user_id, profile.full_name]));
+        setBookings(rows.map((booking) => ({
+          ...booking,
+          profiles: profilesError ? null : { full_name: names.get(booking.user_id) || null },
+        })));
       }
       setLoading(false);
     };
@@ -1045,7 +1054,33 @@ const DashboardContent = ({ type, live, userId, onInspect }: { type: StudioRole;
 
 const StudioOpsDashboard = ({ type }: { type: StudioRole }) => {
   const { studioRole, user } = useAuth();
+  const location = useLocation();
   const [selectedItem, setSelectedItem] = useState<OperationalDrawerData | null>(null);
+
+  useEffect(() => {
+    if (type !== "client_artist" || !user) return;
+    const params = new URLSearchParams(location.search);
+    const bookingId = params.get("booking");
+    if (params.get("payment") !== "cancelled" || !bookingId) return;
+
+    let active = true;
+    void supabase
+      .from("bookings")
+      .update({ status: "cancelled", payment_status: "failed", cancelled_at: new Date().toISOString() })
+      .eq("id", bookingId)
+      .eq("user_id", user.id)
+      .eq("status", "pending_payment")
+      .then(({ error }) => {
+        if (!active) return;
+        if (error) {
+          console.error("Could not release cancelled checkout booking:", error);
+          return;
+        }
+        window.location.replace(location.pathname);
+      });
+
+    return () => { active = false; };
+  }, [location.pathname, location.search, type, user]);
 
   // Fetch live operational data
   const { tasks: cleaningTaskRows } = useCleaningTasks();

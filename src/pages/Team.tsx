@@ -13,12 +13,13 @@ export default function Team() {
   const [members, setMembers] = useState<TeamMember[]>(TEAM_MEMBERS);
 
   useEffect(() => {
-    supabase
-      .from("fg_producer_profiles" as any)
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true })
-      .then(({ data }) => {
+    const loadMembers = async () => {
+      try {
+        const { data } = await supabase
+          .from("fg_producer_profiles" as any)
+          .select("*")
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true });
         if (!data?.length) return;
         setMembers((data as any[]).map((profile): TeamMember => ({
           slug: profile.slug,
@@ -37,8 +38,12 @@ export default function Team() {
             : [],
           tone: profile.bio || "",
         })));
-      })
-      .catch(() => setMembers(TEAM_MEMBERS));
+      } catch {
+        setMembers(TEAM_MEMBERS);
+      }
+    };
+
+    void loadMembers();
   }, []);
 
   return (
