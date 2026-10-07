@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
+import heroStudio from "@/assets/hero-studio.jpg";
 
 const HeroSection = () => {
   const [hasPlayed, setHasPlayed] = useState(false);
@@ -19,7 +20,7 @@ const HeroSection = () => {
       {/* Background image */}
       <div className="absolute inset-0">
         <img
-            src="/images/rooms/360/recording-room-01.jpeg"
+            src={heroStudio}
           alt="Fully Governed recording studio mixing console"
           className="w-full h-full object-cover"
         />
