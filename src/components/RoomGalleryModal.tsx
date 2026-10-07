@@ -2,7 +2,6 @@ import { lazy, Suspense, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
 
 const PanoramaViewer = lazy(() => import("@/components/PanoramaViewer").then((module) => ({ default: module.PanoramaViewer })));
@@ -13,7 +12,7 @@ interface RoomGalleryModalProps {
 
 const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose: () => void; images: string[] }) => {
   const [current, setCurrent] = useState(0);
-  const [panoramaOpen, setPanoramaOpen] = useState(false);
+  const [view, setView] = useState<"360" | "photo">("360");
   const total = images.length;
 
   return (
@@ -29,20 +28,31 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="relative w-full max-w-3xl"
+          className="relative w-full max-w-6xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bebas text-2xl text-white tracking-wider">{roomName} GALLERY</h2>
-            <button onClick={onClose} className="text-white/70 hover:text-white transition-colors" aria-label="Close gallery">
-              <X className="w-6 h-6" />
-            </button>
+            <div className="flex items-center gap-4">
+              <div className="flex rounded-sm border border-white/20 p-0.5" role="group" aria-label="Gallery view">
+                <button type="button" aria-pressed={view === "360"} onClick={() => setView("360")} className={`px-3 py-1.5 text-sm ${view === "360" ? "bg-primary text-primary-foreground" : "text-white/75 hover:text-white"}`}>360° TOUR</button>
+                <button type="button" aria-pressed={view === "photo"} onClick={() => setView("photo")} className={`px-3 py-1.5 text-sm ${view === "photo" ? "bg-primary text-primary-foreground" : "text-white/75 hover:text-white"}`}>PHOTO</button>
+              </div>
+              <button onClick={onClose} className="text-white/70 hover:text-white transition-colors" aria-label="Close gallery">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
 
-          <div className="relative aspect-video bg-card border border-border rounded-lg overflow-hidden">
-            <img src={images[current]} alt={`${roomName}, panorama ${current + 1}`} className="h-full w-full object-cover" />
+          <div className="relative h-[min(68vh,680px)] min-h-[300px] bg-black border border-border rounded-lg overflow-hidden">
+            {view === "360" ? (
+              <Suspense fallback={<div className="h-full w-full animate-pulse bg-muted" />}>
+                <PanoramaViewer key={images[current]} src={images[current]} label={roomName} />
+              </Suspense>
+            ) : (
+              <img src={images[current]} alt={`${roomName}, photo ${current + 1}`} className="h-full w-full object-contain" />
+            )}
             <span className="absolute bottom-3 left-3 rounded-sm bg-black/70 px-2 py-1 font-mono text-xs text-white">{current + 1} / {total}</span>
-            <button onClick={() => setPanoramaOpen(true)} className="absolute bottom-3 right-3 rounded-sm bg-black/75 px-3 py-2 text-sm text-white hover:bg-black" aria-label={`Explore ${roomName} in 360 degrees`}>Explore 360</button>
             <button
               onClick={() => setCurrent((c) => (c - 1 + total) % total)}
               className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 transition-colors"
@@ -71,14 +81,6 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
           </div>
         </motion.div>
       </motion.div>
-      <Dialog open={panoramaOpen} onOpenChange={setPanoramaOpen}>
-        <DialogContent className="max-w-6xl border-border bg-background p-4 sm:p-6">
-          <DialogHeader><DialogTitle className="font-bebas text-2xl">{roomName} 360°</DialogTitle></DialogHeader>
-          <Suspense fallback={<div className="h-[min(72vh,760px)] min-h-[360px] w-full animate-pulse bg-muted" />}>
-            <PanoramaViewer src={images[current]} label={roomName} />
-          </Suspense>
-        </DialogContent>
-      </Dialog>
     </AnimatePresence>
   );
 };
