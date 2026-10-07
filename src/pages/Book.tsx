@@ -428,14 +428,12 @@ const Book = () => {
     total,
     deposit,
     balance,
-    stripePaymentId,
   }: {
     status?: string;
     paymentStatus?: string;
     total?: number | null;
     deposit?: number | null;
     balance?: number | null;
-    stripePaymentId?: string;
   }) => {
     if (!selectedRoom || !sessionType || !user) return null;
     const slot = getSelectedSlot();
@@ -464,7 +462,6 @@ const Book = () => {
         selectedSetup ? `[Room Setup: ${selectedSetup}]` : "",
         supportRequirement ? `[Support room: ${supportRequirement.supportRoom}; ${supportRequirement.supportType}; status: ${supportRequirement.status}]` : "",
       ].filter(Boolean).join(" "),
-      stripe_payment_id: stripePaymentId ?? null,
     }).select("id").single();
 
     if (error) {
