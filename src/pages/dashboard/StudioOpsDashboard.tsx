@@ -171,6 +171,7 @@ function adaptRoomStatus(room: RoomStatusRPCRow): StudioRoomStatus {
 interface BookingRow {
   id: string;
   user_id: string;
+  room_id: string;
   start_time: string;
   end_time: string;
   session_type: string;
@@ -195,7 +196,7 @@ const useBookings = (role: StudioRole) => {
 
       let query = supabase
         .from("bookings")
-        .select("id, user_id, start_time, end_time, session_type, status, notes, num_guests, rooms(name, color)")
+        .select("id, user_id, room_id, start_time, end_time, session_type, status, notes, num_guests")
         .order("start_time", { ascending: true })
         .limit(25);
 
@@ -210,13 +211,21 @@ const useBookings = (role: StudioRole) => {
       } else {
         const rows = (data as unknown as BookingRow[]) || [];
         const userIds = [...new Set(rows.map((booking) => booking.user_id))];
-        const { data: profiles, error: profilesError } = userIds.length
-          ? await supabase.from("profiles").select("user_id, full_name").in("user_id", userIds)
-          : { data: [], error: null };
+        const roomIds = [...new Set(rows.map((booking) => booking.room_id))];
+        const [{ data: profiles, error: profilesError }, { data: rooms, error: roomsError }] = await Promise.all([
+          userIds.length
+            ? supabase.from("profiles").select("user_id, full_name").in("user_id", userIds)
+            : Promise.resolve({ data: [], error: null }),
+          roomIds.length
+            ? supabase.from("rooms").select("id, name, color").in("id", roomIds)
+            : Promise.resolve({ data: [], error: null }),
+        ]);
         const names = new Map((profiles || []).map((profile) => [profile.user_id, profile.full_name]));
+        const roomMap = new Map((rooms || []).map((room) => [room.id, { name: room.name, color: room.color }]));
         setBookings(rows.map((booking) => ({
           ...booking,
           profiles: profilesError ? null : { full_name: names.get(booking.user_id) || null },
+          rooms: roomsError ? null : roomMap.get(booking.room_id) || null,
         })));
       }
       setLoading(false);
@@ -1063,24 +1072,21 @@ const StudioOpsDashboard = ({ type }: { type: StudioRole }) => {
     const bookingId = params.get("booking");
     if (params.get("payment") !== "cancelled" || !bookingId) return;
 
-    let active = true;
-    void supabase
-      .from("bookings")
-      .update({ status: "cancelled", payment_status: "failed", cancelled_at: new Date().toISOString() })
-      .eq("id", bookingId)
-      .eq("user_id", user.id)
-      .eq("status", "pending_payment")
-      .then(({ error }) => {
-        if (!active) return;
-        if (error) {
-          console.error("Could not release cancelled checkout booking:", error);
-          return;
-        }
-        window.location.replace(location.pathname);
-      });
+    void (async () => {
+      const { error } = await supabase
+        .from("bookings")
+        .update({ status: "cancelled", payment_status: "failed", cancelled_at: new Date().toISOString() })
+        .eq("id", bookingId)
+        .eq("user_id", user.id)
+        .eq("status", "pending_payment");
 
-    return () => { active = false; };
-  }, [location.pathname, location.search, type, user]);
+      if (error) {
+        console.error("Could not release cancelled checkout booking:", error);
+        return;
+      }
+      window.location.replace(location.pathname);
+    })();
+  }, [location.pathname, location.search, type, user?.id]);
 
   // Fetch live operational data
   const { tasks: cleaningTaskRows } = useCleaningTasks();
