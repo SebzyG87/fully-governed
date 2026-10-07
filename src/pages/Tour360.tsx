@@ -6,7 +6,6 @@ import { useSearchParams } from "react-router-dom";
 const panoramas = [
   { slug: "recording", label: "Room 1B · Recording Studio", image: "/images/rooms/360/recording-room-01.jpeg" },
   { slug: "multi-use", label: "Room 1A · Multi-Use Room", image: "/images/rooms/360/multi-use-room-01.jpeg" },
-  { slug: "content-centre", label: "Room 2 · Content Creation Centre", image: "/images/rooms/360/content-room-01.jpeg" },
 ];
 
 export default function Tour360() {

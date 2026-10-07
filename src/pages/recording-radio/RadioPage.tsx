@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import QuoteRequestModal from "@/components/QuoteRequestModal";
-import { RoomViewButtons } from "@/components/RoomGalleryModal";
 
 const RadioPage = () => {
   const [quoteOpen, setQuoteOpen] = useState(false);
@@ -36,7 +35,6 @@ const RadioPage = () => {
             <p className="text-sm text-muted-foreground font-barlow">The Stream Room is available for self-operated dry hire. Confirm the room setup and equipment needed with the studio before booking.</p>
           </div>
 
-          <RoomViewButtons roomName="Content Creation Centre" />
 
           <div className="flex gap-4 justify-center">
             <Link to="/book"><Button className="font-bebas text-lg tracking-wider px-8 h-12">BOOK NOW</Button></Link>

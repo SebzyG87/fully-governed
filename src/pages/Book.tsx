@@ -65,6 +65,14 @@ const roomNameMapping: Record<string, string> = {
   "Room 2 — Content Creation Centre": "Content Creation Centre"
 };
 
+const getRoomPhoto = (displayName: string) => {
+  if (displayName.toLowerCase().includes("recording")) return "/images/rooms/360/recording-room-01.jpeg";
+  if (displayName.toLowerCase().includes("multi-use")) return "/images/rooms/360/multi-use-room-01.jpeg";
+  return null;
+};
+
+const getRoomTour = (displayName: string) => displayName.toLowerCase().includes("multi-use") ? "multi-use" : "recording";
+
 interface Engineer {
   id: string;
   name: string;
@@ -625,19 +633,25 @@ const Book = () => {
         )}
 
         {/* Room Selector */}
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="grid grid-cols-1 gap-4 pb-2 sm:grid-cols-2 xl:grid-cols-3">
           {rooms.map((room) => {
             const rc = roomColorMap[room.color] ?? "";
             const active = selectedRoom?.id === room.id;
             const displayName = roomNameMapping[room.name] || room.name;
+            const photo = getRoomPhoto(displayName);
             return (
-              <button
-                key={room.id}
-                onClick={() => { setSelectedRoom(room); setSelectedDate(null); setSelectedHour(null); }}
-                className={`flex-shrink-0 px-5 py-3 rounded-lg border-2 transition-all font-bebas text-lg tracking-wider ${active ? `${rc} border-current bg-current/10 shadow-[0_0_15px_rgba(0,0,0,0.2)]` : "bg-card border-border text-white hover:border-interactive hover:text-interactive hover:shadow-[0_0_12px_hsl(var(--interactive))]"}`}
-              >
-                {displayName.toUpperCase()}
-              </button>
+              <div key={room.id} className={`overflow-hidden border-2 transition-colors ${active ? `${rc} border-current bg-current/10` : "border-border bg-card"}`}>
+                <button
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => { setSelectedRoom(room); setSelectedDate(null); setSelectedHour(null); }}
+                  className="block w-full text-left"
+                >
+                  {photo && <img src={photo} alt={`${displayName} room`} className="aspect-[2/1] w-full object-cover" />}
+                  <span className="block px-4 py-3 font-bebas text-lg tracking-wider text-foreground">{displayName.toUpperCase()}</span>
+                </button>
+                {photo && <Link to={`/360-tour?room=${getRoomTour(displayName)}`} className="block border-t border-border px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10">OPEN INTERACTIVE 360° TOUR</Link>}
+              </div>
             );
           })}
         </div>

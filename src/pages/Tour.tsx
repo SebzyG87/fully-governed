@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Mic, Camera, Users, Wifi, Monitor, Headphones } from "lucide-react";
+import { Mic, Users, Wifi, Monitor, Headphones } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -31,20 +31,6 @@ const rooms = [
     ],
     description: "Room 1A — Our editing suite and multi-purpose space. Post-production, video editing, animation, podcast recording, interviews, workshops, listening parties, and private events. Configure it however you need.",
   },
-  {
-    slug: "content-centre",
-    name: "Content Creation Centre",
-    subBrand: "Fully Governed Media",
-    image: "/images/rooms/360/content-room-01.jpeg",
-    color: "border-room-content",
-    features: [
-      { icon: Camera, label: "Stream Room dry hire" },
-      { icon: Monitor, label: "Self-operated production" },
-      { icon: Mic, label: "Setup confirmed with the studio" },
-      { icon: Wifi, label: "Internet radio and content enquiries" },
-    ],
-    description: "Room 2 is Fully Governed Media's content creation centre. Contact the studio to confirm the equipment and setup available for your session.",
-  },
 ];
 
 const Tour = () => {
@@ -57,7 +43,7 @@ const Tour = () => {
           <p className="font-mono text-xs tracking-[0.3em] text-primary mb-2 uppercase">Explore the Space</p>
           <h1 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">VIRTUAL TOUR</h1>
           <p className="text-muted-foreground font-barlow mt-2 max-w-xl mx-auto">
-            Three purpose-built rooms in the heart of Lewisham. Explore what each space has to offer.
+            Explore the Recording Studio and Multi-Use Room in Lewisham through their room photos and interactive 360° views.
           </p>
         </motion.div>
 

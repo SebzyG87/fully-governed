@@ -14,7 +14,7 @@ interface Room {
   colorClass: string;
   borderClass: string;
   glowClass: string;
-  image: string;
+  image?: string;
   description: string;
   features: string[];
   pricing: PriceItem[];
@@ -89,7 +89,6 @@ const rooms: Room[] = [
     colorClass: "room-purple",
     borderClass: "border-room-purple",
     glowClass: "glow-purple",
-    image: "/images/rooms/360/content-room-01.jpeg",
     description:
       "Room 2 — Fully Governed Media content creation centre. Book the Stream Room for self-operated production; confirm your required setup with the studio.",
     features: [
@@ -125,15 +124,11 @@ const RoomCard = ({ room, index }: { room: Room; index: number }) => (
     transition={{ duration: 0.6, delay: index * 0.15 }}
     className={`bg-card rounded-lg border ${room.borderClass} ${room.glowClass} overflow-hidden`}
   >
-    {/* Image */}
-    <div className="relative h-64 overflow-hidden">
-      <img
-        src={room.image}
-        alt={`${room.subtitle} at Fully Governed`}
-        className="w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
-      <div className="absolute bottom-4 left-4">
+      {/* Room photo and gallery controls */}
+    <div className={`relative ${room.image ? "h-64" : "min-h-32"} overflow-hidden`}>
+      {room.image && <img src={room.image} alt={`${room.subtitle} at Fully Governed`} className="h-full w-full object-cover" />}
+      {room.image && <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />}
+      <div className={room.image ? "absolute bottom-4 left-4" : "p-6"}>
         <p className={`font-mono text-xs tracking-widest ${room.colorClass} uppercase`}>
           {room.name}
         </p>
@@ -142,6 +137,7 @@ const RoomCard = ({ room, index }: { room: Room; index: number }) => (
           <p className="text-primary font-mono text-[10px] uppercase tracking-[0.2em] mt-0.5">Fully Governed Media</p>
         )}
       </div>
+      {room.id !== "content" && <div className="border-b border-border bg-card px-4 py-3"><RoomViewButtons roomName={room.subtitle} /></div>}
     </div>
 
     {/* Content */}
@@ -193,9 +189,6 @@ const RoomCard = ({ room, index }: { room: Room; index: number }) => (
         </div>
       </div>
 
-      {/* Gallery + 3D view buttons */}
-      <RoomViewButtons roomName={room.subtitle} />
-
       {/* Book CTA */}
       <div className="mt-4">
         <Link
@@ -225,6 +218,10 @@ const RoomsSection = () => {
           <h2 className="font-bebas text-5xl md:text-7xl text-foreground tracking-wider">
             OUR ROOMS
           </h2>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <a href="#rooms" className="inline-flex min-h-11 items-center border border-border px-4 font-bebas tracking-wider text-foreground hover:border-primary hover:text-primary">BROWSE ROOM PHOTOS</a>
+            <Link to="/360-tour?room=recording" className="inline-flex min-h-11 items-center bg-primary px-4 font-bebas tracking-wider text-primary-foreground hover:bg-primary/90">OPEN 360° ROOM TOUR</Link>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8" id="pricing">

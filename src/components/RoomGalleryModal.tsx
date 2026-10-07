@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Link } from "react-router-dom";
 
 const PanoramaViewer = lazy(() => import("@/components/PanoramaViewer").then((module) => ({ default: module.PanoramaViewer })));
 
@@ -87,16 +88,18 @@ export const RoomViewButtons = ({ roomName }: RoomGalleryModalProps) => {
   const name = roomName.toLowerCase();
   const images = name.includes("recording")
     ? ["recording-room-01.jpeg", "recording-room-02.jpeg"]
-    : name.includes("multi-use")
-      ? ["multi-use-room-01.jpeg", "multi-use-room-02.jpeg"]
-      : ["content-room-01.jpeg", "content-room-02.jpeg"];
+    : ["multi-use-room-01.jpeg", "multi-use-room-02.jpeg"];
   const imagePaths = images.map((image) => `/images/rooms/360/${image}`);
+  const tourRoom = name.includes("recording") ? "recording" : "multi-use";
 
   return (
     <>
-      <div className="flex gap-3 justify-center">
+      <div className="flex flex-wrap gap-3 justify-center">
         <Button variant="outline" className="font-bebas tracking-wider" onClick={() => setGalleryOpen(true)}>
-          <Images className="w-4 h-4 mr-2" /> VIEW PHOTOS
+          <Images className="w-4 h-4 mr-2" /> ROOM PHOTOS
+        </Button>
+        <Button asChild className="font-bebas tracking-wider">
+          <Link to={`/360-tour?room=${tourRoom}`}>OPEN 360° TOUR</Link>
         </Button>
       </div>
       {galleryOpen && (
