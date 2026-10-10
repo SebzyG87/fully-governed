@@ -4,23 +4,25 @@ import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { WebsiteImage } from "@/components/WebsiteImage";
-import { getRoomMediaSlots } from "@/lib/websiteMedia";
+import { getRoomMediaSlots, type RoomGalleryKey } from "@/lib/websiteMedia";
 import { useWebsiteMedia } from "@/hooks/useWebsiteMedia";
+import { useRoomGalleryContent } from "@/hooks/useRoomGalleryContent";
 
 const PanoramaViewer = lazy(() => import("@/components/PanoramaViewer").then((module) => ({ default: module.PanoramaViewer })));
 
 interface RoomGalleryModalProps {
   roomName: string;
-  roomKey?: "recording" | "multi-use" | "content";
+  roomKey?: RoomGalleryKey;
   showTourLink?: boolean;
   galleryButtonLabel?: string;
 }
 
-const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose: () => void; images: ReturnType<typeof getRoomMediaSlots>["gallery"] }) => {
+const GalleryModal = ({ roomName, roomKey, onClose, images }: { roomName: string; roomKey: RoomGalleryKey; onClose: () => void; images: ReturnType<typeof getRoomMediaSlots>["gallery"] }) => {
   const [current, setCurrent] = useState(0);
   const [view, setView] = useState<"360" | "photo">("360");
   const total = images.length;
   const imageUrl = useWebsiteMedia(images[current].key, images[current].fallback);
+  const galleryContent = useRoomGalleryContent(roomKey);
 
   return (
     <AnimatePresence>
@@ -38,9 +40,12 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
           className="relative w-full max-w-6xl"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bebas text-2xl text-white tracking-wider">{roomName} GALLERY</h2>
-            <div className="flex items-center gap-4">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="font-bebas text-xl tracking-wider text-white sm:text-2xl">{galleryContent.title} GALLERY</h2>
+              <p className="mt-1 max-w-2xl text-sm text-white/75">{galleryContent.description}</p>
+            </div>
+            <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-start">
               <div className="flex rounded-sm border border-white/20 p-0.5" role="group" aria-label="Gallery view">
                 <button type="button" aria-pressed={view === "360"} onClick={() => setView("360")} className={`px-3 py-1.5 text-sm ${view === "360" ? "bg-primary text-primary-foreground" : "text-white/75 hover:text-white"}`}>360° TOUR</button>
                 <button type="button" aria-pressed={view === "photo"} onClick={() => setView("photo")} className={`px-3 py-1.5 text-sm ${view === "photo" ? "bg-primary text-primary-foreground" : "text-white/75 hover:text-white"}`}>PHOTO</button>
@@ -54,7 +59,7 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
           <div className="relative h-[min(68vh,680px)] min-h-[300px] bg-black border border-border rounded-lg overflow-hidden">
             {view === "360" ? (
               <Suspense fallback={<div className="h-full w-full animate-pulse bg-muted" />}>
-                <PanoramaViewer key={imageUrl} src={imageUrl} label={roomName} />
+                <PanoramaViewer key={imageUrl} src={imageUrl} label={galleryContent.title || roomName} />
               </Suspense>
             ) : (
               <WebsiteImage slotKey={images[current].key} fallback={images[current].fallback} alt={`${roomName}, photo ${current + 1}`} className="h-full w-full object-contain" />
@@ -95,7 +100,7 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
 export const RoomViewButtons = ({ roomName, roomKey, showTourLink = true, galleryButtonLabel = "ROOM PHOTOS" }: RoomGalleryModalProps) => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const name = roomName.toLowerCase();
-  const resolvedRoomKey = roomKey || (name.includes("content") ? "content" : name.includes("recording") ? "recording" : "multi-use");
+  const resolvedRoomKey: RoomGalleryKey = roomKey || (name.includes("content") ? "content" : name.includes("recording") ? "recording" : "multi-use");
   const images = getRoomMediaSlots(resolvedRoomKey).gallery;
   const tourRoom = resolvedRoomKey;
 
@@ -112,7 +117,7 @@ export const RoomViewButtons = ({ roomName, roomKey, showTourLink = true, galler
         )}
       </div>
       {galleryOpen && (
-        <GalleryModal roomName={roomName} images={images} onClose={() => setGalleryOpen(false)} />
+        <GalleryModal roomName={roomName} roomKey={resolvedRoomKey} images={images} onClose={() => setGalleryOpen(false)} />
       )}
     </>
   );

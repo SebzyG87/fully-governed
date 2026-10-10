@@ -224,6 +224,11 @@ const Dashboard = () => {
             <span className="font-bebas text-2xl tracking-widest text-foreground">FULLY GOVERNED</span>
           </Link>
           <div className="flex items-center gap-4">
+            {canManageSettings(studioRole) && (
+              <Link to="/admin" className="inline-flex min-h-10 items-center gap-2 border border-red-600 bg-red-600 px-4 font-bebas text-sm tracking-wider text-white transition-colors hover:border-red-500 hover:bg-red-700">
+                <Shield className="h-4 w-4" /> ADMIN DASHBOARD
+              </Link>
+            )}
             <span className="text-sm text-muted-foreground font-barlow hidden sm:block">{profile.full_name}</span>
             <Button variant="ghost" size="sm" onClick={() => { signOut(); navigate("/"); }}>
               <LogOut className="w-4 h-4" />
