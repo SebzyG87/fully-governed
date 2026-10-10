@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSEO } from "@/hooks/useSEO";
 import WalletHistoryModal from "@/components/WalletHistoryModal";
-import { getStudioRoleLabel } from "@/lib/studioRoles";
+import { canManageSettings, getStudioRoleLabel } from "@/lib/studioRoles";
 import { getVisibleDashboardEntries, type RoleDashboardEntry } from "@/lib/roleAccessConfig";
 
 const TIERS = [
