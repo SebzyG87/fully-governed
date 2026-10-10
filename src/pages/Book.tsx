@@ -7,6 +7,7 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMont
 import { supabase } from "@/integrations/supabase/client";
 
 import { useAuth } from "@/hooks/useAuth";
+import { WebsiteImage } from "@/components/WebsiteImage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -66,12 +67,17 @@ const roomNameMapping: Record<string, string> = {
 };
 
 const getRoomPhoto = (displayName: string) => {
-  if (displayName.toLowerCase().includes("recording")) return "/images/rooms/360/recording-room-01.jpeg";
-  if (displayName.toLowerCase().includes("multi-use")) return "/images/rooms/360/multi-use-room-01.jpeg";
+  const name = displayName.toLowerCase();
+  if (name.includes("recording")) return { slotKey: "room.recording.cover", fallback: "/images/rooms/360/recording-room-01.jpeg" };
+  if (name.includes("multi-use")) return { slotKey: "room.multi-use.cover", fallback: "/images/rooms/360/multi-use-room-01.jpeg" };
+  if (name.includes("content") || name.includes("creator")) return { slotKey: "room.content.cover", fallback: "/images/rooms/360/production-workshop.jpeg" };
   return null;
 };
 
-const getRoomTour = (displayName: string) => displayName.toLowerCase().includes("multi-use") ? "multi-use" : "recording";
+const getRoomTour = (displayName: string) => {
+  const name = displayName.toLowerCase();
+  return name.includes("multi-use") ? "multi-use" : name.includes("content") || name.includes("creator") ? "content" : "recording";
+};
 
 interface Engineer {
   id: string;
@@ -650,7 +656,7 @@ const Book = () => {
                   onClick={() => { setSelectedRoom(room); setSelectedDate(null); setSelectedHour(null); }}
                   className="block w-full text-left"
                 >
-                  {photo && <img src={photo} alt={`${displayName} room`} className="aspect-[2/1] w-full object-cover" />}
+                  {photo && <WebsiteImage slotKey={photo.slotKey} fallback={photo.fallback} alt={`${displayName} room`} className="aspect-[2/1] w-full object-cover" />}
                   <span className="block px-4 py-3 font-bebas text-lg tracking-wider text-foreground">{displayName.toUpperCase()}</span>
                 </button>
                 {photo && <Link to={`/360-tour?room=${getRoomTour(displayName)}`} className="block border-t border-border px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10">OPEN INTERACTIVE 360° TOUR</Link>}

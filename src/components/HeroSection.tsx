@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import heroStudio from "@/assets/hero-studio.jpg";
+import { WebsiteImage } from "@/components/WebsiteImage";
 
 const HeroSection = () => {
   const [hasPlayed, setHasPlayed] = useState(false);
@@ -19,8 +20,9 @@ const HeroSection = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
-        <img
-            src={heroStudio}
+        <WebsiteImage
+          slotKey="home.hero"
+          fallback={heroStudio}
           alt="Fully Governed recording studio mixing console"
           className="w-full h-full object-cover"
         />

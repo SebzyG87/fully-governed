@@ -3,12 +3,14 @@ import { Mic, Users, Wifi, Monitor, Headphones } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
+import { WebsiteImage } from "@/components/WebsiteImage";
 
 const rooms = [
   {
     slug: "recording",
     name: "Recording Studio",
     image: "/images/rooms/360/recording-room-01.jpeg",
+    mediaKey: "room.recording.cover",
     color: "border-room-studio",
     features: [
       { icon: Mic, label: "Music recording room" },
@@ -22,6 +24,7 @@ const rooms = [
     slug: "multi-use",
     name: "Multi-Use Room",
     image: "/images/rooms/360/multi-use-room-01.jpeg",
+    mediaKey: "room.multi-use.cover",
     color: "border-room-multi",
     features: [
       { icon: Users, label: "Multi-use room" },
@@ -30,6 +33,21 @@ const rooms = [
       { icon: Headphones, label: "Production setup confirmed before booking" },
     ],
     description: "Room 1A — Our editing suite and multi-purpose space. Post-production, video editing, animation, podcast recording, interviews, workshops, listening parties, and private events. Configure it however you need.",
+  },
+  {
+    slug: "content",
+    name: "Content Creation Centre",
+    image: "/images/rooms/360/production-workshop.jpeg",
+    mediaKey: "room.content.cover",
+    color: "border-room-content",
+    subBrand: "Fully Governed Media",
+    features: [
+      { icon: Users, label: "Stream Room dry hire" },
+      { icon: Monitor, label: "Production and content creation" },
+      { icon: Wifi, label: "Internet radio enquiries" },
+      { icon: Headphones, label: "Setup confirmed before booking" },
+    ],
+    description: "Room 2 is the Fully Governed Media content creation centre. Contact the studio to confirm equipment and setup for your session.",
   },
 ];
 
@@ -57,7 +75,7 @@ const Tour = () => {
             className={`grid grid-cols-1 lg:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
           >
             <div className={`relative group ${i % 2 === 1 ? "lg:order-2" : ""}`}>
-              <img src={room.image} alt={room.name} className={`w-full rounded-lg border-2 ${room.color} object-cover aspect-video`} />
+              <WebsiteImage slotKey={room.mediaKey} fallback={room.image} alt={room.name} className={`w-full rounded-lg border-2 ${room.color} object-cover aspect-video`} />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                 <Link to={`/360-tour?room=${room.slug}`} className="inline-flex items-center rounded-sm bg-primary px-4 py-2 font-bebas tracking-wider text-primary-foreground">
                   ENTER 360° VIEW

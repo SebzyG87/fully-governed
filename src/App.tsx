@@ -145,6 +145,7 @@ const AdminRadio = lazy(() => import("./pages/admin/AdminRadio"));
 const AdminShop = lazy(() => import("./pages/admin/AdminShop"));
 const AdminSessionLog = lazy(() => import("./pages/admin/AdminSessionLog"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
+const AdminMedia = lazy(() => import("./pages/admin/AdminMedia"));
 const AdminVehicles = lazy(() => import("./pages/admin/AdminVehicles"));
 const AdminEnquiries = lazy(() => import("./pages/admin/AdminEnquiries"));
 const AdminStreetTeam = lazy(() => import("./pages/admin/AdminStreetTeam"));
@@ -356,6 +357,7 @@ const App = () => (
                     <Route path="people/:personId" element={<AdminPersonProfile />} />
                     <Route path="staff-roles" element={<AdminStaffRoles />} />
                     <Route path="settings" element={<AdminSettings />} />
+                    <Route path="media" element={<AdminMedia />} />
                   </Route>
 
                   {/* Public artist profile */}

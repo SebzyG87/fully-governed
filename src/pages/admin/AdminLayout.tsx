@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
-import { Crown, LayoutDashboard, CalendarDays, Users, PoundSterling, Wrench, Megaphone, Radio, ShoppingBag, FileText, Settings, LogOut, ChevronLeft, Car, MessageSquare, UserCheck, Shirt, BookOpen, ClipboardList, Mail, Inbox, Trophy, Disc3, ShieldCheck, Clock, ShieldAlert } from "lucide-react";
+import { Crown, LayoutDashboard, CalendarDays, Users, PoundSterling, Wrench, Megaphone, Radio, ShoppingBag, FileText, Settings, LogOut, ChevronLeft, Car, MessageSquare, UserCheck, Shirt, BookOpen, ClipboardList, Mail, Inbox, Trophy, Disc3, ShieldCheck, Clock, ShieldAlert, Images } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { canManageSettings } from "@/lib/studioRoles";
 
@@ -33,6 +33,7 @@ const navItems = [
   { label: "Vehicles", icon: Car, path: "/admin/vehicles" },
   { label: "Staff Roles", icon: ShieldCheck, path: "/admin/staff-roles" },
   { label: "Settings", icon: Settings, path: "/admin/settings" },
+  { label: "Website Images", icon: Images, path: "/admin/media" },
 ];
 
 const AdminLayout = () => {

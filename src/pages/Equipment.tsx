@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import { WebsiteImage } from "@/components/WebsiteImage";
 import Footer from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -75,8 +76,9 @@ const Equipment = () => {
         {/* Verified equipment from the supplied operational register */}
         <div className="max-w-4xl mx-auto space-y-6">
           <figure className="overflow-hidden border border-border">
-            <img
-              src="/images/rooms/360/production-workshop.jpeg"
+            <WebsiteImage
+              slotKey="room.content.cover"
+              fallback="/images/rooms/360/production-workshop.jpeg"
               alt="Fully Governed production workshop"
               className="aspect-video w-full object-cover"
             />

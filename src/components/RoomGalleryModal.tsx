@@ -3,19 +3,24 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { WebsiteImage } from "@/components/WebsiteImage";
+import { getRoomMediaSlots } from "@/lib/websiteMedia";
+import { useWebsiteMedia } from "@/hooks/useWebsiteMedia";
 
 const PanoramaViewer = lazy(() => import("@/components/PanoramaViewer").then((module) => ({ default: module.PanoramaViewer })));
 
 interface RoomGalleryModalProps {
   roomName: string;
+  roomKey?: "recording" | "multi-use" | "content";
   showTourLink?: boolean;
   galleryButtonLabel?: string;
 }
 
-const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose: () => void; images: string[] }) => {
+const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose: () => void; images: ReturnType<typeof getRoomMediaSlots>["gallery"] }) => {
   const [current, setCurrent] = useState(0);
   const [view, setView] = useState<"360" | "photo">("360");
   const total = images.length;
+  const imageUrl = useWebsiteMedia(images[current].key, images[current].fallback);
 
   return (
     <AnimatePresence>
@@ -49,10 +54,10 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
           <div className="relative h-[min(68vh,680px)] min-h-[300px] bg-black border border-border rounded-lg overflow-hidden">
             {view === "360" ? (
               <Suspense fallback={<div className="h-full w-full animate-pulse bg-muted" />}>
-                <PanoramaViewer key={images[current]} src={images[current]} label={roomName} />
+                <PanoramaViewer key={imageUrl} src={imageUrl} label={roomName} />
               </Suspense>
             ) : (
-              <img src={images[current]} alt={`${roomName}, photo ${current + 1}`} className="h-full w-full object-contain" />
+              <WebsiteImage slotKey={images[current].key} fallback={images[current].fallback} alt={`${roomName}, photo ${current + 1}`} className="h-full w-full object-contain" />
             )}
             <span className="absolute bottom-3 left-3 rounded-sm bg-black/70 px-2 py-1 font-mono text-xs text-white">{current + 1} / {total}</span>
             <button
@@ -87,14 +92,12 @@ const GalleryModal = ({ roomName, onClose, images }: { roomName: string; onClose
   );
 };
 
-export const RoomViewButtons = ({ roomName, showTourLink = true, galleryButtonLabel = "ROOM PHOTOS" }: RoomGalleryModalProps) => {
+export const RoomViewButtons = ({ roomName, roomKey, showTourLink = true, galleryButtonLabel = "ROOM PHOTOS" }: RoomGalleryModalProps) => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const name = roomName.toLowerCase();
-  const images = name.includes("recording")
-    ? ["recording-room-01.jpeg", "recording-room-02.jpeg"]
-    : ["multi-use-room-01.jpeg", "multi-use-room-02.jpeg"];
-  const imagePaths = images.map((image) => `/images/rooms/360/${image}`);
-  const tourRoom = name.includes("recording") ? "recording" : "multi-use";
+  const resolvedRoomKey = roomKey || (name.includes("content") ? "content" : name.includes("recording") ? "recording" : "multi-use");
+  const images = getRoomMediaSlots(resolvedRoomKey).gallery;
+  const tourRoom = resolvedRoomKey;
 
   return (
     <>
@@ -109,7 +112,7 @@ export const RoomViewButtons = ({ roomName, showTourLink = true, galleryButtonLa
         )}
       </div>
       {galleryOpen && (
-        <GalleryModal roomName={roomName} images={imagePaths} onClose={() => setGalleryOpen(false)} />
+        <GalleryModal roomName={roomName} images={images} onClose={() => setGalleryOpen(false)} />
       )}
     </>
   );

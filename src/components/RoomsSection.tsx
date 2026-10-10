@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { RoomViewButtons } from "@/components/RoomGalleryModal";
+import { WebsiteImage } from "@/components/WebsiteImage";
 import { studioRates } from "@/lib/studioRates";
 
 interface PriceItem {
@@ -31,6 +32,7 @@ const rooms: Room[] = [
     borderClass: "border-room-gold",
     glowClass: "glow-gold",
     image: "/images/rooms/360/recording-room-01.jpeg",
+    mediaKey: "recording" as const,
     description:
       "Room 1B — Our flagship music recording space in Lewisham. Ask the studio to confirm equipment and engineer availability for your session.",
     features: [
@@ -61,6 +63,7 @@ const rooms: Room[] = [
     borderClass: "border-room-red",
     glowClass: "glow-red",
     image: "/images/rooms/360/multi-use-room-01.jpeg",
+    mediaKey: "multi-use" as const,
     description:
       "Room 1A — Our editing suite and multi-purpose space. Post-production, video editing, animation, podcast recording, interviews, workshops, listening parties, and private events. Configure it however you need.",
     features: [
@@ -90,6 +93,8 @@ const rooms: Room[] = [
     colorClass: "room-purple",
     borderClass: "border-room-purple",
     glowClass: "glow-purple",
+    image: "/images/rooms/360/production-workshop.jpeg",
+    mediaKey: "content" as const,
     description:
       "Room 2 — Fully Governed Media content creation centre. Book the Stream Room for self-operated production; confirm your required setup with the studio.",
     features: [
@@ -127,9 +132,9 @@ const RoomCard = ({ room, index }: { room: Room; index: number }) => (
   >
       {/* Room photo and gallery controls */}
     <div className={`relative ${room.image ? "h-64" : "min-h-32"} overflow-hidden`}>
-      {room.image && <img src={room.image} alt={`${room.subtitle} at Fully Governed`} className="h-full w-full object-cover" />}
-      {room.image && <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />}
-      <div className={room.image ? "absolute bottom-4 left-4" : "p-6"}>
+      <WebsiteImage slotKey={`room.${room.mediaKey}.cover`} fallback={room.image} alt={`${room.subtitle} at Fully Governed`} className="h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+      <div className="absolute bottom-4 left-4">
         <p className={`font-mono text-xs tracking-widest ${room.colorClass} uppercase`}>
           {room.name}
         </p>
@@ -189,11 +194,9 @@ const RoomCard = ({ room, index }: { room: Room; index: number }) => (
         </div>
       </div>
 
-      {room.id !== "content" && (
-        <div className="mt-4">
-          <RoomViewButtons roomName={room.subtitle} showTourLink={false} galleryButtonLabel="VIEW 360° ROOM GALLERY" />
-        </div>
-      )}
+      <div className="mt-4">
+        <RoomViewButtons roomName={room.subtitle} roomKey={room.mediaKey} showTourLink={false} galleryButtonLabel="VIEW 360° ROOM GALLERY" />
+      </div>
 
       {/* Book CTA */}
       <div className="mt-4">
