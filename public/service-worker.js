@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fg-studio-cache-v1';
+const CACHE_NAME = 'fg-studio-cache-v2';
 const OFFLINE_URL = '/offline';
 
 const URLS_TO_CACHE = [
@@ -22,7 +22,9 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+                cacheNames
+                    .filter((name) => name.startsWith('fg-studio-cache-') && name !== CACHE_NAME)
+                    .map((name) => caches.delete(name))
             );
         })
     );
@@ -30,16 +32,12 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
+
     if (event.request.mode === 'navigate') {
         event.respondWith(
-            fetch(event.request).catch(() => {
+            fetch(new Request(event.request, { cache: 'no-store' })).catch(() => {
                 return caches.match(OFFLINE_URL);
-            })
-        );
-    } else {
-        event.respondWith(
-            caches.match(event.request).then((response) => {
-                return response || fetch(event.request);
             })
         );
     }
