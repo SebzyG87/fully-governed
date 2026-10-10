@@ -13,7 +13,7 @@ const groupedNav = [
       { label: "Editing Suite", href: "/editing-suite" },
       { label: "Recording & Radio", href: "/recording-radio" },
       { label: "Studio Equipment", href: "/equipment" },
-      { label: "360 Tour", href: "/360-tour" },
+      { label: "Room Gallery · 360 Tour", href: "/360-tour" },
       { label: "Food Menu", href: "/food" },
     ]
   },
@@ -112,14 +112,14 @@ const Navbar = () => {
 
             <Link
               to={user ? "/dashboard" : "/auth"}
-              className="text-muted-foreground hover:text-interactive transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center gap-2 rounded-sm border border-border/70 bg-card/60 px-3 font-bebas text-sm tracking-wider"
+              className="text-muted-foreground hover:text-interactive transition-colors min-h-[44px] flex items-center justify-center gap-2 rounded-sm border border-border/70 bg-card/60 px-3 font-bebas text-sm tracking-wider"
             >
               {user?.user_metadata?.avatar_url ? (
                 <img src={user.user_metadata.avatar_url} alt="Profile" className="w-7 h-7 rounded-full border border-border" />
               ) : (
                 <User className="w-5 h-5" />
               )}
-              <span className="hidden sm:inline">{user ? "DASHBOARD" : "SIGN IN"}</span>
+              <span>{user ? "DASHBOARD" : "SIGN IN"}</span>
             </Link>
 
             <button

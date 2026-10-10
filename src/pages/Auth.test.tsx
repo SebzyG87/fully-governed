@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   resetPassword: vi.fn(),
   updateUser: vi.fn(),
   signUp: vi.fn(),
+  signInWithOAuth: vi.fn(),
 }));
 
 vi.mock("@/hooks/useAuth", () => ({
@@ -28,7 +29,7 @@ vi.mock("@/integrations/supabase/client", () => ({
     auth: {
       updateUser: mocks.updateUser,
       verifyOtp: vi.fn(),
-      signInWithOAuth: vi.fn(),
+      signInWithOAuth: mocks.signInWithOAuth,
     },
     from: vi.fn(() => ({
       select: vi.fn().mockReturnThis(),
@@ -59,6 +60,7 @@ describe("Auth", () => {
     mocks.resetPassword.mockReset();
     mocks.updateUser.mockReset();
     mocks.signUp.mockReset();
+    mocks.signInWithOAuth.mockReset();
   });
 
   it("shows email, password, Google, and forgot-password login options", () => {
@@ -69,6 +71,18 @@ describe("Auth", () => {
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /continue with google/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /forgot your password/i })).toBeInTheDocument();
+  });
+
+  it("starts Google sign-in and returns to the auth callback", async () => {
+    mocks.signInWithOAuth.mockResolvedValue({ error: null });
+    renderAuth("/auth");
+
+    fireEvent.click(screen.getByRole("button", { name: /continue with google/i }));
+
+    await waitFor(() => expect(mocks.signInWithOAuth).toHaveBeenCalledWith({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth` },
+    }));
   });
 
   it("sends a password reset email from the forgot-password screen", async () => {
