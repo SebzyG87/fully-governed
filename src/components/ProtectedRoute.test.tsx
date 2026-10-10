@@ -30,4 +30,19 @@ describe("ProtectedRoute", () => {
     expect(screen.getByText("Sign in page")).toBeInTheDocument();
     expect(screen.queryByText("Private dashboard")).not.toBeInTheDocument();
   });
+
+  it("blocks signed-in members from administrator-only pages", () => {
+    mocks.useAuth.mockReturnValue({ user: { id: "member-1" }, studioRole: "client_artist", loading: false });
+
+    render(
+      <MemoryRouter initialEntries={["/admin"]}>
+        <Routes>
+          <Route path="/admin" element={<ProtectedRoute permission="manage_settings"><div>Admin workspace</div></ProtectedRoute>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("ACCESS LIMITED")).toBeInTheDocument();
+    expect(screen.queryByText("Admin workspace")).not.toBeInTheDocument();
+  });
 });

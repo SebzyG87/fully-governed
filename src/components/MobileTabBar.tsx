@@ -1,22 +1,23 @@
-import { Home, Calendar, LayoutDashboard, Users, HelpCircle } from "lucide-react";
+import { Home, Calendar, LayoutDashboard, Images, HelpCircle } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const TAB_BREAKPOINT = 1024;
-
-const tabs = [
-  { label: "Home", icon: Home, path: "/" },
-  { label: "Book", icon: Calendar, path: "/book" },
-  { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-  { label: "Community", icon: Users, path: "/community" },
-  { label: "Help", icon: HelpCircle, path: "/help" },
-];
 
 const HIDDEN_PATHS = ["/auth", "/unlock"];
 
 const MobileTabBar = () => {
   const [show, setShow] = useState(false);
   const { pathname } = useLocation();
+  const { user } = useAuth();
+  const tabs = [
+    { label: "Home", icon: Home, path: "/" },
+    { label: "Book", icon: Calendar, path: "/book" },
+    { label: "Gallery", icon: Images, path: "/360-tour" },
+    { label: user ? "Dashboard" : "Sign In", icon: user ? LayoutDashboard : HelpCircle, path: user ? "/dashboard" : "/auth" },
+    { label: "Help", icon: HelpCircle, path: "/help" },
+  ];
 
   useEffect(() => {
     const check = () => setShow(window.innerWidth < TAB_BREAKPOINT);
