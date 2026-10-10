@@ -26,6 +26,19 @@ class ErrorBoundary extends Component<Props, State> {
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error("Uncaught error:", error, errorInfo);
         this.setState({ componentStack: errorInfo.componentStack ?? undefined });
+
+        void fetch("/api/client-error", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            keepalive: true,
+            body: JSON.stringify({
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
+                componentStack: errorInfo.componentStack,
+                route: window.location.pathname,
+            }),
+        }).catch(() => undefined);
     }
 
     private handleCopyDetails = async () => {
