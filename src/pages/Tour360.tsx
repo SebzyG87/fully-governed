@@ -23,9 +23,9 @@ function RoomGallery({ room }: { room: typeof rooms[number] }) {
         <h2 id={`${room.slug}-title`} className="font-bebas text-3xl tracking-wide text-foreground sm:text-4xl">{content.title}</h2>
         <p className="mt-2 max-w-3xl text-base text-muted-foreground">{content.description}</p>
         <h3 className="mt-6 font-bebas text-2xl tracking-wide text-foreground">INTERACTIVE 360° VIEW</h3>
-        <p className="mb-3 mt-1 text-base text-muted-foreground">Drag to look around. On a phone, use two fingers to move the view and one finger to scroll the page.</p>
+        <p className="mb-3 mt-1 text-base text-muted-foreground">Drag to look around. On a phone, swipe across the image to explore the room.</p>
         <div className="overflow-hidden rounded-sm border border-border bg-black">
-          <PanoramaViewer src={image} label={content.title} lazy />
+          <PanoramaViewer src={image} label={content.title} />
         </div>
         <figure className="mt-8">
           <figcaption className="mb-3">
