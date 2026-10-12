@@ -4,18 +4,30 @@ import Footer from "@/components/Footer";
 import { PanoramaViewer } from "@/components/PanoramaViewer";
 import { useSearchParams } from "react-router-dom";
 import { useWebsiteMedia } from "@/hooks/useWebsiteMedia";
-import { useRoomGalleryContent } from "@/hooks/useRoomGalleryContent";
+import { useRoomGalleryContent, type RoomGalleryContent } from "@/hooks/useRoomGalleryContent";
 import { roomGalleryDefaults, type RoomGalleryKey } from "@/lib/websiteMedia";
 
-const rooms: { slug: RoomGalleryKey; image: string; mediaKey: string }[] = [
+type GalleryRoom = { slug: RoomGalleryKey | "podcast"; image: string; mediaKey: string };
+
+const podcastContent: RoomGalleryContent = {
+  title: "Podcast Room",
+  description: "Explore the podcast room, with its sofa seating and recording setup.",
+};
+
+const rooms: GalleryRoom[] = [
   { slug: "recording", image: "/images/rooms/360/recording-room-01.jpeg", mediaKey: "room.recording.panorama.1" },
   { slug: "multi-use", image: "/images/rooms/360/multi-use-room-01.jpeg", mediaKey: "room.multi-use.panorama.1" },
   { slug: "content", image: "/images/rooms/360/production-workshop.jpeg", mediaKey: "room.content.panorama.1" },
+  { slug: "podcast", image: "/images/rooms/360/podcast-room-01.jpeg", mediaKey: "room.podcast.panorama.1" },
 ];
 
-function RoomGallery({ room }: { room: typeof rooms[number] }) {
-  const image = useWebsiteMedia(room.mediaKey, room.image);
+function ManagedRoomGallery({ room }: { room: GalleryRoom & { slug: RoomGalleryKey } }) {
   const content = useRoomGalleryContent(room.slug);
+  return <RoomGallery room={room} content={content} />;
+}
+
+function RoomGallery({ room, content }: { room: GalleryRoom; content: RoomGalleryContent }) {
+  const image = useWebsiteMedia(room.mediaKey, room.image);
 
   return (
     <section id={room.slug} aria-labelledby={`${room.slug}-title`} className="scroll-mt-20 border-b border-border py-8 sm:py-12">
@@ -69,19 +81,22 @@ export default function Tour360() {
         <header className="border-b border-border bg-card/40">
           <div className="container py-8 sm:py-10">
             <p className="font-mono text-sm uppercase text-primary">Fully Governed Studios</p>
-            <h1 className="mt-2 font-bebas text-4xl tracking-wide text-foreground sm:text-5xl">EXPLORE OUR THREE ROOMS</h1>
+            <h1 className="mt-2 font-bebas text-4xl tracking-wide text-foreground sm:text-5xl">EXPLORE OUR FOUR ROOMS</h1>
             <p className="mt-3 max-w-3xl text-lg text-muted-foreground">Scroll to see every room, with an interactive 360° view and a flat photo underneath. Or jump straight to a room below.</p>
-            <nav aria-label="Jump to a room" className="mt-6 grid gap-3 md:grid-cols-3">
+            <nav aria-label="Jump to a room" className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
               {rooms.map((room) => (
                 <a key={room.slug} href={`#${room.slug}`} className="flex min-h-16 items-center justify-between gap-3 rounded-sm border-2 border-primary bg-primary/10 px-4 py-3 font-bebas text-xl tracking-wide text-foreground hover:bg-primary hover:text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
-                  {roomGalleryDefaults[room.slug].title}
+                  {room.slug === "podcast" ? podcastContent.title : roomGalleryDefaults[room.slug].title}
                   <span aria-hidden="true">↓</span>
                 </a>
               ))}
             </nav>
           </div>
         </header>
-        {rooms.map((room) => <RoomGallery key={room.slug} room={room} />)}
+        {rooms.map((room) => room.slug === "podcast"
+          ? <RoomGallery key={room.slug} room={room} content={podcastContent} />
+          : <ManagedRoomGallery key={room.slug} room={{ ...room, slug: room.slug }} />
+        )}
       </main>
       <Footer />
     </div>
