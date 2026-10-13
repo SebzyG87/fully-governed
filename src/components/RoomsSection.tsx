@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { RoomViewButtons } from "@/components/RoomGalleryModal";
 import { WebsiteImage } from "@/components/WebsiteImage";
 import { studioRates } from "@/lib/studioRates";
+import type { RoomGalleryKey } from "@/lib/websiteMedia";
 
 interface PriceItem {
   label: string;
@@ -16,7 +17,8 @@ interface Room {
   colorClass: string;
   borderClass: string;
   glowClass: string;
-  image?: string;
+  image: string;
+  mediaKey: RoomGalleryKey;
   description: string;
   features: string[];
   pricing: PriceItem[];
@@ -32,7 +34,7 @@ const rooms: Room[] = [
     borderClass: "border-room-gold",
     glowClass: "glow-gold",
     image: "/images/rooms/360/recording-room-01.jpeg",
-    mediaKey: "recording" as const,
+    mediaKey: "recording",
     description:
       "Room 1B — Our flagship music recording space in Lewisham. Ask the studio to confirm equipment and engineer availability for your session.",
     features: [
@@ -63,7 +65,7 @@ const rooms: Room[] = [
     borderClass: "border-room-red",
     glowClass: "glow-red",
     image: "/images/rooms/360/multi-use-room-01.jpeg",
-    mediaKey: "multi-use" as const,
+    mediaKey: "multi-use",
     description:
       "Room 1A — Our editing suite and multi-purpose space. Post-production, video editing, animation, podcast recording, interviews, workshops, listening parties, and private events. Configure it however you need.",
     features: [
@@ -94,7 +96,7 @@ const rooms: Room[] = [
     borderClass: "border-room-purple",
     glowClass: "glow-purple",
     image: "/images/rooms/360/production-workshop.jpeg",
-    mediaKey: "content" as const,
+    mediaKey: "content",
     description:
       "Room 2 — Fully Governed Media content creation centre. Book the Stream Room for self-operated production; confirm your required setup with the studio.",
     features: [

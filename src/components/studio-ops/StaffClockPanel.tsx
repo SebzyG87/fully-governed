@@ -17,6 +17,7 @@ interface Shift {
 export const StaffClockPanel = ({ staffRole }: { staffRole: string }) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const userId = user?.id;
   const [isClockedIn, setIsClockedIn] = useState(false);
   const [clockInTime, setClockInTime] = useState<string | null>(null);
   const [activeShiftId, setActiveShiftId] = useState<string | null>(null);
@@ -24,68 +25,68 @@ export const StaffClockPanel = ({ staffRole }: { staffRole: string }) => {
   const [history, setHistory] = useState<Shift[]>([]);
   const [isLiveData, setIsLiveData] = useState(false);
 
-  const loadLiveShifts = async () => {
-    if (!user) return false;
-    const { data, error } = await supabase
-      .from("fg_staff_shifts" as any)
-      .select("*")
-      .eq("staff_user_id", user.id)
-      .order("clock_in_at", { ascending: false })
-      .limit(30);
-    if (error || !data) return false;
-
-    const active = (data as any[]).find((shift) => !shift.clock_out_at);
-    if (active) {
-      setActiveShiftId(active.id);
-      setIsClockedIn(true);
-      setClockInTime(active.clock_in_at);
-      const elapsed = Math.floor((Date.now() - new Date(active.clock_in_at).getTime()) / 1000);
-      setElapsedSeconds(elapsed > 0 ? elapsed : 0);
-    }
-
-    setHistory((data as any[])
-      .filter((shift) => shift.clock_out_at)
-      .map((shift) => ({
-        id: shift.id,
-        clockIn: shift.clock_in_at,
-        clockOut: shift.clock_out_at,
-        durationMs: (shift.duration_seconds ?? 0) * 1000,
-        role: shift.staff_role,
-      })));
-    setIsLiveData(true);
-    return true;
-  };
-
   useEffect(() => {
-    loadLiveShifts().then((loaded) => {
+    const loadLiveShifts = async () => {
+      if (!userId) return false;
+      const { data, error } = await supabase
+        .from("fg_staff_shifts" as any)
+        .select("*")
+        .eq("staff_user_id", userId)
+        .order("clock_in_at", { ascending: false })
+        .limit(30);
+      if (error || !data) return false;
+
+      const active = (data as any[]).find((shift) => !shift.clock_out_at);
+      if (active) {
+        setActiveShiftId(active.id);
+        setIsClockedIn(true);
+        setClockInTime(active.clock_in_at);
+        const elapsed = Math.floor((Date.now() - new Date(active.clock_in_at).getTime()) / 1000);
+        setElapsedSeconds(elapsed > 0 ? elapsed : 0);
+      }
+
+      setHistory((data as any[])
+        .filter((shift) => shift.clock_out_at)
+        .map((shift) => ({
+          id: shift.id,
+          clockIn: shift.clock_in_at,
+          clockOut: shift.clock_out_at,
+          durationMs: (shift.duration_seconds ?? 0) * 1000,
+          role: shift.staff_role,
+        })));
+      setIsLiveData(true);
+      return true;
+    };
+
+    void loadLiveShifts().then((loaded) => {
       if (loaded) return;
 
-    const activeClockIn = localStorage.getItem("fg_staff_clock_in");
-    if (activeClockIn) {
-      setIsClockedIn(true);
-      setClockInTime(activeClockIn);
-      const elapsed = Math.floor((Date.now() - new Date(activeClockIn).getTime()) / 1000);
-      setElapsedSeconds(elapsed > 0 ? elapsed : 0);
-    }
-
-    const savedHistory = localStorage.getItem("fg_staff_shift_history");
-    if (savedHistory) {
-      try {
-        setHistory(JSON.parse(savedHistory));
-      } catch {
-        // use default mock baseline
+      const activeClockIn = localStorage.getItem("fg_staff_clock_in");
+      if (activeClockIn) {
+        setIsClockedIn(true);
+        setClockInTime(activeClockIn);
+        const elapsed = Math.floor((Date.now() - new Date(activeClockIn).getTime()) / 1000);
+        setElapsedSeconds(elapsed > 0 ? elapsed : 0);
       }
-    } else {
-      // Create baseline mock shifts
-      const baseline: Shift[] = [
-        { id: "1", clockIn: new Date(Date.now() - 86400000 * 2 - 3600000 * 8).toISOString(), clockOut: new Date(Date.now() - 86400000 * 2).toISOString(), durationMs: 3600000 * 8, role: staffRole },
-        { id: "2", clockIn: new Date(Date.now() - 86400000 * 1 - 3600000 * 6.5).toISOString(), clockOut: new Date(Date.now() - 86400000 * 1).toISOString(), durationMs: 3600000 * 6.5, role: staffRole },
-      ];
-      setHistory(baseline);
-      localStorage.setItem("fg_staff_shift_history", JSON.stringify(baseline));
-    }
+
+      const savedHistory = localStorage.getItem("fg_staff_shift_history");
+      if (savedHistory) {
+        try {
+          setHistory(JSON.parse(savedHistory));
+        } catch {
+          // use default mock baseline
+        }
+      } else {
+        // Create baseline mock shifts
+        const baseline: Shift[] = [
+          { id: "1", clockIn: new Date(Date.now() - 86400000 * 2 - 3600000 * 8).toISOString(), clockOut: new Date(Date.now() - 86400000 * 2).toISOString(), durationMs: 3600000 * 8, role: staffRole },
+          { id: "2", clockIn: new Date(Date.now() - 86400000 * 1 - 3600000 * 6.5).toISOString(), clockOut: new Date(Date.now() - 86400000 * 1).toISOString(), durationMs: 3600000 * 6.5, role: staffRole },
+        ];
+        setHistory(baseline);
+        localStorage.setItem("fg_staff_shift_history", JSON.stringify(baseline));
+      }
     });
-  }, [staffRole, user?.id]);
+  }, [staffRole, userId]);
 
   // Live timer effect
   useEffect(() => {

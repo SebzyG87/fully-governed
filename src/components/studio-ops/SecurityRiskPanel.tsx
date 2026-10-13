@@ -26,6 +26,18 @@ interface IncidentReport {
   date: string;
 }
 
+const defaultRisks: RiskRegistry[] = [
+  { id: "r1", name: "Marcus Sterling (North Side)", type: "client", status: "amber", notes: "Do not schedule on the same day as South Side collective members. Avoid overlap sessions.", actions: "Enforce 1-hour room buffer gaps" },
+  { id: "r2", name: "Jayden K. (South Side Collective)", type: "group", status: "amber", notes: "Keep scheduled sessions segregated from Marcus Sterling's crews.", actions: "Coordinate schedule blockages" },
+  { id: "r3", name: "Tyrone Vance", type: "client", status: "red", notes: "Banned due to equipment damage and aggressive behavior during session on May 12.", actions: "BANNED - Do not accept bookings or allow entry" },
+  { id: "r4", name: "Kane H. Crew", type: "participant", status: "red", notes: "Gang-related verbal altercation in public lounge. High risk group mixing issues.", actions: "BANNED - Block booking access and participants" }
+];
+
+const defaultIncidents: IncidentReport[] = [
+  { id: "in-1", reporter: "Mono Luke", type: "Equip Damage", severity: "high", details: "Tyrone Vance cracked a vocal isolation panel after session over-run argument.", date: "May 12, 2026" },
+  { id: "in-2", reporter: "Cleaner Team", type: "Clean Conflict", severity: "medium", details: "Lounge was littered with forbidden items. Booking reference FG-0291.", date: "May 28, 2026" }
+];
+
 export const SecurityRiskPanel = ({ staffRole }: { staffRole: string }) => {
   const { toast } = useToast();
   const { user } = useAuth();
@@ -45,18 +57,6 @@ export const SecurityRiskPanel = ({ staffRole }: { staffRole: string }) => {
   const [incidentType, setIncidentType] = useState("");
   const [incidentSeverity, setIncidentSeverity] = useState<"low" | "medium" | "high" | "critical">("medium");
   const [incidentDetails, setIncidentDetails] = useState("");
-
-  const defaultRisks: RiskRegistry[] = [
-    { id: "r1", name: "Marcus Sterling (North Side)", type: "client", status: "amber", notes: "Do not schedule on the same day as South Side collective members. Avoid overlap sessions.", actions: "Enforce 1-hour room buffer gaps" },
-    { id: "r2", name: "Jayden K. (South Side Collective)", type: "group", status: "amber", notes: "Keep scheduled sessions segregated from Marcus Sterling's crews.", actions: "Coordinate schedule blockages" },
-    { id: "r3", name: "Tyrone Vance", type: "client", status: "red", notes: "Banned due to equipment damage and aggressive behavior during session on May 12.", actions: "BANNED - Do not accept bookings or allow entry" },
-    { id: "r4", name: "Kane H. Crew", type: "participant", status: "red", notes: "Gang-related verbal altercation in public lounge. High risk group mixing issues.", actions: "BANNED - Block booking access and participants" }
-  ];
-
-  const defaultIncidents: IncidentReport[] = [
-    { id: "in-1", reporter: "Mono Luke", type: "Equip Damage", severity: "high", details: "Tyrone Vance cracked a vocal isolation panel after session over-run argument.", date: "May 12, 2026" },
-    { id: "in-2", reporter: "Cleaner Team", type: "Clean Conflict", severity: "medium", details: "Lounge was littered with forbidden items. Booking reference FG-0291.", date: "May 28, 2026" }
-  ];
 
   useEffect(() => {
     Promise.all([

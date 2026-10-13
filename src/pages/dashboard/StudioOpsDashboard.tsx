@@ -1063,11 +1063,12 @@ const DashboardContent = ({ type, live, userId, onInspect }: { type: StudioRole;
 
 const StudioOpsDashboard = ({ type }: { type: StudioRole }) => {
   const { studioRole, user } = useAuth();
+  const userId = user?.id;
   const location = useLocation();
   const [selectedItem, setSelectedItem] = useState<OperationalDrawerData | null>(null);
 
   useEffect(() => {
-    if (type !== "client_artist" || !user) return;
+    if (type !== "client_artist" || !userId) return;
     const params = new URLSearchParams(location.search);
     const bookingId = params.get("booking");
     if (params.get("payment") !== "cancelled" || !bookingId) return;
@@ -1077,7 +1078,7 @@ const StudioOpsDashboard = ({ type }: { type: StudioRole }) => {
         .from("bookings")
         .update({ status: "cancelled", payment_status: "failed", cancelled_at: new Date().toISOString() })
         .eq("id", bookingId)
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .eq("status", "pending_payment");
 
       if (error) {
@@ -1086,7 +1087,7 @@ const StudioOpsDashboard = ({ type }: { type: StudioRole }) => {
       }
       window.location.replace(location.pathname);
     })();
-  }, [location.pathname, location.search, type, user?.id]);
+  }, [location.pathname, location.search, type, userId]);
 
   // Fetch live operational data
   const { tasks: cleaningTaskRows } = useCleaningTasks();

@@ -24,53 +24,53 @@ interface Conversation {
   messages: Message[];
 }
 
+// Default baseline conversations
+const baselineConversations: Conversation[] = [
+  {
+    id: "conv-1",
+    title: "Staff General Operations",
+    type: "staff_internal",
+    lastMessage: "Clean room checklist completed for Studio B.",
+    lastUpdated: "17:02",
+    messages: [
+      { id: "m1", sender: "Manny", senderRole: "studio_manager", content: "Hey team, we have a boiler room layout booking tonight in Studio A.", timestamp: "15:30", isStaffOnly: true },
+      { id: "m2", sender: "Cleaner Crew", senderRole: "cleaner", content: "Vocal booth reset is done. Replaced the mic covers.", timestamp: "16:15", isStaffOnly: true },
+      { id: "m3", sender: "Mono Luke", senderRole: "session_producer", content: "Sweet. I'll need some 3D model prototype preparation prints ready by 6pm.", timestamp: "16:45", isStaffOnly: true },
+      { id: "m4", sender: "Manny", senderRole: "studio_manager", content: "Clean room checklist completed for Studio B.", timestamp: "17:02", isStaffOnly: true }
+    ]
+  },
+  {
+    id: "conv-2",
+    title: "Client Support Request #FG-4029",
+    type: "client_support",
+    lastMessage: "Is it possible to reschedule to Friday at 2pm?",
+    lastUpdated: "16:50",
+    messages: [
+      { id: "m5", sender: "Marcus Sterling", senderRole: "client_artist", content: "Hi, I have a booking today at 6pm but my artist is running late. Is it possible to reschedule to Friday at 2pm?", timestamp: "16:40", isStaffOnly: false },
+      { id: "m6", sender: "System", senderRole: "automation", content: "Auto-reply: Rescheduling request registered. Staff review required.", timestamp: "16:41", isStaffOnly: false },
+      { id: "m7", sender: "Marcus Sterling", senderRole: "client_artist", content: "Also, we paid the deposit, let me know if we need to pay the balance now.", timestamp: "16:50", isStaffOnly: false }
+    ]
+  },
+  {
+    id: "conv-3",
+    title: "Seb Green <-> Admin (Ops Systems)",
+    type: "staff_internal",
+    lastMessage: "Custom booking buffer script is live on Supabase.",
+    lastUpdated: "14:12",
+    messages: [
+      { id: "m8", sender: "Seb Green", senderRole: "systems_director", content: "I've added the room setup buffer calculations to the booking flow.", timestamp: "13:45", isStaffOnly: true },
+      { id: "m9", sender: "Manny", senderRole: "studio_manager", content: "Awesome. Does it block the room automatically?", timestamp: "14:00", isStaffOnly: true },
+      { id: "m10", sender: "Seb Green", senderRole: "systems_director", content: "Yes, 30m before and after. Custom booking buffer script is live on Supabase.", timestamp: "14:12", isStaffOnly: true }
+    ]
+  }
+];
+
 export const InternalMessagingPanel = ({ staffRole, currentUserName = "Staff" }: { staffRole: string; currentUserName?: string }) => {
   const { toast } = useToast();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConvId, setActiveConvId] = useState<string>("");
   const [newMessageText, setNewMessageText] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
-
-  // Default baseline conversations
-  const baselineConversations: Conversation[] = [
-    {
-      id: "conv-1",
-      title: "Staff General Operations",
-      type: "staff_internal",
-      lastMessage: "Clean room checklist completed for Studio B.",
-      lastUpdated: "17:02",
-      messages: [
-        { id: "m1", sender: "Manny", senderRole: "studio_manager", content: "Hey team, we have a boiler room layout booking tonight in Studio A.", timestamp: "15:30", isStaffOnly: true },
-        { id: "m2", sender: "Cleaner Crew", senderRole: "cleaner", content: "Vocal booth reset is done. Replaced the mic covers.", timestamp: "16:15", isStaffOnly: true },
-        { id: "m3", sender: "Mono Luke", senderRole: "session_producer", content: "Sweet. I'll need some 3D model prototype preparation prints ready by 6pm.", timestamp: "16:45", isStaffOnly: true },
-        { id: "m4", sender: "Manny", senderRole: "studio_manager", content: "Clean room checklist completed for Studio B.", timestamp: "17:02", isStaffOnly: true }
-      ]
-    },
-    {
-      id: "conv-2",
-      title: "Client Support Request #FG-4029",
-      type: "client_support",
-      lastMessage: "Is it possible to reschedule to Friday at 2pm?",
-      lastUpdated: "16:50",
-      messages: [
-        { id: "m5", sender: "Marcus Sterling", senderRole: "client_artist", content: "Hi, I have a booking today at 6pm but my artist is running late. Is it possible to reschedule to Friday at 2pm?", timestamp: "16:40", isStaffOnly: false },
-        { id: "m6", sender: "System", senderRole: "automation", content: "Auto-reply: Rescheduling request registered. Staff review required.", timestamp: "16:41", isStaffOnly: false },
-        { id: "m7", sender: "Marcus Sterling", senderRole: "client_artist", content: "Also, we paid the deposit, let me know if we need to pay the balance now.", timestamp: "16:50", isStaffOnly: false }
-      ]
-    },
-    {
-      id: "conv-3",
-      title: "Seb Green <-> Admin (Ops Systems)",
-      type: "staff_internal",
-      lastMessage: "Custom booking buffer script is live on Supabase.",
-      lastUpdated: "14:12",
-      messages: [
-        { id: "m8", sender: "Seb Green", senderRole: "systems_director", content: "I've added the room setup buffer calculations to the booking flow.", timestamp: "13:45", isStaffOnly: true },
-        { id: "m9", sender: "Manny", senderRole: "studio_manager", content: "Awesome. Does it block the room automatically?", timestamp: "14:00", isStaffOnly: true },
-        { id: "m10", sender: "Seb Green", senderRole: "systems_director", content: "Yes, 30m before and after. Custom booking buffer script is live on Supabase.", timestamp: "14:12", isStaffOnly: true }
-      ]
-    }
-  ];
 
   // Load from localStorage on mount
   useEffect(() => {

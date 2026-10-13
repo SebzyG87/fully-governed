@@ -39,47 +39,47 @@ export const InteractiveTaskPanel = ({ staffRole }: { staffRole: string }) => {
   const [newSession, setNewSession] = useState("");
   const [newNotes, setNewNotes] = useState("");
 
-  const rowToTask = (row: any): StudioTask => ({
-    id: row.id,
-    title: row.title,
-    assignedTo: row.assigned_to_name || "Unassigned",
-    assignedRole: row.assigned_role || staffRole,
-    linkedSession: row.linked_label || "No Session",
-    dueTime: row.due_label || (row.due_at ? new Date(row.due_at).toLocaleString() : "End of shift"),
-    priority: row.priority,
-    status: row.status,
-    notes: row.notes || "None",
-  });
-
-  const loadTasks = async () => {
-    const { data, error } = await supabase
-      .from("fg_staff_tasks" as any)
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(100);
-
-    if (!error && data) {
-      setTasks((data as any[]).map(rowToTask));
-      setIsLiveData(true);
-      return;
-    }
-
-    const saved = localStorage.getItem("fg_staff_tasks");
-    if (saved) {
-      try {
-        setTasks(JSON.parse(saved));
-        return;
-      } catch {
-        setTasks(MOCK_TASKS);
-      }
-    } else {
-      setTasks(MOCK_TASKS);
-      localStorage.setItem("fg_staff_tasks", JSON.stringify(MOCK_TASKS));
-    }
-  };
-
   useEffect(() => {
-    loadTasks();
+    const rowToTask = (row: any): StudioTask => ({
+      id: row.id,
+      title: row.title,
+      assignedTo: row.assigned_to_name || "Unassigned",
+      assignedRole: row.assigned_role || staffRole,
+      linkedSession: row.linked_label || "No Session",
+      dueTime: row.due_label || (row.due_at ? new Date(row.due_at).toLocaleString() : "End of shift"),
+      priority: row.priority,
+      status: row.status,
+      notes: row.notes || "None",
+    });
+
+    const loadTasks = async () => {
+      const { data, error } = await supabase
+        .from("fg_staff_tasks" as any)
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (!error && data) {
+        setTasks((data as any[]).map(rowToTask));
+        setIsLiveData(true);
+        return;
+      }
+
+      const saved = localStorage.getItem("fg_staff_tasks");
+      if (saved) {
+        try {
+          setTasks(JSON.parse(saved));
+          return;
+        } catch {
+          setTasks(MOCK_TASKS);
+        }
+      } else {
+        setTasks(MOCK_TASKS);
+        localStorage.setItem("fg_staff_tasks", JSON.stringify(MOCK_TASKS));
+      }
+    };
+
+    void loadTasks();
   }, [staffRole]);
 
   const saveTasks = async (updated: StudioTask[]) => {

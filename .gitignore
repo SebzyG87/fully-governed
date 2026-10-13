@@ -27,3 +27,8 @@ dist-ssr
 *.sw?
 .vercel
 .env*.local
+
+# Generated Supabase CLI state and local verification output
+supabase/.temp/
+coverage/
+*.tsbuildinfo

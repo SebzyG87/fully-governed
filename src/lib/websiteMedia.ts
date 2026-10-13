@@ -18,6 +18,7 @@ export const websiteMediaSlots: WebsiteMediaSlot[] = [
   { key: "room.multi-use.panorama.2", label: "Multi-Use Room 360 image 2", page: "Room gallery", kind: "panorama", fallback: "/images/rooms/360/multi-use-room-02.jpeg" },
   { key: "room.content.cover", label: "Content Creation Centre cover", page: "Home, Book, Tours, Equipment", kind: "image", fallback: "/images/rooms/360/production-workshop.jpeg" },
   { key: "room.content.panorama.1", label: "Production Workshop 360 image", page: "Room gallery", kind: "panorama", fallback: "/images/rooms/360/production-workshop.jpeg" },
+  { key: "room.podcast.panorama.1", label: "Podcast Room 360 and flat photo", page: "360 tour", kind: "panorama", fallback: "/images/rooms/360/podcast-room-01.jpeg" },
 ];
 
 export const roomGalleryDefaults = {
